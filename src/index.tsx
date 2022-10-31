@@ -1,15 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import './reset.css';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { Provider as CartProvider } from 'react-redux';
+import store from './app/store';
+import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
+
+export const client = new ApolloClient({
+	uri: 'http://localhost:4000/',
+	cache: new InMemoryCache(),
+});
 
 const root = ReactDOM.createRoot(
 	document.getElementById('root') as HTMLElement
 );
 root.render(
 	<React.StrictMode>
-		<App />
+		<ApolloProvider client={client}>
+			<CartProvider store={store}>
+				<App />
+			</CartProvider>
+		</ApolloProvider>
 	</React.StrictMode>
 );
 
