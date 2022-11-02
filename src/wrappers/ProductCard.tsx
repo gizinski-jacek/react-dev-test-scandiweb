@@ -5,7 +5,7 @@ import styled from 'styled-components';
 interface Props {
 	product: Product;
 	selectedCurrency: Currency;
-	// addItem: (item: Product) => void;
+	addItem: (product: Product) => void;
 }
 
 const Card = styled.div`
@@ -57,9 +57,7 @@ class ProductCard extends Component<Props> {
 			<Card key={this.props.product.name}>
 				<ImageWrapper>
 					<Image src={this.props.product.gallery[0]} alt='' />
-					<CartIcon
-					// onClick={() => this.props.addItem(this.props.product)}
-					>
+					<CartIcon onClick={() => this.props.addItem(this.props.product)}>
 						<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
 							<path
 								fill='#ffffff'
@@ -71,7 +69,7 @@ class ProductCard extends Component<Props> {
 				</ImageWrapper>
 				<Details>
 					<h4>{this.props.product.name}</h4>
-					<h4>{`${itemPrice?.amount} ${itemPrice?.currency.label} ${itemPrice?.currency.symbol}`}</h4>
+					<h4>{`${itemPrice?.currency.symbol}${itemPrice?.amount}`}</h4>
 				</Details>
 			</Card>
 		);
