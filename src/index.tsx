@@ -7,6 +7,7 @@ import reportWebVitals from './reportWebVitals';
 import { Provider as CartProvider } from 'react-redux';
 import store from './app/store';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
+import { BrowserRouter } from 'react-router-dom';
 
 export const client = new ApolloClient({
 	uri: 'http://localhost:4000/',
@@ -20,7 +21,9 @@ root.render(
 	<React.StrictMode>
 		<ApolloProvider client={client}>
 			<CartProvider store={store}>
-				<App />
+				<BrowserRouter>
+					<App />
+				</BrowserRouter>
 			</CartProvider>
 		</ApolloProvider>
 	</React.StrictMode>
