@@ -37,3 +37,7 @@ export interface Currency {
 	label: string;
 	symbol: string;
 }
+
+export interface CartProduct extends Product {
+	count: number;
+}
