@@ -1,54 +1,47 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Product } from '../types/types';
+import { CartProduct, Product } from '../types/types';
 
-const initialState: { product: Product; count: number }[] = [];
+const initialState: CartProduct[] = [];
 
 export const cartSlice = createSlice({
 	name: 'cart',
 	initialState,
 	reducers: {
-		addItem: (state, action) => {
-			if (action.payload.type === 'add') {
-				const newItem = { product: action.payload.product, count: 1 };
-				state = [...state, newItem];
-			}
-		},
-		removeItem: (
-			state,
-			action: PayloadAction<{ type: string; product: Product }>
-		) => {
-			if (action.payload.type === 'remove') {
-				const newState = state.filter(
-					(item) => item.product.id !== action.payload.product.id
-				);
-				state = newState;
-			}
-		},
-		incrementItem: (
-			state,
-			action: PayloadAction<{ type: string; product: Product }>
-		) => {
-			if (action.payload.type === 'increment') {
+		addItem: (state, action: PayloadAction<Product>) => {
+			const itemInCart = state.find((item) => item.id === action.payload.id);
+			if (itemInCart) {
 				const newState = state.map((item) =>
-					item.product.id === action.payload.product.id
-						? { ...item, count: item.count++ }
+					item.id === action.payload.id
+						? { ...item, count: item.count + 1 }
 						: item
 				);
-				state = newState;
+				return (state = newState);
+			} else {
+				const newState = [...state, { ...action.payload, count: 1 }];
+				return (state = newState);
 			}
 		},
-		decrementItem: (
-			state,
-			action: PayloadAction<{ type: string; product: Product }>
-		) => {
-			if (action.payload.type === 'decrement') {
-				const newState = state.map((item) =>
-					item.product.id === action.payload.product.id
-						? { ...item, count: item.count-- }
-						: item
-				);
-				state = newState;
-			}
+		removeItem: (state, action: PayloadAction<Product>) => {
+			const newState = state.filter(
+				(product) => product.id !== action.payload.id
+			);
+			return (state = newState);
+		},
+		incrementItem: (state, action: PayloadAction<Product>) => {
+			const newState = state.map((item) =>
+				item.id === action.payload.id
+					? { ...item, count: item.count + 1 }
+					: item
+			);
+			return (state = newState);
+		},
+		decrementItem: (state, action: PayloadAction<Product>) => {
+			const newState = state.map((item) =>
+				item.id === action.payload.id
+					? { ...item, count: item.count - 1 }
+					: item
+			);
+			return (state = newState);
 		},
 	},
 });
