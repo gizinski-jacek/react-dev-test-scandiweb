@@ -1,3 +1,6 @@
+import { BrowserHistory } from 'history';
+import { NavigateFunction, Params } from 'react-router-dom';
+
 export interface Price {
 	currency: Currency;
 	amount: number;
@@ -30,7 +33,7 @@ export interface Product {
 
 export interface Category {
 	name: string;
-	products: Product[];
+	products?: Product[];
 }
 
 export interface Currency {
@@ -40,4 +43,11 @@ export interface Currency {
 
 export interface CartProduct extends Product {
 	count: number;
+}
+
+export interface WithRouter {
+	location: Location;
+	navigate: NavigateFunction;
+	params: Params<string>;
+	history: BrowserHistory;
 }
