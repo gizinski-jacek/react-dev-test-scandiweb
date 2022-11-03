@@ -1,15 +1,23 @@
 import { Component } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-interface Props {
-	border?: boolean;
+interface BtnLinkProps {
+	border?: string;
 	bgColor?: string;
 	color?: string;
-	children?: string;
+}
+interface Props extends BtnLinkProps {
+	children: string;
+	to: string;
 }
 
-const Btn = styled.div<Props>`
-	border: ${(props) => (props.border ? '1px solid #000000' : 'none')};
+const BtnLink = styled(Link).attrs((props: BtnLinkProps) => ({
+	border: props.border ? `1px solid ${props.border}` : 'none',
+	bgColor: props.bgColor || '#000000',
+	color: props.color || '#ffffff',
+}))`
+	border: ${(props) => props.border};
 	color: ${(props) => props.color};
 	background-color: ${(props) => props.bgColor};
 	padding: 0.5rem;
@@ -17,12 +25,17 @@ const Btn = styled.div<Props>`
 	flex: 1;
 	font-weight: 600;
 	text-align: center;
+	text-decoration: none;
 `;
 
-class Button extends Component<Props> {
+class ButtonLink extends Component<Props> {
 	render() {
-		return <Btn {...this.props}>{this.props.children ?? 'Button'}</Btn>;
+		return (
+			<BtnLink {...this.props} to={this.props.to}>
+				{this.props.children ?? 'Button'}
+			</BtnLink>
+		);
 	}
 }
 
-export default Button;
+export default ButtonLink;
