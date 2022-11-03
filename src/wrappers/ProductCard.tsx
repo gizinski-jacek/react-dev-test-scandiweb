@@ -12,6 +12,7 @@ const Card = styled.div`
 	margin: 2rem;
 	display: flex;
 	flex-direction: column;
+	max-width: 300px;
 `;
 
 const ImageWrapper = styled.div`
@@ -68,7 +69,9 @@ class ProductCard extends Component<Props> {
 					</CartIcon>
 				</ImageWrapper>
 				<Details>
-					<h4>{this.props.product.name}</h4>
+					<h4>
+						{this.props.product.brand} {this.props.product.name}
+					</h4>
 					<h4>{`${itemPrice?.currency.symbol}${itemPrice?.amount}`}</h4>
 				</Details>
 			</Card>
