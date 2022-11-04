@@ -1,18 +1,17 @@
 import { Component } from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-interface BtnLinkProps {
+interface BtnProps {
 	border?: string;
 	bgColor?: string;
 	color?: string;
+	click: () => void;
 }
-interface Props extends BtnLinkProps {
+interface Props extends BtnProps {
 	children: string;
-	to: string;
 }
 
-const BtnLink = styled(Link).attrs((props: BtnLinkProps) => ({
+const Btn = styled.div.attrs((props: BtnProps) => ({
 	border: props.border ? `1px solid ${props.border}` : 'none',
 	bgColor: props.bgColor || '#000000',
 	color: props.color || '#ffffff',
@@ -28,14 +27,14 @@ const BtnLink = styled(Link).attrs((props: BtnLinkProps) => ({
 	text-decoration: none;
 `;
 
-class ButtonLink extends Component<Props> {
+class Button extends Component<Props> {
 	render() {
 		return (
-			<BtnLink {...this.props} to={this.props.to}>
+			<Btn {...this.props} onClick={() => this.props.click()}>
 				{this.props.children ?? 'Button'}
-			</BtnLink>
+			</Btn>
 		);
 	}
 }
 
-export default ButtonLink;
+export default Button;
