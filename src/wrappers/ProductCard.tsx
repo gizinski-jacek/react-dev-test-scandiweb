@@ -1,12 +1,15 @@
 import { Component } from 'react';
-import { Currency, Product } from '../types/types';
+import {
+	CartAttributeSet,
+	CartProduct,
+	Currency,
+	Product,
+} from '../types/types';
 import styled from 'styled-components';
-
-interface Props {
-	product: Product;
-	selectedCurrency: Currency;
-	addItem: (product: Product) => void;
-}
+import { AppDispatch } from '../app/store';
+import { addItem } from '../features/cartSlice';
+import { connect } from 'react-redux';
+import { nanoid } from 'nanoid';
 
 const Card = styled.div`
 	margin: 2rem;
@@ -49,7 +52,33 @@ const Details = styled.div`
 	margin: 0 0.5rem;
 `;
 
+interface Props {
+	product: Product;
+	selectedCurrency: Currency;
+	addItem: (product: CartProduct) => void;
+}
+
 class ProductCard extends Component<Props> {
+	add = (product: Product) => {
+		const defaultAttributes: CartAttributeSet[] = product.attributes.map(
+			(att) => {
+				return {
+					id: att.id,
+					name: att.name,
+					type: att.type,
+					item: att.items[0],
+				};
+			}
+		);
+		const item: CartProduct = {
+			...product,
+			uid: nanoid(),
+			count: 1,
+			selectedAttributes: defaultAttributes,
+		};
+		this.props.addItem(item);
+	};
+
 	render() {
 		const itemPrice = this.props.product.prices.find(
 			(price) => price.currency.label === this.props.selectedCurrency.label
@@ -58,7 +87,7 @@ class ProductCard extends Component<Props> {
 			<Card key={this.props.product.name}>
 				<ImageWrapper>
 					<Image src={this.props.product.gallery[0]} alt='' />
-					<CartIcon onClick={() => this.props.addItem(this.props.product)}>
+					<CartIcon onClick={() => this.add(this.props.product)}>
 						<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
 							<path
 								fill='#ffffff'
@@ -79,4 +108,10 @@ class ProductCard extends Component<Props> {
 	}
 }
 
-export default ProductCard;
+function mapDispatchToProps(dispatch: AppDispatch) {
+	return {
+		addItem: (product: CartProduct) => dispatch(addItem(product)),
+	};
+}
+
+export default connect(null, mapDispatchToProps)(ProductCard);
