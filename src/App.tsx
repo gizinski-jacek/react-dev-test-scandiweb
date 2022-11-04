@@ -1,11 +1,5 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-	addItem,
-	removeItem,
-	incrementItem,
-	decrementItem,
-} from './features/cartSlice';
 import './App.css';
 import { client } from '.';
 import { gql } from '@apollo/client';
@@ -18,7 +12,7 @@ import {
 } from './types/types';
 import ProductCard from './wrappers/ProductCard';
 import styled from 'styled-components';
-import { AppDispatch, RootState } from './app/store';
+import { RootState } from './app/store';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import CatalogPage from './components/CatalogPage';
 import ProductPage from './components/ProductPage';
@@ -52,10 +46,6 @@ interface InitialData {
 interface Props {
 	withRouter: WithRouter;
 	cart: CartProduct[];
-	addItem: (product: Product) => void;
-	removeItem: (product: Product) => void;
-	incrementItem: (product: Product) => void;
-	decrementItem: (product: Product) => void;
 }
 
 class App extends Component<Props> {
@@ -102,11 +92,7 @@ class App extends Component<Props> {
 		}
 	};
 
-	changeCurrency = (
-		e: React.MouseEvent<HTMLDivElement>,
-		currency: Currency
-	) => {
-		e.stopPropagation();
+	changeCurrency = (currency: Currency) => {
 		this.setState({ ...this.state, currency: currency });
 	};
 
@@ -131,7 +117,6 @@ class App extends Component<Props> {
 										key={i}
 										product={product}
 										selectedCurrency={this.state.currency}
-										addItem={this.props.addItem}
 									/>
 								))}
 							</Main>
@@ -224,13 +209,4 @@ function mapStateToProps(state: RootState) {
 	return { cart: state.cart };
 }
 
-function mapDispatchToProps(dispatch: AppDispatch) {
-	return {
-		addItem: (product: Product) => dispatch(addItem(product)),
-		removeItem: (product: Product) => dispatch(removeItem(product)),
-		incrementItem: (product: Product) => dispatch(incrementItem(product)),
-		decrementItem: (product: Product) => dispatch(decrementItem(product)),
-	};
-}
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+export default withRouter(connect(mapStateToProps, null)(App));
