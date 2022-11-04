@@ -41,8 +41,16 @@ export interface Currency {
 	symbol: string;
 }
 
+export interface CartAttributeSet {
+	id: string;
+	name: string;
+	type: string;
+	item: Attribute;
+}
 export interface CartProduct extends Product {
+	uid: string;
 	count: number;
+	selectedAttributes: CartAttributeSet[];
 }
 
 export interface WithRouter {
