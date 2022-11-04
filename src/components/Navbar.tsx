@@ -1,8 +1,8 @@
-import React, { Component, createRef } from 'react';
+import { Component, createRef } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import withRouter from '../HOC/withRouter';
-import ButtonLink from '../reusables/Button';
+import Button from '../reusables/Button';
 import { CartProduct, Category, Currency, WithRouter } from '../types/types';
 import CartItemCard from '../wrappers/CartItemCard';
 
@@ -26,23 +26,23 @@ const Blur = styled.div`
 	flex: 1;
 `;
 
-const CategoryLink = styled(Link).attrs((props: { active: string }) => ({
-	border: props.active === 'true' ? '2px solid #00c800' : 'none',
-	color: props.active === 'true' ? '#00c800' : '#000000',
-}))`
+const CategoryLink = styled(Link)`
 	display: inline-block;
 	padding: 1rem;
 	text-transform: uppercase;
-	border-bottom: ${(props) => props.border};
-	color: ${(props) => props.color};
 	text-decoration: none;
+	color: #000000;
+
+	&.active {
+		border-bottom: 2px solid #00c800;
+		color: #00c800;
+	}
 `;
 
-const CartPageLink = styled.a`
+const Logo = styled.div`
 	width: 40px;
 	height: 40px;
 	fill: #ffffff;
-	cursor: pointer;
 `;
 
 const NavControls = styled.div`
@@ -70,42 +70,15 @@ const CurrencySelect = styled.div`
 		left: 0;
 		overflow: hidden;
 	}
+
 `;
 
-const SideCart = styled.div`
-	position: relative;
-	width: 40px;
-	cursor: pointer;
+const CurrencyItem = styled.div`
+	padding: 1rem;
+	background-color: #ffffff;
 
-	.side-cart {
-		width: 340px;
-		position: absolute;
-		margin-top: 1rem;
-		top: 100%;
-		right: 0;
-		overflow: hidden;
-		display: flex;
-		flex-direction: column;
-		background-color: #ffffff;
-		z-index: 10;
-	}
-
-	.side-cart-header {
-		display: flex;
-		align-items: center;
-
-		h4 {
-			margin: 0.5rem;
-			font-weight: 600;
-		}
-	}
-
-	.side-cart-item-list {
-		flex: 1;
-	}
-
-	.side-cart-footer {
-		display: flex;
+	&.selected {
+		background-color: #c7c7c7;
 	}
 `;
 
@@ -122,10 +95,51 @@ const CartItemCount = styled.div`
 	border-radius: 50%;
 `;
 
+const SideCart = styled.div`
+	position: relative;
+	width: 40px;
+	cursor: pointer;
+
+	.side-cart {
+		padding: 1rem;
+		width: 340px;
+		max-width: 340px;
+
+		position: absolute;
+		margin-top: 1rem;
+		top: 100%;
+		right: 0;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		background-color: #ffffff;
+		z-index: 10;
+	}
+
+	.side-cart-item-list {
+		flex: 1;
+	}
+
+	.side-cart-footer {
+		display: flex;
+	}
+`;
+
+const Header = styled.div`
+	display: flex;
+	align-items: center;
+	margin-bottom: 1rem;
+
+	h4 {
+		margin: 0.5rem 0.5rem 0.5rem 0;
+		font-weight: 600;
+	}
+`;
+
 const Total = styled.div`
 	display: flex;
 	justify-content: space-between;
-	margin: 2rem 1rem;
+	margin: 2rem 0;
 	font-size: 1.25rem;
 	font-weight: 600;
 `;
@@ -139,10 +153,7 @@ interface State {
 interface Props {
 	withRouter: WithRouter;
 	categoryList: Category[];
-	changeCurrency: (
-		e: React.MouseEvent<HTMLDivElement>,
-		currency: Currency
-	) => void;
+	changeCurrency: (currency: Currency) => void;
 	currencyList: Currency[];
 	selectedCurrency: Currency;
 	cart: CartProduct[];
@@ -174,17 +185,50 @@ class Navbar extends Component<Props> {
 		});
 	};
 
-	// outsideRefClick = (e: any) => {
-	// 	//
-	// };
+	outsideRefClick = (e: any) => {
+		const container = this.state.ref.current;
+		const { target } = e;
+		if (target !== container && !container.contains(target)) {
+			this.setState({
+				...this.state,
+				currencySelectOpen: false,
+				sideCartOpen: false,
+			});
+		}
+	};
 
-	// componentDidMount = () => {
-	// 	document.body.addEventListener('click', this.outsideRefClick);
-	// };
+	componentDidUpdate = () => {
+		if (this.state.sideCartOpen || this.state.currencySelectOpen) {
+			document.body.addEventListener('click', this.outsideRefClick);
+		} else {
+			document.body.removeEventListener('click', this.outsideRefClick);
+		}
+	};
 
-	// componentWillUnmount = () => {
-	// 	document.body.removeEventListener('click', this.outsideRefClick);
-	// };
+	componentWillUnmount = () => {
+		document.body.removeEventListener('click', this.outsideRefClick);
+	};
+
+	navigateToCart = () => {
+		this.setState({
+			...this.state,
+			currencySelectOpen: false,
+			sideCartOpen: false,
+		});
+		this.props.withRouter.navigate('/cart');
+	};
+
+	changeCurrency = (
+		e: React.MouseEvent<HTMLDivElement>,
+		currency: Currency
+	) => {
+		e.stopPropagation();
+		this.setState({
+			...this.state,
+			currencySelectOpen: false,
+		});
+		this.props.changeCurrency(currency);
+	};
 
 	render() {
 		const search = this.props.withRouter.location.search;
@@ -192,9 +236,8 @@ class Navbar extends Component<Props> {
 		return (
 			<>
 				{this.state.sideCartOpen && <Blur />}
-
 				<Nav>
-					<ul className='category-list'>
+					<div>
 						{this.props.categoryList.map((c) => {
 							return (
 								<CategoryLink
@@ -202,14 +245,14 @@ class Navbar extends Component<Props> {
 									to={`/catalog${
 										c.name !== 'all' ? `?category=${c.name}` : ''
 									}`}
-									// active={(category === c.name).toString()}
+									className={`${c.name === category ? 'active' : ''}`}
 								>
 									{c.name}
 								</CategoryLink>
 							);
 						})}
-					</ul>
-					<CartPageLink href='/cart'>
+					</div>
+					<Logo>
 						<svg
 							xmlns='http://www.w3.org/2000/svg'
 							xmlSpace='preserve'
@@ -240,7 +283,7 @@ class Navbar extends Component<Props> {
 								</g>
 							</g>
 						</svg>
-					</CartPageLink>
+					</Logo>
 					<NavControls ref={this.state.ref}>
 						<CurrencySelect
 							onClick={(e) => this.toggleCurrencySelectorVisibility(e)}
@@ -270,13 +313,18 @@ class Navbar extends Component<Props> {
 							<div className='currency-item-list'>
 								{this.state.currencySelectOpen &&
 									this.props.currencyList.map((currency) => (
-										<div
+										<CurrencyItem
 											key={currency.label}
-											onClick={(e) => this.props.changeCurrency(e, currency)}
+											onClick={(e) => this.changeCurrency(e, currency)}
+											className={`${
+												currency.label === this.props.selectedCurrency.label
+													? 'selected'
+													: ''
+											}`}
 										>
 											{currency.label}
 											{currency.symbol}
-										</div>
+										</CurrencyItem>
 									))}
 							</div>
 						</CurrencySelect>
@@ -298,14 +346,14 @@ class Navbar extends Component<Props> {
 							</div>
 							{this.state.sideCartOpen && (
 								<div className='side-cart'>
-									<div className='side-cart-header'>
+									<Header>
 										<h4>My Bag</h4>
 										{this.props.cart.reduce(
 											(total, item) => total + item.count,
 											0
 										)}{' '}
 										items
-									</div>
+									</Header>
 									<ul className='side-cart-item-list'>
 										{this.props.cart.map((item, i) => (
 											<CartItemCard
@@ -333,17 +381,21 @@ class Navbar extends Component<Props> {
 										</span>
 									</Total>
 									<div className='side-cart-footer'>
-										<ButtonLink
+										<Button
 											bgColor='#ffffff'
 											color='#000000'
 											border='#000000'
-											to='cart'
+											click={this.navigateToCart}
 										>
 											View Bag
-										</ButtonLink>
-										<ButtonLink bgColor='#00c800' color='#ffffff' to='cart'>
+										</Button>
+										<Button
+											bgColor='#00c800'
+											color='#ffffff'
+											click={this.navigateToCart}
+										>
 											Check Out
-										</ButtonLink>
+										</Button>
 									</div>
 								</div>
 							)}
