@@ -21,11 +21,19 @@ import Navbar from './components/Navbar';
 import withRouter from './HOC/withRouter';
 
 const Main = styled.main`
-	margin: 2rem 0;
-	display: grid;
-	grid-template-columns: repeat(auto-fit, 280px);
-	grid-gap: 5rem;
-	justify-content: center;
+	margin: 2rem;
+
+	h3 {
+		margin: 2rem 8rem;
+		text-transform: uppercase;
+	}
+
+	.plp-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, 280px);
+		grid-gap: 4rem;
+		justify-content: center;
+	}
 `;
 
 interface State {
@@ -99,6 +107,9 @@ class App extends Component<Props> {
 	};
 
 	render() {
+		const search = this.props.withRouter.location.search;
+		const category =
+			new URLSearchParams(search).get('category') || 'all products';
 		return (
 			<>
 				<Navbar
@@ -114,13 +125,16 @@ class App extends Component<Props> {
 						path='/catalog'
 						element={
 							<Main>
-								{this.state.productList.map((product, i) => (
-									<PLPProductCard
-										key={i}
-										product={product}
-										selectedCurrency={this.state.currency}
-									/>
-								))}
+								<h3>{category}</h3>
+								<div className='plp-grid'>
+									{this.state.productList.map((product, i) => (
+										<PLPProductCard
+											key={i}
+											product={product}
+											selectedCurrency={this.state.currency}
+										/>
+									))}
+								</div>
 							</Main>
 						}
 					/>
