@@ -19,6 +19,7 @@ import ProductPage from './components/ProductPage';
 import CartPage from './components/CartPage';
 import Navbar from './components/Navbar';
 import withRouter from './HOC/withRouter';
+import productToCartProduct from './utils/productToCartProduct';
 
 const Main = styled.main`
 	margin: 2rem;
@@ -39,7 +40,7 @@ const Main = styled.main`
 interface State {
 	category: string;
 	categoryList: Category[];
-	productList: Product[];
+	productList: CartProduct[];
 	currency: Currency;
 	currencyList: Currency[];
 	cart: CartProduct[];
@@ -78,11 +79,14 @@ class App extends Component<Props> {
 			query: GET_INITIAL_DATA,
 			variables: { category: category },
 		});
+		const cartProducts = initialData.data.category.products.map((product) =>
+			productToCartProduct(product)
+		);
 		this.setState({
 			...this.state,
 			categoryList: initialData.data.categories,
 			currencyList: initialData.data.currencies,
-			productList: initialData.data.category.products,
+			productList: cartProducts,
 		});
 	};
 
@@ -94,10 +98,13 @@ class App extends Component<Props> {
 				query: GET_PRODUCTS,
 				variables: { category: category },
 			});
+			const cartProducts = response.data.category.products.map(
+				(product: Product) => productToCartProduct(product)
+			);
 			this.setState({
 				...this.state,
 				category: response.data.category.name,
-				productList: response.data.category.products,
+				productList: cartProducts,
 			});
 		}
 	};
