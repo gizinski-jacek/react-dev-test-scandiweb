@@ -122,7 +122,7 @@ const SideCart = styled.div`
 const Header = styled.div`
 	display: flex;
 	align-items: center;
-	margin: 1rem;
+	margin: 0 1rem;
 	cursor: initial;
 
 	h4 {
