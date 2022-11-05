@@ -10,7 +10,7 @@ import {
 	Product,
 	WithRouter,
 } from './types/types';
-import ProductCard from './wrappers/ProductCard';
+import PLPProductCard from './wrappers/PLPProductCard';
 import styled from 'styled-components';
 import { RootState } from './app/store';
 import { Routes, Route, Navigate } from 'react-router-dom';
@@ -113,7 +113,7 @@ class App extends Component<Props> {
 						element={
 							<Main>
 								{this.state.productList.map((product, i) => (
-									<ProductCard
+									<PLPProductCard
 										key={i}
 										product={product}
 										selectedCurrency={this.state.currency}
