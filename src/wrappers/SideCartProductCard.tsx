@@ -13,7 +13,7 @@ import { Attribute, AttributeSet, CartProduct, Currency } from '../types/types';
 
 const Item = styled.li`
 	display: flex;
-	margin: 1rem;
+	margin: 2rem 1rem;
 `;
 
 const Details = styled.div`
@@ -223,7 +223,7 @@ class SideCartProductCard extends Component<Props> {
 														) >= 0
 													}
 													bgColor={item.value}
-												></Color>
+												/>
 											);
 										})}
 									</div>
