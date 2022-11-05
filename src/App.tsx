@@ -23,7 +23,7 @@ import withRouter from './HOC/withRouter';
 const Main = styled.main`
 	margin: 2rem 0;
 	display: grid;
-	grid-template-columns: repeat(auto-fit, 300px);
+	grid-template-columns: repeat(auto-fit, 280px);
 	grid-gap: 5rem;
 	justify-content: center;
 `;
