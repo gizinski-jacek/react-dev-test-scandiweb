@@ -1,15 +1,9 @@
 import { Component } from 'react';
-import {
-	CartAttributeSet,
-	CartProduct,
-	Currency,
-	Product,
-} from '../types/types';
+import { CartProduct, Currency } from '../types/types';
 import styled from 'styled-components';
 import { AppDispatch } from '../app/store';
 import { addItem } from '../features/cartSlice';
 import { connect } from 'react-redux';
-import { nanoid } from 'nanoid';
 import { Link } from 'react-router-dom';
 
 const Card = styled(Link)`
@@ -87,32 +81,12 @@ const Details = styled.div`
 `;
 
 interface Props {
-	product: Product;
+	product: CartProduct;
 	selectedCurrency: Currency;
 	addItem: (product: CartProduct) => void;
 }
 
 class PLPProductCard extends Component<Props> {
-	add = (product: Product) => {
-		const defaultAttributes: CartAttributeSet[] = product.attributes.map(
-			(att) => {
-				return {
-					id: att.id,
-					name: att.name,
-					type: att.type,
-					item: att.items[0],
-				};
-			}
-		);
-		const item: CartProduct = {
-			...product,
-			uid: nanoid(),
-			count: 1,
-			selectedAttributes: defaultAttributes,
-		};
-		this.props.addItem(item);
-	};
-
 	render() {
 		const itemPrice = this.props.product.prices.find(
 			(price) => price.currency.label === this.props.selectedCurrency.label
@@ -127,7 +101,7 @@ class PLPProductCard extends Component<Props> {
 				>
 					<Image src={this.props.product.gallery[0]} alt='' />
 					{this.props.product.inStock && (
-						<CartIcon onClick={() => this.add(this.props.product)}>
+						<CartIcon onClick={() => this.props.addItem(this.props.product)}>
 							<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
 								<path
 									fill='#ffffff'
