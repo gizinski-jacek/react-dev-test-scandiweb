@@ -21,9 +21,11 @@ import Navbar from './components/Navbar';
 import withRouter from './HOC/withRouter';
 
 const Main = styled.main`
-	display: flex;
+	margin: 2rem 0;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, 300px);
+	grid-gap: 5rem;
 	justify-content: center;
-	flex-wrap: wrap;
 `;
 
 interface State {
