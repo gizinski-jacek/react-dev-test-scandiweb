@@ -5,6 +5,7 @@ import withRouter from '../HOC/withRouter';
 import Button from '../reusables/Button';
 import { CartProduct, Category, Currency, WithRouter } from '../types/types';
 import SideCartProductCard from '../wrappers/SideCartProductCard';
+import roundToDecimal from '../utils/roundToDecimal';
 
 const Nav = styled.nav`
 	padding: 1rem 4rem;
@@ -243,12 +244,6 @@ class Navbar extends Component<Props> {
 		this.props.changeCurrency(currency);
 	};
 
-	roundNumber(value: number, decimals: number) {
-		return Number(
-			Math.round(Number(value + 'e' + decimals)) + 'e-' + decimals
-		).toFixed(decimals);
-	}
-
 	render() {
 		const search = this.props.withRouter.location.search;
 		const category = new URLSearchParams(search).get('category') || 'all';
@@ -387,7 +382,7 @@ class Navbar extends Component<Props> {
 											<span>Total</span>
 											<span>
 												{this.props.selectedCurrency.symbol}
-												{this.roundNumber(
+												{roundToDecimal(
 													this.props.cart.reduce(
 														(total, item) =>
 															total +
