@@ -49,7 +49,7 @@ const CartIcon = styled.div`
 `;
 
 const Details = styled.div`
-	margin: 0 0.5rem;
+	margin: 1rem 0;
 `;
 
 interface Props {
