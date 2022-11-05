@@ -166,7 +166,7 @@ interface Props {
 	changeItemAttribute: (product: CartProduct) => void;
 }
 
-class CartItemCard extends Component<Props> {
+class SideCartProductCard extends Component<Props> {
 	increment = (e: React.MouseEvent<HTMLDivElement>, item: CartProduct) => {
 		e.stopPropagation();
 		this.props.incrementItem(item);
@@ -277,4 +277,4 @@ function mapDispatchToProps(dispatch: AppDispatch) {
 	};
 }
 
-export default connect(null, mapDispatchToProps)(CartItemCard);
+export default connect(null, mapDispatchToProps)(SideCartProductCard);
