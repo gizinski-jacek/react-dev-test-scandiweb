@@ -25,6 +25,7 @@ const Btn = styled.div.attrs((props: BtnProps) => ({
 	font-weight: 600;
 	text-align: center;
 	text-decoration: none;
+	cursor: pointer;
 `;
 
 class Button extends Component<Props> {
