@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import withRouter from '../HOC/withRouter';
 import Button from '../reusables/Button';
 import { CartProduct, Category, Currency, WithRouter } from '../types/types';
-import CartItemCard from '../wrappers/CartItemCard';
+import SideCartProductCard from '../wrappers/SideCartProductCard';
 
 const Nav = styled.nav`
 	padding: 1rem 4rem;
@@ -66,7 +66,6 @@ const CurrencySelect = styled.div`
 	.currency-item-list {
 		position: absolute;
 		margin-top:1rem;
-		top: 100%;
 		left: 0;
 		overflow: hidden;
 	}
@@ -100,16 +99,15 @@ const SideCart = styled.div`
 	width: 40px;
 	cursor: pointer;
 
-	.side-cart {
-		padding: 1rem;
-		width: 340px;
-		max-width: 340px;
-
+	.side-cart-contents {
+		width: 360px;
+		max-width: 360px;
+		max-height: 75vh;
+		overflow: scroll;
+		cursor: initial;
 		position: absolute;
 		margin-top: 1rem;
-		top: 100%;
 		right: 0;
-		overflow: hidden;
 		display: flex;
 		flex-direction: column;
 		background-color: #ffffff;
@@ -119,16 +117,13 @@ const SideCart = styled.div`
 	.side-cart-item-list {
 		flex: 1;
 	}
-
-	.side-cart-footer {
-		display: flex;
-	}
 `;
 
 const Header = styled.div`
 	display: flex;
 	align-items: center;
-	margin-bottom: 1rem;
+	margin: 1rem;
+	cursor: initial;
 
 	h4 {
 		margin: 0.5rem 0.5rem 0.5rem 0;
@@ -136,10 +131,22 @@ const Header = styled.div`
 	}
 `;
 
+const Footer = styled.div`
+	padding: 1rem;
+	position: sticky;
+	bottom: 0;
+	background-color: #ffffff;
+
+	.side-cart-controls {
+		display: flex;
+		gap: 1rem;
+	}
+`;
+
 const Total = styled.div`
 	display: flex;
 	justify-content: space-between;
-	margin: 2rem 0;
+	margin: 1rem 0;
 	font-size: 1.25rem;
 	font-weight: 600;
 `;
@@ -177,7 +184,6 @@ class Navbar extends Component<Props> {
 
 	toggleSideCartVisibility = (e: React.MouseEvent<HTMLDivElement>) => {
 		e.stopPropagation();
-		console.log(123);
 		this.setState({
 			...this.state,
 			sideCartOpen: !this.state.sideCartOpen,
@@ -198,10 +204,17 @@ class Navbar extends Component<Props> {
 	};
 
 	componentDidUpdate = () => {
-		if (this.state.sideCartOpen || this.state.currencySelectOpen) {
+		if (this.state.currencySelectOpen) {
 			document.body.addEventListener('click', this.outsideRefClick);
 		} else {
 			document.body.removeEventListener('click', this.outsideRefClick);
+		}
+		if (this.state.sideCartOpen) {
+			document.body.addEventListener('click', this.outsideRefClick);
+			document.body.style.overflow = 'hidden';
+		} else {
+			document.body.removeEventListener('click', this.outsideRefClick);
+			document.body.style.removeProperty('overflow');
 		}
 	};
 
@@ -229,6 +242,12 @@ class Navbar extends Component<Props> {
 		});
 		this.props.changeCurrency(currency);
 	};
+
+	roundNumber(value: number, decimals: number) {
+		return Number(
+			Math.round(Number(value + 'e' + decimals)) + 'e-' + decimals
+		).toFixed(decimals);
+	}
 
 	render() {
 		const search = this.props.withRouter.location.search;
@@ -345,7 +364,7 @@ class Navbar extends Component<Props> {
 								</CartItemCount>
 							</div>
 							{this.state.sideCartOpen && (
-								<div className='side-cart'>
+								<div className='side-cart-contents'>
 									<Header>
 										<h4>My Bag</h4>
 										{this.props.cart.reduce(
@@ -356,47 +375,52 @@ class Navbar extends Component<Props> {
 									</Header>
 									<ul className='side-cart-item-list'>
 										{this.props.cart.map((item, i) => (
-											<CartItemCard
+											<SideCartProductCard
 												key={i}
 												item={item}
 												currency={this.props.selectedCurrency}
 											/>
 										))}
 									</ul>
-									<Total>
-										<span>Total</span>
-										<span>
-											{this.props.selectedCurrency.symbol}
-											{this.props.cart.reduce(
-												(total, item) =>
-													total +
-													item.count *
-														item.prices.find(
-															(p) =>
-																p.currency.label ===
-																this.props.selectedCurrency.label
-														)!.amount,
-												0
-											)}
-										</span>
-									</Total>
-									<div className='side-cart-footer'>
-										<Button
-											bgColor='#ffffff'
-											color='#000000'
-											border='#000000'
-											click={this.navigateToCart}
-										>
-											View Bag
-										</Button>
-										<Button
-											bgColor='#00c800'
-											color='#ffffff'
-											click={this.navigateToCart}
-										>
-											Check Out
-										</Button>
-									</div>
+									<Footer>
+										<Total>
+											<span>Total</span>
+											<span>
+												{this.props.selectedCurrency.symbol}
+												{this.roundNumber(
+													this.props.cart.reduce(
+														(total, item) =>
+															total +
+															item.count *
+																item.prices.find(
+																	(p) =>
+																		p.currency.label ===
+																		this.props.selectedCurrency.label
+																)!.amount,
+														0
+													),
+													2
+												)}
+											</span>
+										</Total>
+										<div className='side-cart-controls'>
+											<Button
+												bgColor='#ffffff'
+												color='#000000'
+												border='#000000'
+												click={this.navigateToCart}
+											>
+												View Bag
+											</Button>
+											<Button
+												bgColor='#00c800'
+												color='#ffffff'
+												click={this.navigateToCart}
+											>
+												Check Out
+											</Button>
+										</div>
+									</Footer>
 								</div>
 							)}
 						</SideCart>
