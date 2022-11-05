@@ -58,7 +58,7 @@ interface Props {
 	addItem: (product: CartProduct) => void;
 }
 
-class ProductCard extends Component<Props> {
+class PLPProductCard extends Component<Props> {
 	add = (product: Product) => {
 		const defaultAttributes: CartAttributeSet[] = product.attributes.map(
 			(att) => {
@@ -114,4 +114,4 @@ function mapDispatchToProps(dispatch: AppDispatch) {
 	};
 }
 
-export default connect(null, mapDispatchToProps)(ProductCard);
+export default connect(null, mapDispatchToProps)(PLPProductCard);
