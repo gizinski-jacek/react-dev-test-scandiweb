@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
 import { CartProduct } from '../types/types';
 
 const initialState: CartProduct[] = [];
@@ -8,28 +8,34 @@ export const cartSlice = createSlice({
 	initialState,
 	reducers: {
 		addItem: (state, action: PayloadAction<CartProduct>) => {
-			const itemInCart = state.find((item) => item.id === action.payload.id);
-			const sameAttributes = itemInCart?.selectedAttributes.map(
-				(attribute) =>
-					action.payload.selectedAttributes.find(
-						(att) => att.id === attribute.id
-					)?.item.id === attribute.item.id
+			const sameTypeItemsInCart = state.filter(
+				(item) => item.id === action.payload.id
 			);
-			if (itemInCart && sameAttributes?.every((v) => v)) {
-				itemInCart.count++;
-				const newState = state.map((item) =>
-					item.uid === itemInCart.uid ? itemInCart : item
+			const sameAttributesItem = sameTypeItemsInCart?.find((item) => {
+				const sameAttributes = item.selectedAttributes.map(
+					(attribute) =>
+						action.payload.selectedAttributes.find(
+							(att) => att.id === attribute.id
+						)?.item.id === attribute.item.id
 				);
-				return (state = newState);
+				if (sameAttributes.every((v) => v)) {
+					return item;
+				}
+			});
+			if (sameAttributesItem) {
+				const index = state.findIndex(
+					(item) => item.uid === sameAttributesItem.uid
+				);
+				state[index].count++;
 			} else {
-				state = [...state, action.payload];
+				state.push(action.payload);
 			}
 		},
 		removeItem: (state, action: PayloadAction<CartProduct>) => {
 			const newState = state.filter(
 				(product) => product.uid !== action.payload.uid
 			);
-			return (state = newState);
+			return newState;
 		},
 		incrementItem: (state, action: PayloadAction<CartProduct>) => {
 			const newState = state.map((item) =>
@@ -37,7 +43,7 @@ export const cartSlice = createSlice({
 					? { ...item, count: item.count + 1 }
 					: item
 			);
-			return (state = newState);
+			return newState;
 		},
 		decrementItem: (state, action: PayloadAction<CartProduct>) => {
 			const itemInCart = state.find((item) => item.id === action.payload.id);
@@ -45,21 +51,21 @@ export const cartSlice = createSlice({
 				const newState = state.filter(
 					(product) => product.uid !== action.payload.uid
 				);
-				return (state = newState);
+				return newState;
 			} else {
 				const newState = state.map((item) =>
 					item.uid === action.payload.uid
 						? { ...item, count: item.count - 1 }
 						: item
 				);
-				return (state = newState);
+				return newState;
 			}
 		},
 		changeItemAttribute: (state, action: PayloadAction<CartProduct>) => {
 			const newState = state.map((item) =>
 				item.uid === action.payload.uid ? action.payload : item
 			);
-			return (state = newState);
+			return newState;
 		},
 	},
 });
