@@ -17,6 +17,10 @@ const Btn = styled.button<{
 	text-align: center;
 	text-decoration: none;
 	cursor: pointer;
+
+	&:disabled {
+		opacity: 0.25;
+	}
 `;
 
 interface Props {
@@ -24,13 +28,14 @@ interface Props {
 	border?: string;
 	bgColor?: string;
 	color?: string;
+	disabled?: boolean;
 	onClick: (...any: any) => void;
 }
 
 class Button extends Component<Props> {
 	render() {
 		return (
-			<Btn {...this.props} type='button' onClick={() => this.props.onClick()}>
+			<Btn {...this.props} type='button'>
 				{this.props.children ?? 'Button'}
 			</Btn>
 		);
