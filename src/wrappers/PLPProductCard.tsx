@@ -5,14 +5,16 @@ import { AppDispatch } from '../app/store';
 import { addItem } from '../features/cartSlice';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import Image from '../reusables/Image';
 
-const Card = styled(Link)`
+const Card = styled.div`
 	padding: 1rem;
 	display: flex;
 	flex-direction: column;
 	transition: 0.25s ease-in-out;
 	text-decoration: none;
 	color: #000000;
+	position: relative;
 
 	&:hover {
 		box-shadow: 0 0 1rem 0.25rem #00000040;
@@ -23,35 +25,22 @@ const Card = styled(Link)`
 	}
 `;
 
-const ImageWrapper = styled.div.attrs((props: { inStock: boolean }) => ({
-	inStock: props.inStock ? '' : '',
-}))`
-	max-width: 280px;
-	height: 280px;
-	position: relative;
+const CardLink = styled(Link)`
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	cursor: pointer;
+	z-index: 1;
 
-	&.out-of-stock {
-		img {
-			opacity: 0.25;
-		}
+	&:hover {
+		box-shadow: 0 0 1rem 0.25rem #00000040;
 
-		:before {
-			font-size: 1.5rem;
-			white-space: nowrap;
-			content: 'Out of Stock';
-			text-transform: uppercase;
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
+		div {
+			opacity: 1;
 		}
 	}
-`;
-
-const Image = styled.img`
-	display: block;
-	width: 100%;
-	height: 100%;
 `;
 
 const CartIcon = styled.div`
@@ -66,6 +55,7 @@ const CartIcon = styled.div`
 	background-color: #00c800;
 	transition: 0.25s ease-in-out;
 	cursor: pointer;
+	z-index: 3;
 
 	&:hover {
 		transform: scale(1.25);
@@ -92,14 +82,12 @@ class PLPProductCard extends Component<Props> {
 			(price) => price.currency.label === this.props.selectedCurrency.label
 		);
 		return (
-			<Card
-				key={this.props.product.name}
-				to={`/product/${this.props.product.id}`}
-			>
-				<ImageWrapper
-					className={`${!this.props.product.inStock ? 'out-of-stock' : ''}`}
+			<Card key={this.props.product.name}>
+				<CardLink to={`/product/${this.props.product.id}`} />
+				<Image
+					src={this.props.product.gallery[0]}
+					inStock={this.props.product.inStock}
 				>
-					<Image src={this.props.product.gallery[0]} alt='' />
 					{this.props.product.inStock && (
 						<CartIcon onClick={() => this.props.addItem(this.props.product)}>
 							<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
@@ -111,7 +99,7 @@ class PLPProductCard extends Component<Props> {
 							</svg>
 						</CartIcon>
 					)}
-				</ImageWrapper>
+				</Image>
 				<Details>
 					<h4>
 						{this.props.product.brand} {this.props.product.name}
