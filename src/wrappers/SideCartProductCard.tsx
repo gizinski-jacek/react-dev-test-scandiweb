@@ -1,15 +1,11 @@
-//@ts-nocheck
-
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { AppDispatch } from '../app/store';
-import {
-	changeItemAttribute,
-	decrementItem,
-	incrementItem,
-} from '../features/cartSlice';
-import { Attribute, AttributeSet, CartProduct, Currency } from '../types/types';
+import { decrementItem, incrementItem } from '../features/cartSlice';
+import Image from '../reusables/Image';
+import { CartProduct, Currency } from '../types/types';
+import ProductAttributes from './ProductAttributes';
 
 const Item = styled.li`
 	display: flex;
@@ -77,93 +73,11 @@ const IncBtn = styled(DecBtn)`
 	}
 `;
 
-const Colors = styled.div`
-	div {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 1rem;
-		margin: 0.25rem 0;
-	}
-`;
-
-const Color = styled.div.attrs(
-	(props: { selected: boolean; bgColor: string }) => ({
-		border: props.selected ? '2px solid #64ff00' : '0',
-		bgColor: props.bgColor,
-	})
-)`
-	width: 20px;
-	height: 20px;
-	border: 1px solid #a1a1a1;
-	cursor: pointer;
-	position: relative;
-	background-color: ${(props) => props.bgColor};
-	user-select: none;
-
-	&:before {
-		border: ${(props) => props.border};
-		content: '';
-		display: block;
-		position: absolute;
-		top: -4px;
-		left: -4px;
-		right: -4px;
-		bottom: -4px;
-	}
-`;
-
-const OtherAttributes = styled.div`
-	div {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 1rem;
-		margin: 0.25rem 0;
-	}
-`;
-
-const OtherAtt = styled.div.attrs((props: { selected: boolean }) => ({
-	border: props.selected ? '2px solid #64ff00' : '0',
-}))`
-	display: block;
-	min-width: 40px;
-	text-align: center;
-	padding: 0.25rem;
-	border: 1px solid #000000;
-	cursor: pointer;
-	position: relative;
-	user-select: none;
-
-	&:before {
-		border: ${(props) => props.border};
-		content: '';
-		display: block;
-		position: absolute;
-		top: -4px;
-		left: -4px;
-		right: -4px;
-		bottom: -4px;
-	}
-`;
-
-const ImageWrapper = styled.div`
-	position: relative;
-	width: 120px;
-	height: 160px;
-	user-select: none;
-`;
-
-const Image = styled.img`
-	display: block;
-	width: 100%;
-	height: 100%;
-`;
-
 interface Props {
 	item: CartProduct;
 	currency: Currency;
 	incrementItem: (product: CartProduct) => void;
 	decrementItem: (product: CartProduct) => void;
-	changeItemAttribute: (product: CartProduct) => void;
 }
 
 class SideCartProductCard extends Component<Props> {
@@ -175,22 +89,6 @@ class SideCartProductCard extends Component<Props> {
 	decrement = (e: React.MouseEvent<HTMLDivElement>, item: CartProduct) => {
 		e.stopPropagation();
 		this.props.decrementItem(item);
-	};
-
-	changeAttribute = (
-		e: React.MouseEvent<HTMLDivElement>,
-		attribute: AttributeSet,
-		attributeItem: Attribute
-	) => {
-		e.stopPropagation();
-		const updatedAttribute = this.props.item.selectedAttributes.map((att) =>
-			att.id === attribute.id ? { ...attribute, item: attributeItem } : att
-		);
-		const updatedItem = {
-			...this.props.item,
-			selectedAttributes: updatedAttribute,
-		};
-		this.props.changeItemAttribute(updatedItem);
 	};
 
 	render() {
@@ -206,63 +104,18 @@ class SideCartProductCard extends Component<Props> {
 						{price?.currency.symbol}
 						{price?.amount}
 					</span>
-					{this.props.item.attributes?.map((att) => {
-						if (att.id.toLowerCase() === 'color') {
-							return (
-								<Colors key={att.type}>
-									<span>{att.name}</span>
-									<div>
-										{att.items.map((item) => {
-											return (
-												<Color
-													key={item.value}
-													onClick={(e) => this.changeAttribute(e, att, item)}
-													selected={
-														this.props.item.selectedAttributes.findIndex(
-															(a) => a.item.id === item.id
-														) >= 0
-													}
-													bgColor={item.value}
-												/>
-											);
-										})}
-									</div>
-								</Colors>
-							);
-						} else {
-							return (
-								<OtherAttributes key={att.type}>
-									<span>{att.name}</span>
-									<div>
-										{att.items.map((item) => {
-											return (
-												<OtherAtt
-													key={item.value}
-													onClick={(e) => this.changeAttribute(e, att, item)}
-													selected={
-														this.props.item.selectedAttributes.findIndex(
-															(a) => a.item.id === item.id
-														) >= 0
-													}
-												>
-													{item.value}
-												</OtherAtt>
-											);
-										})}
-									</div>
-								</OtherAttributes>
-							);
-						}
-					})}
+					<ProductAttributes product={this.props.item} />
 				</Details>
 				<ItemCounter>
 					<IncBtn onClick={(e) => this.increment(e, this.props.item)}></IncBtn>
 					<span>{this.props.item.count}</span>
 					<DecBtn onClick={(e) => this.decrement(e, this.props.item)}></DecBtn>
 				</ItemCounter>
-				<ImageWrapper>
-					<Image src={this.props.item.gallery[0]} />
-				</ImageWrapper>
+				<Image
+					src={this.props.item.gallery[0]}
+					mWidth={'120px'}
+					height={'160px'}
+				/>
 			</Item>
 		);
 	}
@@ -272,8 +125,6 @@ function mapDispatchToProps(dispatch: AppDispatch) {
 	return {
 		incrementItem: (product: CartProduct) => dispatch(incrementItem(product)),
 		decrementItem: (product: CartProduct) => dispatch(decrementItem(product)),
-		changeItemAttribute: (product: CartProduct) =>
-			dispatch(changeItemAttribute(product)),
 	};
 }
 
