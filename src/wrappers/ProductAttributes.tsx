@@ -1,15 +1,12 @@
 import { Component } from 'react';
-import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { AppDispatch } from '../app/store';
-import { changeItemAttribute } from '../features/cartSlice';
-import { Attribute, AttributeSet, CartProduct } from '../types/types';
+import { CartProduct } from '../types/types';
 
 const Colors = styled.div`
 	div {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 1rem;
+		gap: 0.25rem 1rem;
 		margin: 0.25rem 0;
 	}
 `;
@@ -39,7 +36,7 @@ const OtherAttributes = styled.div`
 	div {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 1rem;
+		gap: 0.25rem 1rem;
 		margin: 0.25rem 0;
 	}
 `;
@@ -68,26 +65,10 @@ const OtherAtt = styled.div<{ selected: boolean }>`
 
 interface Props {
 	product: CartProduct;
-	changeItemAttribute: (product: CartProduct) => void;
+	onClick?: (...any: any) => void;
 }
 
 class ProductAttributes extends Component<Props> {
-	changeAttribute = (
-		e: React.MouseEvent<HTMLDivElement>,
-		attribute: AttributeSet,
-		attributeItem: Attribute
-	) => {
-		e.stopPropagation();
-		const updatedAttribute = this.props.product.selectedAttributes.map((att) =>
-			att.id === attribute.id ? { ...attribute, item: attributeItem } : att
-		);
-		const updatedItem = {
-			...this.props.product,
-			selectedAttributes: updatedAttribute,
-		};
-		this.props.changeItemAttribute(updatedItem);
-	};
-
 	render() {
 		return (
 			<div>
@@ -95,13 +76,17 @@ class ProductAttributes extends Component<Props> {
 					if (att.id.toLowerCase() === 'color') {
 						return (
 							<Colors key={att.type}>
-								<span>{att.name}</span>
+								<span>{att.name}:</span>
 								<div>
 									{att.items.map((item) => {
 										return (
 											<Color
 												key={item.value}
-												onClick={(e) => this.changeAttribute(e, att, item)}
+												onClick={(e) =>
+													this.props.onClick
+														? this.props.onClick(e, att, item)
+														: null
+												}
 												bgColor={item.value}
 												selected={
 													this.props.product.selectedAttributes.findIndex(
@@ -117,13 +102,17 @@ class ProductAttributes extends Component<Props> {
 					} else {
 						return (
 							<OtherAttributes key={att.type}>
-								<span>{att.name}</span>
+								<span>{att.name}:</span>
 								<div>
 									{att.items.map((item) => {
 										return (
 											<OtherAtt
 												key={item.value}
-												onClick={(e) => this.changeAttribute(e, att, item)}
+												onClick={(e) =>
+													this.props.onClick
+														? this.props.onClick(e, att, item)
+														: null
+												}
 												selected={
 													this.props.product.selectedAttributes.findIndex(
 														(a) => a.item.id === item.id
@@ -144,11 +133,4 @@ class ProductAttributes extends Component<Props> {
 	}
 }
 
-function mapDispatchToProps(dispatch: AppDispatch) {
-	return {
-		changeItemAttribute: (product: CartProduct) =>
-			dispatch(changeItemAttribute(product)),
-	};
-}
-
-export default connect(null, mapDispatchToProps)(ProductAttributes);
+export default ProductAttributes;
