@@ -1,5 +1,5 @@
 import { Component, createRef } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import withRouter from '../HOC/withRouter';
 import Button from '../reusables/Button';
@@ -27,17 +27,19 @@ const Blur = styled.div`
 	flex: 1;
 `;
 
-const CategoryLink = styled(Link)`
+const CategoryLink = styled(NavLink)<{ active: string }>`
 	display: inline-block;
 	padding: 1rem;
 	text-transform: uppercase;
 	text-decoration: none;
 	color: #000000;
 
-	&.active {
+	${({ active }) =>
+		active === 'true' &&
+		`
 		border-bottom: 2px solid #00c800;
 		color: #00c800;
-	}
+  `}
 `;
 
 const Logo = styled.div`
@@ -73,13 +75,9 @@ const CurrencySelect = styled.div`
 
 `;
 
-const CurrencyItem = styled.div`
+const CurrencyItem = styled.div<{ selected: boolean }>`
 	padding: 1rem;
-	background-color: #ffffff;
-
-	&.selected {
-		background-color: #c7c7c7;
-	}
+	background-color: ${({ selected }) => (selected ? '#c7c7c7' : '#ffffff')};
 `;
 
 const CartItemCount = styled.div`
@@ -246,7 +244,7 @@ class Navbar extends Component<Props> {
 
 	render() {
 		const search = this.props.withRouter.location.search;
-		const category = new URLSearchParams(search).get('category') || 'all';
+		const category = new URLSearchParams(search).get('category');
 		return (
 			<>
 				{this.state.sideCartOpen && <Blur />}
@@ -256,10 +254,8 @@ class Navbar extends Component<Props> {
 							return (
 								<CategoryLink
 									key={c.name}
-									to={`/catalog${
-										c.name !== 'all' ? `?category=${c.name}` : ''
-									}`}
-									className={`${c.name === category ? 'active' : ''}`}
+									to={`/catalog${`?category=${c.name}`}`}
+									active={(category === c.name).toString()}
 								>
 									{c.name}
 								</CategoryLink>
@@ -330,11 +326,9 @@ class Navbar extends Component<Props> {
 										<CurrencyItem
 											key={currency.label}
 											onClick={(e) => this.changeCurrency(e, currency)}
-											className={`${
+											selected={
 												currency.label === this.props.selectedCurrency.label
-													? 'selected'
-													: ''
-											}`}
+											}
 										>
 											{currency.label}
 											{currency.symbol}
