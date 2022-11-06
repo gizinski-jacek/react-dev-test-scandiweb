@@ -20,7 +20,7 @@ export const cartSlice = createSlice({
 				);
 				if (sameAttributes.every((v) => v)) {
 					return item;
-				}
+				} else return null;
 			});
 			if (sameAttributesItem) {
 				const index = state.findIndex(
