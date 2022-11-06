@@ -367,7 +367,7 @@ class Navbar extends Component<Props> {
 											<SideCartProductCard
 												key={i}
 												item={item}
-												currency={this.props.selectedCurrency}
+												selectedCurrency={this.props.selectedCurrency}
 											/>
 										))}
 									</ul>
