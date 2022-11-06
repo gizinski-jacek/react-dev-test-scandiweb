@@ -87,6 +87,8 @@ class PLPProductCard extends Component<Props> {
 				<Image
 					src={this.props.product.gallery[0]}
 					inStock={this.props.product.inStock}
+					mWidth={'280px'}
+					height={'280px'}
 				>
 					{this.props.product.inStock && (
 						<CartIcon onClick={() => this.props.addItem(this.props.product)}>
