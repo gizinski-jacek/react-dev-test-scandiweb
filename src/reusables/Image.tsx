@@ -3,15 +3,19 @@ import styled from 'styled-components';
 
 const ImgWrapper = styled.div<{
 	mWidth?: string;
+	width?: string;
 	height?: string;
 	inStock?: boolean;
+	cursor?: any;
 }>`
-	max-width: ${({ mWidth }) => mWidth || '280px'};
-	height: ${({ height }) => height || '280px'};
+	max-width: ${({ mWidth }) => mWidth || 'auto'};
+	width: ${({ width }) => width || 'auto'};
+	height: ${({ height }) => height || 'auto'};
+	cursor: ${({ cursor }) => cursor === 'true' && 'pointer'};
 	position: relative;
 
 	${({ inStock }) =>
-		!inStock &&
+		inStock === false &&
 		`
     img {
 			opacity: 0.25;
@@ -41,7 +45,9 @@ interface Props {
 	src: string;
 	inStock?: boolean;
 	mWidth?: string;
+	width?: string;
 	height?: string;
+	cursor?: string;
 	onClick?: (...any: any) => void;
 }
 
