@@ -20,6 +20,12 @@ const Details = styled.div`
 	span {
 		margin-bottom: 0.5rem;
 	}
+
+	h5 {
+		margin: 0;
+		margin-bottom: 0.5rem;
+		font-weight: 600;
+	}
 `;
 
 const ItemCounter = styled.div`
@@ -75,7 +81,7 @@ const IncBtn = styled(DecBtn)`
 
 interface Props {
 	item: CartProduct;
-	currency: Currency;
+	selectedCurrency: Currency;
 	incrementItem: (product: CartProduct) => void;
 	decrementItem: (product: CartProduct) => void;
 }
@@ -93,17 +99,17 @@ class SideCartProductCard extends Component<Props> {
 
 	render() {
 		const price = this.props.item.prices.find(
-			(p) => p.currency.label === this.props.currency.label
+			(p) => p.currency.label === this.props.selectedCurrency.label
 		);
 		return (
 			<Item>
 				<Details>
 					<span>{this.props.item.brand}</span>
 					<span>{this.props.item.name}</span>
-					<span style={{ fontWeight: '600' }}>
+					<h5>
 						{price?.currency.symbol}
 						{price?.amount}
-					</span>
+					</h5>
 					<ProductAttributes product={this.props.item} />
 				</Details>
 				<ItemCounter>
