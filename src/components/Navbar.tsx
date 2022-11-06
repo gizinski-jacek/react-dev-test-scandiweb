@@ -397,14 +397,14 @@ class Navbar extends Component<Props> {
 												bgColor='#ffffff'
 												color='#000000'
 												border='#000000'
-												click={this.navigateToCart}
+												onClick={this.navigateToCart}
 											>
 												View Bag
 											</Button>
 											<Button
 												bgColor='#00c800'
 												color='#ffffff'
-												click={this.navigateToCart}
+												onClick={this.navigateToCart}
 											>
 												Check Out
 											</Button>
