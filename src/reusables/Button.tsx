@@ -1,24 +1,15 @@
 import { Component } from 'react';
 import styled from 'styled-components';
 
-interface BtnProps {
+const Btn = styled.button<{
 	border?: string;
 	bgColor?: string;
 	color?: string;
-	click: () => void;
-}
-interface Props extends BtnProps {
-	children: string;
-}
-
-const Btn = styled.div.attrs((props: BtnProps) => ({
-	border: props.border ? `1px solid ${props.border}` : 'none',
-	bgColor: props.bgColor || '#000000',
-	color: props.color || '#ffffff',
-}))`
-	border: ${(props) => props.border};
-	color: ${(props) => props.color};
-	background-color: ${(props) => props.bgColor};
+}>`
+	display: block;
+	border: ${({ border }) => (border ? `1px solid ${border}` : 'none')};
+	color: ${({ color }) => color || '#ffffff'};
+	background-color: ${({ bgColor }) => bgColor || '#000000'};
 	padding: 0.5rem;
 	font-size: 1.1rem;
 	flex: 1;
@@ -28,10 +19,18 @@ const Btn = styled.div.attrs((props: BtnProps) => ({
 	cursor: pointer;
 `;
 
+interface Props {
+	children?: string;
+	border?: string;
+	bgColor?: string;
+	color?: string;
+	onClick: (...any: any) => void;
+}
+
 class Button extends Component<Props> {
 	render() {
 		return (
-			<Btn {...this.props} onClick={() => this.props.click()}>
+			<Btn {...this.props} type='button' onClick={() => this.props.onClick()}>
 				{this.props.children ?? 'Button'}
 			</Btn>
 		);
