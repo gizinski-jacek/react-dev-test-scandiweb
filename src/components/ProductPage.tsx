@@ -9,42 +9,16 @@ import withRouter from '../HOC/withRouter';
 import Button from '../reusables/Button';
 import { CartProduct, Currency, WithRouter } from '../types/types';
 import productToCartProduct from '../utils/productToCartProduct';
+import Image from '../reusables/Image';
+import ProductAttributes from '../wrappers/ProductAttributes';
 
 const Product = styled.div`
 	display: flex;
 `;
 
-const Gallery = styled.div``;
-
-const ImageWrapper = styled.div.attrs((props: { inStock: boolean }) => ({
-	inStock: props.inStock ? '' : '',
-}))`
-	max-width: 280px;
-	height: 280px;
-	position: relative;
-
-	&.out-of-stock {
-		img {
-			opacity: 0.25;
-		}
-
-		:before {
-			font-size: 1.5rem;
-			white-space: nowrap;
-			content: 'Out of Stock';
-			text-transform: uppercase;
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-		}
-	}
-`;
-
-const Image = styled.img`
-	display: block;
-	width: 100%;
-	height: 100%;
+const Gallery = styled.div`
+	display: flex;
+	flex-direction: column;
 `;
 
 const Info = styled.div``;
@@ -55,8 +29,13 @@ interface Props {
 	addItem: (product: CartProduct) => void;
 }
 
+interface State {
+	product: CartProduct | undefined;
+	activeImage: string;
+}
+
 class ProductPage extends Component<Props> {
-	state: CartProduct = {} as CartProduct;
+	state: State = { product: undefined, activeImage: '' };
 
 	componentDidMount = async () => {
 		const { id } = this.props.withRouter.params;
@@ -65,18 +44,47 @@ class ProductPage extends Component<Props> {
 			variables: { id: id },
 		});
 		const cartProduct = productToCartProduct(response.data.product);
-		this.setState(cartProduct);
+		this.setState({
+			...this.state,
+			product: cartProduct,
+			activeImage: cartProduct.gallery[0],
+		});
+	};
+
+	changeImage = (index: number) => {
+		if (!this.state.product) return;
+		this.setState({
+			...this.state,
+			activeImage: this.state.product?.gallery[index],
+		});
 	};
 
 	render() {
 		return (
-			this.state && (
+			this.state.product && (
 				<Product>
-					<Gallery></Gallery>
-					<ImageWrapper>
-						<Image></Image>
-					</ImageWrapper>
-					<Info></Info>
+					<Gallery>
+						{this.state.product.gallery.map((img, i) => (
+							<Image
+								key={i}
+								src={img}
+								mWidth={'80px'}
+								height={'80px'}
+								onClick={() => this.changeImage(i)}
+							/>
+						))}
+					</Gallery>
+					<Image
+						src={this.state.activeImage}
+						mWidth={'280px'}
+						height={'280px'}
+					/>
+					<Info>
+						{this.state.product.brand}
+						{this.state.product.name}
+						<ProductAttributes product={this.state.product} />
+						<Button onClick={this.props.addItem}>Add to Cart</Button>
+					</Info>
 				</Product>
 			)
 		);
