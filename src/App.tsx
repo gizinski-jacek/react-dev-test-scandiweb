@@ -41,7 +41,7 @@ interface State {
 	category: string;
 	categoryList: Category[];
 	productList: CartProduct[];
-	currency: Currency;
+	selectedCurrency: Currency;
 	currencyList: Currency[];
 	cart: CartProduct[];
 }
@@ -67,7 +67,7 @@ class App extends Component<Props> {
 			) || 'all',
 		categoryList: [],
 		productList: [],
-		currency: { label: 'USD', symbol: '$' },
+		selectedCurrency: { label: 'USD', symbol: '$' },
 		currencyList: [],
 		cart: this.props.cart,
 	};
@@ -110,44 +110,50 @@ class App extends Component<Props> {
 	};
 
 	changeCurrency = (currency: Currency) => {
-		this.setState({ ...this.state, currency: currency });
+		this.setState({ ...this.state, selectedCurrency: currency });
 	};
 
 	render() {
 		const search = this.props.withRouter.location.search;
-		const category =
-			new URLSearchParams(search).get('category') || 'all products';
+		const category = new URLSearchParams(search).get('category');
 		return (
 			<>
 				<Navbar
 					categoryList={this.state.categoryList}
 					changeCurrency={this.changeCurrency}
 					currencyList={this.state.currencyList}
-					selectedCurrency={this.state.currency}
+					selectedCurrency={this.state.selectedCurrency}
 					cart={this.props.cart}
 				/>
-				<Routes>
-					<Route path='/' element={<Navigate to='/catalog' />} />
-					<Route
-						path='/catalog'
-						element={
-							<Main>
-								<h3>{category}</h3>
-								<div className='plp-grid'>
-									{this.state.productList.map((product, i) => (
-										<PLPProductCard
-											key={i}
-											product={product}
-											selectedCurrency={this.state.currency}
-										/>
-									))}
-								</div>
-							</Main>
-						}
-					/>
-					<Route path='/product/:id' element={<ProductPage />}></Route>
-					<Route path='/cart' element={<CartPage />}></Route>
-				</Routes>
+				<Main>
+					<Routes>
+						<Route
+							path='/catalog'
+							element={
+								<>
+									<h3>{category === 'all' ? 'all products' : category}</h3>
+									<div className='plp-grid'>
+										{this.state.productList.map((product, i) => (
+											<PLPProductCard
+												key={i}
+												product={product}
+												selectedCurrency={this.state.selectedCurrency}
+											/>
+										))}
+									</div>
+								</>
+							}
+						/>
+						<Route
+							path='/product/:id'
+							element={
+								<ProductPage selectedCurrency={this.state.selectedCurrency} />
+							}
+						></Route>
+						<Route path='/cart' element={<CartPage />}></Route>
+						<Route path='/*' element={<Navigate to='/catalog' />} />
+					</Routes>
+				</Main>
 			</>
 		);
 	}
