@@ -14,16 +14,16 @@ import PLPProductCard from '../wrappers/PLPProductCard';
 
 const Catalog = styled.div`
 	h3 {
-		margin: 2rem 8rem;
+		margin: 3rem;
 		text-transform: uppercase;
 	}
+`;
 
-	.plp-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, 280px);
-		grid-gap: 4rem;
-		justify-content: center;
-	}
+const Grid = styled.div`
+	display: grid;
+	grid-template-columns: repeat(auto-fit, 280px);
+	grid-gap: 4rem;
+	justify-content: center;
 `;
 
 interface Props {
@@ -95,7 +95,7 @@ class CatalogPage extends Component<Props> {
 		return (
 			<Catalog>
 				<h3>{category === 'all' ? 'all products' : category}</h3>
-				<div className='plp-grid'>
+				<Grid>
 					{this.state.productList.map((product, i) => (
 						<PLPProductCard
 							key={i}
@@ -103,7 +103,7 @@ class CatalogPage extends Component<Props> {
 							selectedCurrency={this.props.selectedCurrency}
 						/>
 					))}
-				</div>
+				</Grid>
 			</Catalog>
 		);
 	}
