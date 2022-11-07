@@ -2,17 +2,14 @@ import { Component, createRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import withRouter from '../HOC/withRouter';
-import Button from '../reusables/Button';
-import { CartProduct, Category, Currency, WithRouter } from '../types/types';
-import SideCartProductCard from '../wrappers/SideCartProductCard';
-import roundToDecimal from '../utils/roundToDecimal';
+import { Category, Currency, WithRouter } from '../types/types';
+import SideCart from './SideCart';
 
 const Nav = styled.nav`
 	padding: 1rem 4rem;
 	height: 5rem;
 	display: flex;
 	justify-content: space-between;
-	flex-wrap: wrap;
 	position: relative;
 `;
 
@@ -27,11 +24,16 @@ const Blur = styled.div`
 	flex: 1;
 `;
 
+const CategoryList = styled.div`
+	display: flex;
+`;
+
 const CategoryLink = styled(NavLink)<{ active: string }>`
 	display: inline-block;
 	padding: 1rem;
 	text-transform: uppercase;
 	text-decoration: none;
+	flex-wrap: nowrap;
 	color: #000000;
 
 	${({ active }) =>
@@ -45,15 +47,15 @@ const CategoryLink = styled(NavLink)<{ active: string }>`
 const Logo = styled.div`
 	width: 40px;
 	height: 40px;
+	min-width: 40px;
+	min-height: 40px;
 	fill: #ffffff;
+	margin: 0 1rem;
 `;
 
 const NavControls = styled.div`
 	display: flex;
-
-	> div {
-		margin-left: 1rem;
-	}
+	gap: 1rem;
 `;
 
 const CurrencySelect = styled.div`
@@ -61,93 +63,31 @@ const CurrencySelect = styled.div`
 	cursor: pointer;
 	}
 
+	h3 {
+		min-width: 28px;
+		text-align: end;
+	}
+
 	.currency-icon {
-		display:flex;
-		align-items:center;
+		display: flex;
+		align-items: center;
 	}
 
 	.currency-item-list {
 		position: absolute;
-		margin-top:1rem;
 		left: 0;
-		overflow: hidden;
+		box-shadow: 0 0 0.5rem 0 #dadada;
 	}
-
 `;
 
 const CurrencyItem = styled.div<{ selected: boolean }>`
-	padding: 1rem;
-	background-color: ${({ selected }) => (selected ? '#c7c7c7' : '#ffffff')};
-`;
+	padding: 0.75rem 1.25rem;
+	white-space: nowrap;
+	background-color: ${({ selected }) => (selected ? '#dadada' : '#ffffff')};
 
-const CartItemCount = styled.div`
-	position: absolute;
-	top: 0;
-	right: 0;
-	width: 20px;
-	height: 20px;
-	padding: 2px;
-	text-align: center;
-	color: #ffffff;
-	background-color: #000000;
-	border-radius: 50%;
-`;
-
-const SideCart = styled.div`
-	position: relative;
-	width: 40px;
-	cursor: pointer;
-
-	.side-cart-contents {
-		width: 360px;
-		max-width: 360px;
-		max-height: 75vh;
-		overflow: scroll;
-		cursor: initial;
-		position: absolute;
-		margin-top: 1rem;
-		right: 0;
-		display: flex;
-		flex-direction: column;
-		background-color: #ffffff;
-		z-index: 10;
+	&:hover {
+		filter: brightness(95%);
 	}
-
-	.side-cart-item-list {
-		flex: 1;
-	}
-`;
-
-const Header = styled.div`
-	display: flex;
-	align-items: center;
-	margin: 0 1rem;
-	cursor: initial;
-
-	h4 {
-		margin: 0.5rem 0.5rem 0.5rem 0;
-		font-weight: 600;
-	}
-`;
-
-const Footer = styled.div`
-	padding: 1rem;
-	position: sticky;
-	bottom: 0;
-	background-color: #ffffff;
-
-	.side-cart-controls {
-		display: flex;
-		gap: 1rem;
-	}
-`;
-
-const Total = styled.div`
-	display: flex;
-	justify-content: space-between;
-	margin: 1rem 0;
-	font-size: 1.25rem;
-	font-weight: 600;
 `;
 
 interface State {
@@ -162,7 +102,6 @@ interface Props {
 	changeCurrency: (currency: Currency) => void;
 	currencyList: Currency[];
 	selectedCurrency: Currency;
-	cart: CartProduct[];
 }
 
 class Navbar extends Component<Props> {
@@ -221,15 +160,6 @@ class Navbar extends Component<Props> {
 		document.body.removeEventListener('click', this.outsideRefClick);
 	};
 
-	navigateToCart = () => {
-		this.setState({
-			...this.state,
-			currencySelectOpen: false,
-			sideCartOpen: false,
-		});
-		this.props.withRouter.navigate('/cart');
-	};
-
 	changeCurrency = (
 		e: React.MouseEvent<HTMLDivElement>,
 		currency: Currency
@@ -249,7 +179,7 @@ class Navbar extends Component<Props> {
 			<>
 				{this.state.sideCartOpen && <Blur />}
 				<Nav>
-					<div>
+					<CategoryList>
 						{this.props.categoryList.map((c) => {
 							return (
 								<CategoryLink
@@ -261,7 +191,7 @@ class Navbar extends Component<Props> {
 								</CategoryLink>
 							);
 						})}
-					</div>
+					</CategoryList>
 					<Logo>
 						<svg
 							xmlns='http://www.w3.org/2000/svg'
@@ -330,89 +260,16 @@ class Navbar extends Component<Props> {
 												currency.label === this.props.selectedCurrency.label
 											}
 										>
-											{currency.label}
-											{currency.symbol}
+											{currency.symbol} {currency.label}
 										</CurrencyItem>
 									))}
 							</div>
 						</CurrencySelect>
-						<SideCart>
-							<div onClick={(e) => this.toggleSideCartVisibility(e)}>
-								<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
-									<path
-										fill='#000000'
-										d='M351.9 329.506H206.81l-3.072-12.56H368.16l26.63-116.019-217.23-26.04-9.952-58.09h-50.4v21.946h31.894l35.233 191.246a32.927 32.927 0 1 0 36.363 21.462h100.244a32.825 32.825 0 1 0 30.957-21.945zM181.427 197.45l186.51 22.358-17.258 75.195H198.917z'
-										data-name='Shopping Cart'
-									/>
-								</svg>
-								<CartItemCount>
-									{this.props.cart.reduce(
-										(total, item) => total + item.count,
-										0
-									)}
-								</CartItemCount>
-							</div>
-							{this.state.sideCartOpen && (
-								<div className='side-cart-contents'>
-									<Header>
-										<h4>My Bag</h4>
-										{this.props.cart.reduce(
-											(total, item) => total + item.count,
-											0
-										)}{' '}
-										items
-									</Header>
-									<ul className='side-cart-item-list'>
-										{this.props.cart.map((item, i) => (
-											<SideCartProductCard
-												key={i}
-												item={item}
-												selectedCurrency={this.props.selectedCurrency}
-											/>
-										))}
-									</ul>
-									<Footer>
-										<Total>
-											<span>Total</span>
-											<span>
-												{this.props.selectedCurrency.symbol}
-												{roundToDecimal(
-													this.props.cart.reduce(
-														(total, item) =>
-															total +
-															item.count *
-																item.prices.find(
-																	(p) =>
-																		p.currency.label ===
-																		this.props.selectedCurrency.label
-																)!.amount,
-														0
-													),
-													2
-												)}
-											</span>
-										</Total>
-										<div className='side-cart-controls'>
-											<Button
-												bgColor='#ffffff'
-												color='#000000'
-												border='#000000'
-												onClick={this.navigateToCart}
-											>
-												View Bag
-											</Button>
-											<Button
-												bgColor='#00c800'
-												color='#ffffff'
-												onClick={this.navigateToCart}
-											>
-												Check Out
-											</Button>
-										</div>
-									</Footer>
-								</div>
-							)}
-						</SideCart>
+						<SideCart
+							open={this.state.sideCartOpen}
+							toggle={this.toggleSideCartVisibility}
+							selectedCurrency={this.props.selectedCurrency}
+						/>
 					</NavControls>
 				</Nav>
 			</>
