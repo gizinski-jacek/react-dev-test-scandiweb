@@ -9,7 +9,7 @@ import ProductAttributes from './ProductAttributes';
 
 const Item = styled.li`
 	display: flex;
-	margin: 2rem 1rem;
+	margin: 1rem;
 `;
 
 const Details = styled.div`
@@ -119,7 +119,7 @@ class SideCartProductCard extends Component<Props> {
 				</ItemCounter>
 				<Image
 					src={this.props.item.gallery[0]}
-					mWidth={'120px'}
+					width={'120px'}
 					height={'160px'}
 				/>
 			</Item>
