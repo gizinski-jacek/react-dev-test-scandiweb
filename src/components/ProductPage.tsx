@@ -1,8 +1,6 @@
-import { gql } from '@apollo/client';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { client } from '..';
 import { AppDispatch } from '../app/store';
 import { addItem, changeItemAttribute } from '../features/cartSlice';
 import withRouter from '../HOC/withRouter';
@@ -12,15 +10,20 @@ import {
 	AttributeSet,
 	CartProduct,
 	Currency,
+	GQLProductData,
 	WithRouter,
 } from '../types/types';
 import productToCartProduct from '../utils/productToCartProduct';
 import Image from '../reusables/Image';
 import ProductAttributes from '../wrappers/ProductAttributes';
+import { GET_PRODUCT_DETAILS } from '../apollo/queries';
+import { client } from '../apollo/client';
+import parse from 'html-react-parser';
 
 const Product = styled.div`
 	display: flex;
 	justify-content: space-evenly;
+	gap: 2rem;
 `;
 
 const Gallery = styled.div`
@@ -37,14 +40,30 @@ const Gallery = styled.div`
 `;
 
 const Info = styled.div`
-	> * {
-		margin: 1rem;
-	}
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+	width: 280px;
 
 	span {
 		display: block;
 		font-weight: 600;
 	}
+`;
+
+const Name = styled.div`
+	h4 {
+		margin: 0;
+		margin-bottom: 0.5rem;
+
+		&:first-child {
+			font-weight: 600;
+		}
+	}
+`;
+
+const Price = styled.div`
+	font-weight: 600;
 `;
 
 interface Props {
@@ -63,17 +82,21 @@ class ProductPage extends Component<Props> {
 	state: State = { product: undefined, activeImage: '' };
 
 	componentDidMount = async () => {
-		const { id } = this.props.withRouter.params;
-		const response = await client.query({
-			query: GET_PRODUCT_DETAILS,
-			variables: { id: id },
-		});
-		const cartProduct = productToCartProduct(response.data.product);
-		this.setState({
-			...this.state,
-			product: cartProduct,
-			activeImage: cartProduct.gallery[0],
-		});
+		try {
+			const { id } = this.props.withRouter.params;
+			const response: GQLProductData = await client.query({
+				query: GET_PRODUCT_DETAILS,
+				variables: { id: id },
+			});
+			const cartProduct = productToCartProduct(response.data.product);
+			this.setState({
+				...this.state,
+				product: cartProduct,
+				activeImage: cartProduct.gallery[0],
+			});
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	changeImage = (index: number) => {
@@ -91,8 +114,9 @@ class ProductPage extends Component<Props> {
 	) => {
 		e.stopPropagation();
 		if (!this.state.product) return;
+		const { items, ...otherKeys } = attribute;
 		const updatedAttribute = this.state.product.selectedAttributes.map((att) =>
-			att.id === attribute.id ? { ...attribute, item: attributeItem } : att
+			att.id === attribute.id ? { ...otherKeys, item: attributeItem } : att
 		);
 		const updatedItem = {
 			...this.state.product,
@@ -128,65 +152,40 @@ class ProductPage extends Component<Props> {
 						</div>
 						<Image
 							src={this.state.activeImage}
-							width={'600px'}
+							maxWidth={'600px'}
 							height={'600px'}
 						/>
 					</Gallery>
 					<Info>
-						<h4 style={{ fontWeight: '600' }}>{this.state.product.brand}</h4>
-						<h4>{this.state.product.name}</h4>
+						<Name>
+							<h4>{this.state.product.brand}</h4>
+							<h4>{this.state.product.name}</h4>
+						</Name>
 						<ProductAttributes
 							product={this.state.product}
 							onClick={this.changeAttribute}
 						/>
-						<span>Price:</span>
-						<h4 style={{ fontWeight: '600' }}>
-							{itemPrice?.currency.symbol}
-							{itemPrice?.amount}
-						</h4>
+						<Price>
+							<span>Price:</span>
+							<h4>
+								{itemPrice?.currency.symbol}
+								{itemPrice?.amount}
+							</h4>
+						</Price>
 						<Button
 							disabled={!this.state.product.inStock}
 							onClick={this.addToCart}
 						>
-							Add to Cart
+							{this.state.product.inStock ? 'Add to Cart' : 'Out of Stock'}
 						</Button>
+						{this.state.product.description &&
+							parse(this.state.product.description)}
 					</Info>
 				</Product>
 			)
 		);
 	}
 }
-
-const GET_PRODUCT_DETAILS = gql`
-	query Product($id: String!) {
-		product(id: $id) {
-			id
-			name
-			inStock
-			gallery
-			description
-			category
-			attributes {
-				id
-				name
-				type
-				items {
-					displayValue
-					value
-					id
-				}
-			}
-			prices {
-				currency {
-					label
-					symbol
-				}
-				amount
-			}
-			brand
-		}
-	}
-`;
 
 function mapDispatchToProps(dispatch: AppDispatch) {
 	return {
