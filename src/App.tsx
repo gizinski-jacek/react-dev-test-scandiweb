@@ -1,111 +1,39 @@
 import { Component } from 'react';
-import { connect } from 'react-redux';
 import './App.css';
-import { client } from '.';
-import { gql } from '@apollo/client';
-import {
-	CartProduct,
-	Category,
-	Currency,
-	Product,
-	WithRouter,
-} from './types/types';
-import PLPProductCard from './wrappers/PLPProductCard';
-import styled from 'styled-components';
-import { RootState } from './app/store';
+import { Category, Currency, GQLInitialData } from './types/types';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import CatalogPage from './components/CatalogPage';
 import ProductPage from './components/ProductPage';
 import CartPage from './components/CartPage';
 import Navbar from './components/Navbar';
-import withRouter from './HOC/withRouter';
-import productToCartProduct from './utils/productToCartProduct';
-
-const Main = styled.main`
-	margin: 2rem;
-
-	h3 {
-		margin: 2rem 8rem;
-		text-transform: uppercase;
-	}
-
-	.plp-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, 280px);
-		grid-gap: 4rem;
-		justify-content: center;
-	}
-`;
+import { GET_INITIAL_DATA } from './apollo/queries';
+import { client } from './apollo/client';
 
 interface State {
-	category: string;
 	categoryList: Category[];
-	productList: CartProduct[];
 	selectedCurrency: Currency;
 	currencyList: Currency[];
-	cart: CartProduct[];
 }
 
-interface InitialData {
-	data: {
-		categories: Category[];
-		currencies: Currency[];
-		category: { products: Product[] };
-	};
-}
-
-interface Props {
-	withRouter: WithRouter;
-	cart: CartProduct[];
-}
-
-class App extends Component<Props> {
+class App extends Component {
 	state: State = {
-		category:
-			new URLSearchParams(this.props.withRouter.location.search).get(
-				'category'
-			) || 'all',
 		categoryList: [],
-		productList: [],
 		selectedCurrency: { label: 'USD', symbol: '$' },
 		currencyList: [],
-		cart: this.props.cart,
 	};
 
 	componentDidMount = async () => {
-		const search = this.props.withRouter.location.search;
-		const category = new URLSearchParams(search).get('category') || 'all';
-		const initialData: InitialData = await client.query({
-			query: GET_INITIAL_DATA,
-			variables: { category: category },
-		});
-		const cartProducts = initialData.data.category.products.map((product) =>
-			productToCartProduct(product)
-		);
-		this.setState({
-			...this.state,
-			categoryList: initialData.data.categories,
-			currencyList: initialData.data.currencies,
-			productList: cartProducts,
-		});
-	};
-
-	componentDidUpdate = async (prevProps: Props, prevState: State) => {
-		const search = this.props.withRouter.location.search;
-		const category = new URLSearchParams(search).get('category') || 'all';
-		if (category !== prevState.category) {
-			const response = await client.query({
-				query: GET_PRODUCTS,
-				variables: { category: category },
+		try {
+			const initialData: GQLInitialData = await client.query({
+				query: GET_INITIAL_DATA,
 			});
-			const cartProducts = response.data.category.products.map(
-				(product: Product) => productToCartProduct(product)
-			);
 			this.setState({
 				...this.state,
-				category: response.data.category.name,
-				productList: cartProducts,
+				categoryList: initialData.data.categories,
+				currencyList: initialData.data.currencies,
 			});
+		} catch (error) {
+			console.log(error);
 		}
 	};
 
@@ -114,8 +42,6 @@ class App extends Component<Props> {
 	};
 
 	render() {
-		const search = this.props.withRouter.location.search;
-		const category = new URLSearchParams(search).get('category');
 		return (
 			<>
 				<Navbar
@@ -123,25 +49,13 @@ class App extends Component<Props> {
 					changeCurrency={this.changeCurrency}
 					currencyList={this.state.currencyList}
 					selectedCurrency={this.state.selectedCurrency}
-					cart={this.props.cart}
 				/>
-				<Main>
+				<main>
 					<Routes>
 						<Route
 							path='/catalog'
 							element={
-								<>
-									<h3>{category === 'all' ? 'all products' : category}</h3>
-									<div className='plp-grid'>
-										{this.state.productList.map((product, i) => (
-											<PLPProductCard
-												key={i}
-												product={product}
-												selectedCurrency={this.state.selectedCurrency}
-											/>
-										))}
-									</div>
-								</>
+								<CatalogPage selectedCurrency={this.state.selectedCurrency} />
 							}
 						/>
 						<Route
@@ -153,89 +67,10 @@ class App extends Component<Props> {
 						<Route path='/cart' element={<CartPage />}></Route>
 						<Route path='/*' element={<Navigate to='/catalog' />} />
 					</Routes>
-				</Main>
+				</main>
 			</>
 		);
 	}
 }
 
-const GET_INITIAL_DATA = gql`
-	query ($category: String!) {
-		categories {
-			name
-		}
-		currencies {
-			label
-			symbol
-		}
-		category(input: { title: $category }) {
-			name
-			products {
-				id
-				name
-				inStock
-				gallery
-				description
-				category
-				attributes {
-					id
-					name
-					type
-					items {
-						displayValue
-						value
-						id
-					}
-				}
-				prices {
-					currency {
-						label
-						symbol
-					}
-					amount
-				}
-				brand
-			}
-		}
-	}
-`;
-
-const GET_PRODUCTS = gql`
-	query ($category: String!) {
-		category(input: { title: $category }) {
-			name
-			products {
-				id
-				name
-				inStock
-				gallery
-				description
-				category
-				attributes {
-					id
-					name
-					type
-					items {
-						displayValue
-						value
-						id
-					}
-				}
-				prices {
-					currency {
-						label
-						symbol
-					}
-					amount
-				}
-				brand
-			}
-		}
-	}
-`;
-
-function mapStateToProps(state: RootState) {
-	return { cart: state.cart };
-}
-
-export default withRouter(connect(mapStateToProps, null)(App));
+export default App;
