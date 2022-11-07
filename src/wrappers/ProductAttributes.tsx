@@ -2,7 +2,13 @@ import { Component } from 'react';
 import styled from 'styled-components';
 import { CartProduct } from '../types/types';
 
-const Colors = styled.div`
+const Container = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+`;
+
+const Attributes = styled.div`
 	div {
 		display: flex;
 		flex-wrap: wrap;
@@ -17,11 +23,14 @@ const Color = styled.div<{ selected: boolean; bgColor: string }>`
 	border: 1px solid #a1a1a1;
 	cursor: pointer;
 	position: relative;
-	background-color: ${(props) => props.bgColor};
+	background-color: ${({ bgColor }) => bgColor || '#000000'};
 	user-select: none;
 
-	&:before {
-		border: ${(props) => (props.selected ? '2px solid #64ff00' : '0')};
+	${({ selected }) =>
+		selected &&
+		`
+		&:before {
+		border: 2px solid #64ff00;
 		content: '';
 		display: block;
 		position: absolute;
@@ -30,29 +39,24 @@ const Color = styled.div<{ selected: boolean; bgColor: string }>`
 		right: -4px;
 		bottom: -4px;
 	}
-`;
-
-const OtherAttributes = styled.div`
-	div {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.25rem 1rem;
-		margin: 0.25rem 0;
-	}
+  `}
 `;
 
 const OtherAtt = styled.div<{ selected: boolean }>`
-	display: block;
-	min-width: 40px;
-	text-align: center;
-	padding: 0.25rem;
+	flex: 1;
+	display: flex;
+	justify-content: center;
+	padding: 0.5rem;
 	border: 1px solid #000000;
 	cursor: pointer;
 	position: relative;
 	user-select: none;
 
-	&:before {
-		border: ${(props) => (props.selected ? '2px solid #64ff00' : '0')};
+	${({ selected }) =>
+		selected &&
+		`
+		&:before {
+		border: 2px solid #64ff00;
 		content: '';
 		display: block;
 		position: absolute;
@@ -61,6 +65,7 @@ const OtherAtt = styled.div<{ selected: boolean }>`
 		right: -4px;
 		bottom: -4px;
 	}
+  `}
 `;
 
 interface Props {
@@ -71,11 +76,11 @@ interface Props {
 class ProductAttributes extends Component<Props> {
 	render() {
 		return (
-			<div>
+			<Container>
 				{this.props.product.attributes?.map((att) => {
 					if (att.id.toLowerCase() === 'color') {
 						return (
-							<Colors key={att.type}>
+							<Attributes key={att.id}>
 								<span>{att.name}:</span>
 								<div>
 									{att.items.map((item) => {
@@ -97,11 +102,11 @@ class ProductAttributes extends Component<Props> {
 										);
 									})}
 								</div>
-							</Colors>
+							</Attributes>
 						);
 					} else {
 						return (
-							<OtherAttributes key={att.type}>
+							<Attributes key={att.id}>
 								<span>{att.name}:</span>
 								<div>
 									{att.items.map((item) => {
@@ -124,11 +129,11 @@ class ProductAttributes extends Component<Props> {
 										);
 									})}
 								</div>
-							</OtherAttributes>
+							</Attributes>
 						);
 					}
 				})}
-			</div>
+			</Container>
 		);
 	}
 }
