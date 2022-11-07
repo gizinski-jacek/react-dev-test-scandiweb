@@ -26,7 +26,7 @@ const Cart = styled.div`
 		z-index: 10;
 	}
 
-	.side-cart-item-list {
+	.side-cart-product-list {
 		flex: 1;
 		display: flex;
 		flex-direction: column;
@@ -35,7 +35,7 @@ const Cart = styled.div`
 	}
 `;
 
-const CartItemCount = styled.div`
+const CartProductCount = styled.div`
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -103,6 +103,19 @@ class SideCart extends Component<Props> {
 	};
 
 	render() {
+		const productCount = this.props.cart.reduce(
+			(total, product) => total + product.count,
+			0
+		);
+		const total = this.props.cart.reduce(
+			(total, product) =>
+				total +
+				product.count *
+					product.prices.find(
+						(p) => p.currency.label === this.props.selectedCurrency.label
+					)!.amount,
+			0
+		);
 		return (
 			<Cart>
 				<div onClick={(e) => this.props.toggle(e)}>
@@ -113,25 +126,19 @@ class SideCart extends Component<Props> {
 							data-name='Shopping Cart'
 						/>
 					</svg>
-					<CartItemCount>
-						{this.props.cart.reduce((total, item) => total + item.count, 0)}
-					</CartItemCount>
+					<CartProductCount>{productCount}</CartProductCount>
 				</div>
 				{this.props.open && (
 					<div className='side-cart-contents'>
 						<Header>
 							<h4>My Bag</h4>
-							{this.props.cart.reduce(
-								(total, item) => total + item.count,
-								0
-							)}{' '}
-							items
+							{productCount} items
 						</Header>
-						<ul className='side-cart-item-list'>
-							{this.props.cart.map((item, i) => (
+						<ul className='side-cart-product-list'>
+							{this.props.cart.map((product, i) => (
 								<SideCartProductCard
 									key={i}
-									item={item}
+									product={product}
 									selectedCurrency={this.props.selectedCurrency}
 								/>
 							))}
@@ -141,20 +148,7 @@ class SideCart extends Component<Props> {
 								<span>Total</span>
 								<span>
 									{this.props.selectedCurrency.symbol}
-									{roundToDecimal(
-										this.props.cart.reduce(
-											(total, item) =>
-												total +
-												item.count *
-													item.prices.find(
-														(p) =>
-															p.currency.label ===
-															this.props.selectedCurrency.label
-													)!.amount,
-											0
-										),
-										2
-									)}
+									{roundToDecimal(total, 2)}
 								</span>
 							</Total>
 							<div className='side-cart-controls'>
