@@ -12,7 +12,6 @@ const Btn = styled.button<{
 	background-color: ${({ bgColor }) => bgColor || '#000000'};
 	padding: 0.5rem;
 	font-size: 1.1rem;
-	flex: 1;
 	font-weight: 600;
 	text-align: center;
 	text-decoration: none;
@@ -20,6 +19,7 @@ const Btn = styled.button<{
 
 	&:disabled {
 		opacity: 0.25;
+		cursor: initial;
 	}
 `;
 
