@@ -7,63 +7,65 @@ export const cartSlice = createSlice({
 	name: 'cart',
 	initialState,
 	reducers: {
-		addItem: (state, action: PayloadAction<CartProduct>) => {
-			const sameTypeItemsInCart = state.filter(
-				(item) => item.id === action.payload.id
+		addProduct: (state, action: PayloadAction<CartProduct>) => {
+			const sameTypeProductsInCart = state.filter(
+				(product) => product.id === action.payload.id
 			);
-			const sameAttributesItem = sameTypeItemsInCart?.find((item) => {
-				const sameAttributes = item.selectedAttributes.map(
+			const sameAttributesProduct = sameTypeProductsInCart?.find((product) => {
+				const sameAttributes = product.selectedAttributes.map(
 					(attribute) =>
 						action.payload.selectedAttributes.find(
 							(att) => att.id === attribute.id
 						)?.item.id === attribute.item.id
 				);
 				if (sameAttributes.every((v) => v)) {
-					return item;
+					return product;
 				} else return null;
 			});
-			if (sameAttributesItem) {
+			if (sameAttributesProduct) {
 				const index = state.findIndex(
-					(item) => item.uid === sameAttributesItem.uid
+					(product) => product.uid === sameAttributesProduct.uid
 				);
 				state[index].count++;
 			} else {
 				state.push(action.payload);
 			}
 		},
-		removeItem: (state, action: PayloadAction<CartProduct>) => {
+		removeProduct: (state, action: PayloadAction<CartProduct>) => {
 			const newState = state.filter(
 				(product) => product.uid !== action.payload.uid
 			);
 			return newState;
 		},
-		incrementItem: (state, action: PayloadAction<CartProduct>) => {
-			const newState = state.map((item) =>
-				item.uid === action.payload.uid
-					? { ...item, count: item.count + 1 }
-					: item
+		incrementProduct: (state, action: PayloadAction<CartProduct>) => {
+			const newState = state.map((product) =>
+				product.uid === action.payload.uid
+					? { ...product, count: product.count + 1 }
+					: product
 			);
 			return newState;
 		},
-		decrementItem: (state, action: PayloadAction<CartProduct>) => {
-			const itemInCart = state.find((item) => item.id === action.payload.id);
-			if (itemInCart?.count === 1) {
+		decrementProduct: (state, action: PayloadAction<CartProduct>) => {
+			const productInCart = state.find(
+				(product) => product.id === action.payload.id
+			);
+			if (productInCart?.count === 1) {
 				const newState = state.filter(
 					(product) => product.uid !== action.payload.uid
 				);
 				return newState;
 			} else {
-				const newState = state.map((item) =>
-					item.uid === action.payload.uid
-						? { ...item, count: item.count - 1 }
-						: item
+				const newState = state.map((product) =>
+					product.uid === action.payload.uid
+						? { ...product, count: product.count - 1 }
+						: product
 				);
 				return newState;
 			}
 		},
-		changeItemAttribute: (state, action: PayloadAction<CartProduct>) => {
-			const newState = state.map((item) =>
-				item.uid === action.payload.uid ? action.payload : item
+		changeProductAttribute: (state, action: PayloadAction<CartProduct>) => {
+			const newState = state.map((product) =>
+				product.uid === action.payload.uid ? action.payload : product
 			);
 			return newState;
 		},
@@ -72,11 +74,11 @@ export const cartSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const {
-	addItem,
-	removeItem,
-	incrementItem,
-	decrementItem,
-	changeItemAttribute,
+	addProduct,
+	removeProduct,
+	incrementProduct,
+	decrementProduct,
+	changeProductAttribute,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

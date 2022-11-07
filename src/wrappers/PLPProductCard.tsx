@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { CartProduct, Currency } from '../types/types';
 import styled from 'styled-components';
 import { AppDispatch } from '../app/store';
-import { addItem } from '../features/cartSlice';
+import { addProduct } from '../features/cartSlice';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Image from '../reusables/Image';
@@ -65,12 +65,12 @@ const Details = styled.div`
 interface Props {
 	product: CartProduct;
 	selectedCurrency: Currency;
-	addItem: (product: CartProduct) => void;
+	addProduct: (product: CartProduct) => void;
 }
 
 class PLPProductCard extends Component<Props> {
 	render() {
-		const itemPrice = this.props.product.prices.find(
+		const productPrice = this.props.product.prices.find(
 			(price) => price.currency.label === this.props.selectedCurrency.label
 		);
 		return (
@@ -83,7 +83,7 @@ class PLPProductCard extends Component<Props> {
 					height={'280px'}
 				>
 					{this.props.product.inStock && (
-						<CartIcon onClick={() => this.props.addItem(this.props.product)}>
+						<CartIcon onClick={() => this.props.addProduct(this.props.product)}>
 							<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
 								<path
 									fill='#ffffff'
@@ -98,7 +98,7 @@ class PLPProductCard extends Component<Props> {
 					<h4>
 						{this.props.product.brand} {this.props.product.name}
 					</h4>
-					<h4>{`${itemPrice?.currency.symbol}${itemPrice?.amount}`}</h4>
+					<h4>{`${productPrice?.currency.symbol}${productPrice?.amount}`}</h4>
 				</Details>
 			</Card>
 		);
@@ -107,7 +107,7 @@ class PLPProductCard extends Component<Props> {
 
 function mapDispatchToProps(dispatch: AppDispatch) {
 	return {
-		addItem: (product: CartProduct) => dispatch(addItem(product)),
+		addProduct: (product: CartProduct) => dispatch(addProduct(product)),
 	};
 }
 

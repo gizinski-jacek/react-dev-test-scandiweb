@@ -2,12 +2,12 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { AppDispatch } from '../app/store';
-import { decrementItem, incrementItem } from '../features/cartSlice';
+import { decrementProduct, incrementProduct } from '../features/cartSlice';
 import Image from '../reusables/Image';
 import { CartProduct, Currency } from '../types/types';
 import ProductAttributes from './ProductAttributes';
 
-const Item = styled.li`
+const Product = styled.li`
 	display: flex;
 	margin: 1rem;
 `;
@@ -28,7 +28,7 @@ const Details = styled.div`
 	}
 `;
 
-const ItemCounter = styled.div`
+const ProductCounter = styled.div`
 	display: flex;
 	flex-direction: column;
 	margin: 0 1rem;
@@ -80,57 +80,63 @@ const IncBtn = styled(DecBtn)`
 `;
 
 interface Props {
-	item: CartProduct;
+	product: CartProduct;
 	selectedCurrency: Currency;
-	incrementItem: (product: CartProduct) => void;
-	decrementItem: (product: CartProduct) => void;
+	incrementProduct: (product: CartProduct) => void;
+	decrementProduct: (product: CartProduct) => void;
 }
 
 class SideCartProductCard extends Component<Props> {
-	increment = (e: React.MouseEvent<HTMLDivElement>, item: CartProduct) => {
+	increment = (e: React.MouseEvent<HTMLDivElement>, product: CartProduct) => {
 		e.stopPropagation();
-		this.props.incrementItem(item);
+		this.props.incrementProduct(product);
 	};
 
-	decrement = (e: React.MouseEvent<HTMLDivElement>, item: CartProduct) => {
+	decrement = (e: React.MouseEvent<HTMLDivElement>, product: CartProduct) => {
 		e.stopPropagation();
-		this.props.decrementItem(item);
+		this.props.decrementProduct(product);
 	};
 
 	render() {
-		const price = this.props.item.prices.find(
+		const price = this.props.product.prices.find(
 			(p) => p.currency.label === this.props.selectedCurrency.label
 		);
 		return (
-			<Item>
+			<Product>
 				<Details>
-					<span>{this.props.item.brand}</span>
-					<span>{this.props.item.name}</span>
+					<span>{this.props.product.brand}</span>
+					<span>{this.props.product.name}</span>
 					<h5>
 						{price?.currency.symbol}
 						{price?.amount}
 					</h5>
-					<ProductAttributes product={this.props.item} />
+					<ProductAttributes product={this.props.product} />
 				</Details>
-				<ItemCounter>
-					<IncBtn onClick={(e) => this.increment(e, this.props.item)}></IncBtn>
-					<span>{this.props.item.count}</span>
-					<DecBtn onClick={(e) => this.decrement(e, this.props.item)}></DecBtn>
-				</ItemCounter>
+				<ProductCounter>
+					<IncBtn
+						onClick={(e) => this.increment(e, this.props.product)}
+					></IncBtn>
+					<span>{this.props.product.count}</span>
+					<DecBtn
+						onClick={(e) => this.decrement(e, this.props.product)}
+					></DecBtn>
+				</ProductCounter>
 				<Image
-					src={this.props.item.gallery[0]}
+					src={this.props.product.gallery[0]}
 					width={'120px'}
 					height={'160px'}
 				/>
-			</Item>
+			</Product>
 		);
 	}
 }
 
 function mapDispatchToProps(dispatch: AppDispatch) {
 	return {
-		incrementItem: (product: CartProduct) => dispatch(incrementItem(product)),
-		decrementItem: (product: CartProduct) => dispatch(decrementItem(product)),
+		incrementProduct: (product: CartProduct) =>
+			dispatch(incrementProduct(product)),
+		decrementProduct: (product: CartProduct) =>
+			dispatch(decrementProduct(product)),
 	};
 }
 

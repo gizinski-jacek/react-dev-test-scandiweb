@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { AppDispatch } from '../app/store';
-import { addItem, changeItemAttribute } from '../features/cartSlice';
+import { addProduct } from '../features/cartSlice';
 import withRouter from '../HOC/withRouter';
 import Button from '../reusables/Button';
 import {
@@ -69,8 +69,7 @@ const Price = styled.div`
 interface Props {
 	withRouter: WithRouter;
 	selectedCurrency: Currency;
-	addItem: (product: CartProduct) => void;
-	changeItemAttribute: (product: CartProduct) => void;
+	addProduct: (product: CartProduct) => void;
 }
 
 interface State {
@@ -118,20 +117,20 @@ class ProductPage extends Component<Props> {
 		const updatedAttribute = this.state.product.selectedAttributes.map((att) =>
 			att.id === attribute.id ? { ...otherKeys, item: attributeItem } : att
 		);
-		const updatedItem = {
+		const updatedProduct = {
 			...this.state.product,
 			selectedAttributes: updatedAttribute,
 		};
-		this.setState({ ...this.state, product: updatedItem });
+		this.setState({ ...this.state, product: updatedProduct });
 	};
 
 	addToCart = () => {
 		if (!this.state.product) return;
-		this.props.addItem(this.state.product);
+		this.props.addProduct(this.state.product);
 	};
 
 	render() {
-		const itemPrice = this.state.product?.prices.find(
+		const productPrice = this.state.product?.prices.find(
 			(price) => price.currency.label === this.props.selectedCurrency.label
 		);
 		return (
@@ -168,8 +167,8 @@ class ProductPage extends Component<Props> {
 						<Price>
 							<span>Price:</span>
 							<h4>
-								{itemPrice?.currency.symbol}
-								{itemPrice?.amount}
+								{productPrice?.currency.symbol}
+								{productPrice?.amount}
 							</h4>
 						</Price>
 						<Button
@@ -189,9 +188,7 @@ class ProductPage extends Component<Props> {
 
 function mapDispatchToProps(dispatch: AppDispatch) {
 	return {
-		addItem: (product: CartProduct) => dispatch(addItem(product)),
-		changeItemAttribute: (product: CartProduct) =>
-			dispatch(changeItemAttribute(product)),
+		addProduct: (product: CartProduct) => dispatch(addProduct(product)),
 	};
 }
 
