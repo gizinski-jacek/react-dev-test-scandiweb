@@ -17,7 +17,7 @@ const Card = styled.div`
 	position: relative;
 
 	&:hover {
-		box-shadow: 0 0 1rem 0.25rem #00000040;
+		box-shadow: 0 0 1rem 0.25rem #dadada;
 
 		div {
 			opacity: 1;
@@ -33,14 +33,6 @@ const CardLink = styled(Link)`
 	bottom: 0;
 	cursor: pointer;
 	z-index: 1;
-
-	&:hover {
-		box-shadow: 0 0 1rem 0.25rem #00000040;
-
-		div {
-			opacity: 1;
-		}
-	}
 `;
 
 const CartIcon = styled.div`
@@ -87,7 +79,7 @@ class PLPProductCard extends Component<Props> {
 				<Image
 					src={this.props.product.gallery[0]}
 					inStock={this.props.product.inStock}
-					mWidth={'280px'}
+					maxWidth={'280px'}
 					height={'280px'}
 				>
 					{this.props.product.inStock && (
