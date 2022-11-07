@@ -6,13 +6,9 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider as CartProvider } from 'react-redux';
 import store from './app/store';
-import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client';
 import { BrowserRouter } from 'react-router-dom';
-
-export const client = new ApolloClient({
-	uri: 'http://localhost:4000/',
-	cache: new InMemoryCache(),
-});
+import { client } from './apollo/client';
 
 const root = ReactDOM.createRoot(
 	document.getElementById('root') as HTMLElement
