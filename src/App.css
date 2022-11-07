@@ -54,3 +54,7 @@ body {
 	min-height: 100vh;
 	position: relative;
 }
+
+main {
+	margin: 2rem;
+}
