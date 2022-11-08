@@ -86,7 +86,7 @@ interface Props {
 	decrementProduct: (product: CartProductWithUID) => void;
 }
 
-class SideCartProductCard extends Component<Props> {
+class CartProductCard extends Component<Props> {
 	increment = (
 		e: React.MouseEvent<HTMLDivElement>,
 		product: CartProductWithUID
@@ -146,4 +146,4 @@ function mapDispatchToProps(dispatch: AppDispatch) {
 	};
 }
 
-export default connect(null, mapDispatchToProps)(SideCartProductCard);
+export default connect(null, mapDispatchToProps)(CartProductCard);
