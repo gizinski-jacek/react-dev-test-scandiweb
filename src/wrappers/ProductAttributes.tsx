@@ -1,6 +1,11 @@
 import { Component } from 'react';
 import styled from 'styled-components';
-import { Attribute, AttributeSet, CartProduct } from '../types/types';
+import {
+	Attribute,
+	AttributeSet,
+	CartProduct,
+	CartProductWithUID,
+} from '../types/types';
 
 const Container = styled.div`
 	display: flex;
@@ -24,7 +29,6 @@ const Color = styled.div<{ selected: boolean; bgColor: string }>`
 	cursor: pointer;
 	position: relative;
 	background-color: ${({ bgColor }) => bgColor || '#000000'};
-	user-select: none;
 
 	${({ selected }) =>
 		selected &&
@@ -42,38 +46,55 @@ const Color = styled.div<{ selected: boolean; bgColor: string }>`
   `}
 `;
 
-const OtherAtt = styled.div<{ selected: boolean }>`
+const OtherAtt = styled.div<{ clickable?: boolean; selected: boolean }>`
 	flex: 1;
 	display: flex;
 	justify-content: center;
 	padding: 0.5rem;
 	border: 1px solid #000000;
-	cursor: pointer;
 	position: relative;
-	user-select: none;
+	cursor: pointer;
+
+	${({ clickable }) =>
+		clickable &&
+		`
+		transition: 0.1s ease-in-out;
+
+		&:hover {
+			box-shadow: 0 0 1px 1px #960096;
+			border-color: #960096;
+		}
+
+		&:active {
+			box-shadow: 0 0 2px 2px #960096;
+			border-color: #960096;
+		}
+  `}
 
 	${({ selected }) =>
 		selected &&
 		`
-		&:before {
-		border: 2px solid #64ff00;
-		content: '';
-		display: block;
-		position: absolute;
-		top: -4px;
-		left: -4px;
-		right: -4px;
-		bottom: -4px;
-	}
+		background-color: #000000;
+		color: #ffffff;
+
+		&:hover {
+			border: 1px solid #000000;
+			box-shadow: none;
+		}
+
+		&:active {
+			border: 1px solid #000000;
+			box-shadow: none;
+		}
   `}
 `;
 
 interface Props {
-	product: CartProduct;
+	product: CartProductWithUID | CartProduct;
 	onClick?: (
-		e: React.MouseEvent<HTMLDivElement>,
 		attribute: AttributeSet,
-		attributeItem: Attribute
+		attributeItem: Attribute,
+		product: CartProductWithUID | CartProduct
 	) => void;
 }
 
@@ -88,20 +109,20 @@ class ProductAttributes extends Component<Props> {
 								<span>{att.name}:</span>
 								<div>
 									{att.items.map((item) => {
+										const selected =
+											this.props.product.selectedAttributes.find(
+												(a) => a.id === att.id
+											)?.item.id === item.id;
 										return (
 											<Color
 												key={item.value}
 												onClick={(e) =>
-													this.props.onClick
-														? this.props.onClick(e, att, item)
+													this.props.onClick && !selected
+														? this.props.onClick(att, item, this.props.product)
 														: null
 												}
 												bgColor={item.value}
-												selected={
-													this.props.product.selectedAttributes.find(
-														(a) => a.id === att.id
-													)?.item.id === item.id
-												}
+												selected={selected}
 											/>
 										);
 									})}
@@ -114,19 +135,20 @@ class ProductAttributes extends Component<Props> {
 								<span>{att.name}:</span>
 								<div>
 									{att.items.map((item) => {
+										const selected =
+											this.props.product.selectedAttributes.find(
+												(a) => a.id === att.id
+											)?.item.id === item.id;
 										return (
 											<OtherAtt
 												key={item.value}
 												onClick={(e) =>
-													this.props.onClick
-														? this.props.onClick(e, att, item)
+													this.props.onClick && !selected
+														? this.props.onClick(att, item, this.props.product)
 														: null
 												}
-												selected={
-													this.props.product.selectedAttributes.find(
-														(a) => a.id === att.id
-													)?.item.id === item.id
-												}
+												selected={selected}
+												clickable={this.props.onClick ? true : false}
 											>
 												{item.value}
 											</OtherAtt>
