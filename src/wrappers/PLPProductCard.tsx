@@ -6,7 +6,6 @@ import { addProduct } from '../features/cartSlice';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Image from '../reusables/Image';
-import { nanoid } from '@reduxjs/toolkit';
 
 const Card = styled.div`
 	padding: 1rem;
@@ -66,14 +65,13 @@ const Details = styled.div`
 interface Props {
 	product: CartProduct;
 	selectedCurrency: Currency;
-	addProduct: (product: CartProductWithUID) => void;
+	addProduct: (product: CartProductWithUID | CartProduct) => void;
 }
 
 class PLPProductCard extends Component<Props> {
 	addToCart = () => {
 		if (!this.props.product) return;
-		const productWithUID = { ...this.props.product, uid: nanoid() };
-		this.props.addProduct(productWithUID);
+		this.props.addProduct(this.props.product);
 	};
 
 	render() {
@@ -114,7 +112,8 @@ class PLPProductCard extends Component<Props> {
 
 function mapDispatchToProps(dispatch: AppDispatch) {
 	return {
-		addProduct: (product: CartProductWithUID) => dispatch(addProduct(product)),
+		addProduct: (product: CartProductWithUID | CartProduct) =>
+			dispatch(addProduct(product)),
 	};
 }
 
