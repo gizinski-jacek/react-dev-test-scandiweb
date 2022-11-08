@@ -13,8 +13,8 @@ import productToCartProduct from '../utils/productToCartProduct';
 import PLPProductCard from '../wrappers/PLPProductCard';
 
 const Catalog = styled.div`
-	h3 {
-		margin: 3rem;
+	h2 {
+		margin: 4rem 2rem;
 		text-transform: uppercase;
 	}
 `;
@@ -94,7 +94,7 @@ class CatalogPage extends Component<Props> {
 		const category = new URLSearchParams(search).get('category');
 		return (
 			<Catalog>
-				<h3>{category === 'all' ? 'all products' : category}</h3>
+				<h2>{category === 'all' ? 'all products' : category}</h2>
 				<Grid>
 					{this.state.productList.map((product, i) => (
 						<PLPProductCard
