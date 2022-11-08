@@ -49,9 +49,12 @@ export interface CartAttributeSet {
 	item: Attribute;
 }
 export interface CartProduct extends Product {
-	uid: string;
 	count: number;
 	selectedAttributes: CartAttributeSet[];
+}
+
+export interface CartProductWithUID extends CartProduct {
+	uid: string;
 }
 
 export interface WithRouter {
