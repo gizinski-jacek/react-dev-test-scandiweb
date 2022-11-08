@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { RootState } from '../app/store';
 import withRouter from '../HOC/withRouter';
 import Button from '../reusables/Button';
-import { CartProduct, Currency, WithRouter } from '../types/types';
+import { CartProductWithUID, Currency, WithRouter } from '../types/types';
 import roundToDecimal from '../utils/roundToDecimal';
 import SideCartProductCard from '../wrappers/SideCartProductCard';
 
@@ -86,7 +86,7 @@ const Total = styled.div`
 
 interface Props {
 	withRouter: WithRouter;
-	cart: CartProduct[];
+	cart: CartProductWithUID[];
 	open: boolean;
 	toggle: (e: React.MouseEvent<HTMLDivElement>) => void;
 	selectedCurrency: Currency;
@@ -118,7 +118,7 @@ class SideCart extends Component<Props> {
 		);
 		return (
 			<Cart>
-				<div onClick={(e) => this.props.toggle(e)}>
+				<div onClick={this.props.toggle}>
 					<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
 						<path
 							fill='#000000'
