@@ -65,7 +65,7 @@ class CartPage extends Component<Props> {
 					<CartProductCard
 						product={product}
 						selectedCurrency={this.props.selectedCurrency}
-						gallery={true}
+						gallery={product.gallery.length > 1}
 						bordered={true}
 						bigger={true}
 					/>
