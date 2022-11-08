@@ -1,4 +1,3 @@
-import { nanoid } from '@reduxjs/toolkit';
 import { CartProduct, Product } from '../types/types';
 
 // Transform Product object to CartProduct with uid, default count of 1,
@@ -13,7 +12,6 @@ const productToCartProduct = (product: Product): CartProduct => {
 	});
 	const item: CartProduct = {
 		...product,
-		uid: nanoid(),
 		count: 1,
 		selectedAttributes: defaultAttributes,
 	};
