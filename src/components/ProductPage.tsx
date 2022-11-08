@@ -9,6 +9,7 @@ import {
 	Attribute,
 	AttributeSet,
 	CartProduct,
+	CartProductWithUID,
 	Currency,
 	GQLProductData,
 	WithRouter,
@@ -19,6 +20,7 @@ import ProductAttributes from '../wrappers/ProductAttributes';
 import { GET_PRODUCT_DETAILS } from '../apollo/queries';
 import { client } from '../apollo/client';
 import parse from 'html-react-parser';
+import { nanoid } from '@reduxjs/toolkit';
 
 const Product = styled.div`
 	display: flex;
@@ -69,7 +71,7 @@ const Price = styled.div`
 interface Props {
 	withRouter: WithRouter;
 	selectedCurrency: Currency;
-	addProduct: (product: CartProduct) => void;
+	addProduct: (product: CartProductWithUID) => void;
 }
 
 interface State {
@@ -126,7 +128,8 @@ class ProductPage extends Component<Props> {
 
 	addToCart = () => {
 		if (!this.state.product) return;
-		this.props.addProduct(this.state.product);
+		const productWithUID = { ...this.state.product, uid: nanoid() };
+		this.props.addProduct(productWithUID);
 	};
 
 	render() {
@@ -188,7 +191,7 @@ class ProductPage extends Component<Props> {
 
 function mapDispatchToProps(dispatch: AppDispatch) {
 	return {
-		addProduct: (product: CartProduct) => dispatch(addProduct(product)),
+		addProduct: (product: CartProductWithUID) => dispatch(addProduct(product)),
 	};
 }
 
