@@ -35,6 +35,11 @@ const CategoryLink = styled(NavLink)<{ active: string }>`
 	text-decoration: none;
 	flex-wrap: nowrap;
 	color: #000000;
+	transition: 0.1s ease-in-out;
+
+	&:hover {
+		color: #00c800;
+	}
 
 	${({ active }) =>
 		active === 'true' &&
@@ -61,7 +66,7 @@ const NavControls = styled.div`
 const CurrencySelect = styled.div`
 	position: relative;
 	cursor: pointer;
-	}
+	z-index: 10;
 
 	h3 {
 		min-width: 28px;
@@ -172,6 +177,15 @@ class Navbar extends Component<Props> {
 		this.props.changeCurrency(currency);
 	};
 
+	navigateToCart = () => {
+		this.setState({
+			...this.state,
+			currencySelectOpen: false,
+			sideCartOpen: false,
+		});
+		this.props.withRouter.navigate('/cart');
+	};
+
 	render() {
 		const search = this.props.withRouter.location.search;
 		const category = new URLSearchParams(search).get('category');
@@ -267,6 +281,7 @@ class Navbar extends Component<Props> {
 							open={this.state.sideCartOpen}
 							toggle={this.toggleSideCartVisibility}
 							selectedCurrency={this.props.selectedCurrency}
+							navigateToCart={this.navigateToCart}
 						/>
 					</NavControls>
 				</Nav>
