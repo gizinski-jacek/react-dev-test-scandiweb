@@ -225,9 +225,7 @@ class Navbar extends Component<Props> {
 						</svg>
 					</Logo>
 					<NavControls ref={this.state.ref}>
-						<CurrencySelect
-							onClick={(e) => this.toggleCurrencySelectorVisibility(e)}
-						>
+						<CurrencySelect onClick={this.toggleCurrencySelectorVisibility}>
 							<div className='currency-icon'>
 								<h3>{this.props.selectedCurrency.symbol}</h3>
 								<svg
