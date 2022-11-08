@@ -1,11 +1,12 @@
 import { Component } from 'react';
-import { CartProduct, Currency } from '../types/types';
+import { CartProduct, CartProductWithUID, Currency } from '../types/types';
 import styled from 'styled-components';
 import { AppDispatch } from '../app/store';
 import { addProduct } from '../features/cartSlice';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Image from '../reusables/Image';
+import { nanoid } from '@reduxjs/toolkit';
 
 const Card = styled.div`
 	padding: 1rem;
@@ -65,10 +66,16 @@ const Details = styled.div`
 interface Props {
 	product: CartProduct;
 	selectedCurrency: Currency;
-	addProduct: (product: CartProduct) => void;
+	addProduct: (product: CartProductWithUID) => void;
 }
 
 class PLPProductCard extends Component<Props> {
+	addToCart = () => {
+		if (!this.props.product) return;
+		const productWithUID = { ...this.props.product, uid: nanoid() };
+		this.props.addProduct(productWithUID);
+	};
+
 	render() {
 		const productPrice = this.props.product.prices.find(
 			(price) => price.currency.label === this.props.selectedCurrency.label
@@ -83,7 +90,7 @@ class PLPProductCard extends Component<Props> {
 					height={'280px'}
 				>
 					{this.props.product.inStock && (
-						<CartIcon onClick={() => this.props.addProduct(this.props.product)}>
+						<CartIcon onClick={this.addToCart}>
 							<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
 								<path
 									fill='#ffffff'
@@ -107,7 +114,7 @@ class PLPProductCard extends Component<Props> {
 
 function mapDispatchToProps(dispatch: AppDispatch) {
 	return {
-		addProduct: (product: CartProduct) => dispatch(addProduct(product)),
+		addProduct: (product: CartProductWithUID) => dispatch(addProduct(product)),
 	};
 }
 
