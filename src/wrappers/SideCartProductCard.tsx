@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { AppDispatch } from '../app/store';
 import { decrementProduct, incrementProduct } from '../features/cartSlice';
 import Image from '../reusables/Image';
-import { CartProduct, Currency } from '../types/types';
+import { CartProductWithUID, Currency } from '../types/types';
 import ProductAttributes from './ProductAttributes';
 
 const Product = styled.li`
@@ -80,19 +80,25 @@ const IncBtn = styled(DecBtn)`
 `;
 
 interface Props {
-	product: CartProduct;
+	product: CartProductWithUID;
 	selectedCurrency: Currency;
-	incrementProduct: (product: CartProduct) => void;
-	decrementProduct: (product: CartProduct) => void;
+	incrementProduct: (product: CartProductWithUID) => void;
+	decrementProduct: (product: CartProductWithUID) => void;
 }
 
 class SideCartProductCard extends Component<Props> {
-	increment = (e: React.MouseEvent<HTMLDivElement>, product: CartProduct) => {
+	increment = (
+		e: React.MouseEvent<HTMLDivElement>,
+		product: CartProductWithUID
+	) => {
 		e.stopPropagation();
 		this.props.incrementProduct(product);
 	};
 
-	decrement = (e: React.MouseEvent<HTMLDivElement>, product: CartProduct) => {
+	decrement = (
+		e: React.MouseEvent<HTMLDivElement>,
+		product: CartProductWithUID
+	) => {
 		e.stopPropagation();
 		this.props.decrementProduct(product);
 	};
@@ -133,9 +139,9 @@ class SideCartProductCard extends Component<Props> {
 
 function mapDispatchToProps(dispatch: AppDispatch) {
 	return {
-		incrementProduct: (product: CartProduct) =>
+		incrementProduct: (product: CartProductWithUID) =>
 			dispatch(incrementProduct(product)),
-		decrementProduct: (product: CartProduct) =>
+		decrementProduct: (product: CartProductWithUID) =>
 			dispatch(decrementProduct(product)),
 	};
 }
