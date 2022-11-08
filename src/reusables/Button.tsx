@@ -13,13 +13,21 @@ const Btn = styled.button<{
 	padding: 0.5rem;
 	font-size: 1.1rem;
 	font-weight: 600;
-	text-align: center;
 	text-decoration: none;
 	cursor: pointer;
+	transition: 0.1s ease-in-out;
 
 	&:disabled {
 		opacity: 0.25;
 		cursor: initial;
+	}
+
+	&:hover {
+		filter: brightness(105%);
+	}
+
+	&:active {
+		filter: brightness(110%);
 	}
 `;
 
