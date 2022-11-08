@@ -6,7 +6,7 @@ import withRouter from '../HOC/withRouter';
 import Button from '../reusables/Button';
 import { CartProductWithUID, Currency, WithRouter } from '../types/types';
 import roundToDecimal from '../utils/roundToDecimal';
-import SideCartProductCard from '../wrappers/SideCartProductCard';
+import CartProductCard from '../wrappers/CartProductCard';
 
 const Cart = styled.div`
 	position: relative;
@@ -136,7 +136,7 @@ class SideCart extends Component<Props> {
 						</Header>
 						<ul className='side-cart-product-list'>
 							{this.props.cart.map((product, i) => (
-								<SideCartProductCard
+								<CartProductCard
 									key={i}
 									product={product}
 									selectedCurrency={this.props.selectedCurrency}
