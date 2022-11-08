@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { CartProductWithUID } from '../types/types';
+import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit';
+import { CartProduct, CartProductWithUID } from '../types/types';
 
 const initialState: CartProductWithUID[] = [];
 
@@ -7,7 +7,10 @@ export const cartSlice = createSlice({
 	name: 'cart',
 	initialState,
 	reducers: {
-		addProduct: (state, action: PayloadAction<CartProductWithUID>) => {
+		addProduct: (
+			state,
+			action: PayloadAction<CartProductWithUID | CartProduct>
+		) => {
 			const sameTypeProductsInCart = state.filter(
 				(product) => product.id === action.payload.id
 			);
@@ -28,18 +31,9 @@ export const cartSlice = createSlice({
 						(product) => product.uid === sameAttributesProduct.uid
 					);
 					state[index].count++;
-				} else {
-					state.push(action.payload);
 				}
-			} else {
-				state.push(action.payload);
 			}
-		},
-		removeProduct: (state, action: PayloadAction<CartProductWithUID>) => {
-			const newState = state.filter(
-				(product) => product.uid !== action.payload.uid
-			);
-			return newState;
+			state.push({ ...(action.payload as CartProduct), uid: nanoid() });
 		},
 		incrementProduct: (state, action: PayloadAction<CartProductWithUID>) => {
 			const newState = state.map((product) =>
@@ -83,7 +77,6 @@ export const cartSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const {
 	addProduct,
-	removeProduct,
 	incrementProduct,
 	decrementProduct,
 	changeProductAttribute,
