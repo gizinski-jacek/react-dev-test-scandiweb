@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { RootState } from '../app/store';
-import withRouter from '../HOC/withRouter';
 import Button from '../reusables/Button';
-import { CartProductWithUID, Currency, WithRouter } from '../types/types';
+import { CartProductWithUID, Currency } from '../types/types';
 import roundToDecimal from '../utils/roundToDecimal';
 import CartProductCard from '../wrappers/CartProductCard';
 
@@ -85,23 +84,14 @@ const Total = styled.div`
 `;
 
 interface Props {
-	withRouter: WithRouter;
 	cart: CartProductWithUID[];
 	open: boolean;
 	toggle: (e: React.MouseEvent<HTMLDivElement>) => void;
 	selectedCurrency: Currency;
+	navigateToCart: () => void;
 }
 
 class SideCart extends Component<Props> {
-	navigateToCart = () => {
-		this.setState({
-			...this.state,
-			currencySelectOpen: false,
-			sideCartOpen: false,
-		});
-		this.props.withRouter.navigate('/cart');
-	};
-
 	render() {
 		const productCount = this.props.cart.reduce(
 			(total, product) => total + product.count,
@@ -156,14 +146,14 @@ class SideCart extends Component<Props> {
 									bgColor='#ffffff'
 									color='#000000'
 									border='#000000'
-									onClick={this.navigateToCart}
+									onClick={this.props.navigateToCart}
 								>
 									View Bag
 								</Button>
 								<Button
 									bgColor='#00c800'
 									color='#ffffff'
-									onClick={this.navigateToCart}
+									onClick={this.props.navigateToCart}
 								>
 									Check Out
 								</Button>
@@ -180,4 +170,4 @@ function mapStateToProps(state: RootState) {
 	return { cart: state.cart };
 }
 
-export default withRouter(connect(mapStateToProps, null)(SideCart));
+export default connect(mapStateToProps, null)(SideCart);
