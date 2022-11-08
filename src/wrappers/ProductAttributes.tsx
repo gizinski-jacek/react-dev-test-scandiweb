@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import styled from 'styled-components';
-import { CartProduct } from '../types/types';
+import { Attribute, AttributeSet, CartProduct } from '../types/types';
 
 const Container = styled.div`
 	display: flex;
@@ -70,7 +70,11 @@ const OtherAtt = styled.div<{ selected: boolean }>`
 
 interface Props {
 	product: CartProduct;
-	onClick?: (...any: any) => void;
+	onClick?: (
+		e: React.MouseEvent<HTMLDivElement>,
+		attribute: AttributeSet,
+		attributeItem: Attribute
+	) => void;
 }
 
 class ProductAttributes extends Component<Props> {
@@ -94,9 +98,9 @@ class ProductAttributes extends Component<Props> {
 												}
 												bgColor={item.value}
 												selected={
-													this.props.product.selectedAttributes.findIndex(
-														(a) => a.item.id === item.id
-													) >= 0
+													this.props.product.selectedAttributes.find(
+														(a) => a.id === att.id
+													)?.item.id === item.id
 												}
 											/>
 										);
@@ -119,9 +123,9 @@ class ProductAttributes extends Component<Props> {
 														: null
 												}
 												selected={
-													this.props.product.selectedAttributes.findIndex(
-														(a) => a.item.id === item.id
-													) >= 0
+													this.props.product.selectedAttributes.find(
+														(a) => a.id === att.id
+													)?.item.id === item.id
 												}
 											>
 												{item.value}
