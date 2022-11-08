@@ -108,11 +108,10 @@ class ProductPage extends Component<Props> {
 	};
 
 	changeAttribute = (
-		e: React.MouseEvent<HTMLDivElement>,
 		attribute: AttributeSet,
-		attributeItem: Attribute
+		attributeItem: Attribute,
+		product: CartProduct
 	) => {
-		e.stopPropagation();
 		if (!this.state.product) return;
 		const { items, ...otherKeys } = attribute;
 		const updatedAttribute = this.state.product.selectedAttributes.map((att) =>
@@ -175,6 +174,7 @@ class ProductPage extends Component<Props> {
 						<Button
 							disabled={!this.state.product.inStock}
 							onClick={this.addToCart}
+							bgColor={'#00c800'}
 						>
 							{this.state.product.inStock ? 'Add to Cart' : 'Out of Stock'}
 						</Button>
