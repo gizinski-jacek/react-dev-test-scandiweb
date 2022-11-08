@@ -62,24 +62,11 @@ export const cartSlice = createSlice({
 				return newState;
 			}
 		},
-		changeProductAttribute: (
-			state,
-			action: PayloadAction<CartProductWithUID>
-		) => {
-			const newState = state.map((product) =>
-				product.uid === action.payload.uid ? action.payload : product
-			);
-			return newState;
-		},
 	},
 });
 
 // Action creators are generated for each case reducer function
-export const {
-	addProduct,
-	incrementProduct,
-	decrementProduct,
-	changeProductAttribute,
-} = cartSlice.actions;
+export const { addProduct, incrementProduct, decrementProduct } =
+	cartSlice.actions;
 
 export default cartSlice.reducer;
