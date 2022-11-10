@@ -31,9 +31,12 @@ export const cartSlice = createSlice({
 						(product) => product.uid === sameAttributesProduct.uid
 					);
 					state[index].count++;
+				} else {
+					state.push({ ...(action.payload as CartProduct), uid: nanoid() });
 				}
+			} else {
+				state.push({ ...(action.payload as CartProduct), uid: nanoid() });
 			}
-			state.push({ ...(action.payload as CartProduct), uid: nanoid() });
 		},
 		incrementProduct: (state, action: PayloadAction<CartProductWithUID>) => {
 			const newState = state.map((product) =>
