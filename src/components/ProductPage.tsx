@@ -35,7 +35,6 @@ const Gallery = styled.div`
 		flex-direction: column;
 		flex-wrap: wrap;
 		gap: 1rem;
-		max-height: 600px;
 		margin-right: 1rem;
 	}
 `;
@@ -140,7 +139,7 @@ class ProductPage extends Component<Props> {
 						<div>
 							{this.state.product.gallery.map((img, i) => (
 								<Image
-									key={i}
+									key={img}
 									src={img}
 									width={'60px'}
 									height={'60px'}
@@ -163,6 +162,7 @@ class ProductPage extends Component<Props> {
 						<ProductAttributes
 							product={this.state.product}
 							onClick={this.changeAttribute}
+							bigger
 						/>
 						<Price>
 							<span>Price:</span>
