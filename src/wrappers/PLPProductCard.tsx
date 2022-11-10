@@ -79,7 +79,7 @@ class PLPProductCard extends Component<Props> {
 			(price) => price.currency.label === this.props.selectedCurrency.label
 		);
 		return (
-			<Card key={this.props.product.name}>
+			<Card>
 				<CardLink to={`/product/${this.props.product.id}`} />
 				<Image
 					src={this.props.product.gallery[0]}
