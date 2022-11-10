@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { RootState } from '../app/store';
 import Button from '../reusables/Button';
 import { CartProductWithUID, Currency } from '../types/types';
 import roundToDecimal from '../utils/roundToDecimal';
@@ -166,8 +164,4 @@ class SideCart extends Component<Props> {
 	}
 }
 
-function mapStateToProps(state: RootState) {
-	return { cart: state.cart };
-}
-
-export default connect(mapStateToProps, null)(SideCart);
+export default SideCart;
