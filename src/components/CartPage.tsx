@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { AppDispatch, RootState } from '../app/store';
+import { AppDispatch, RootState } from '../redux/store';
 import { decrementProduct, incrementProduct } from '../features/cartSlice';
 import { CartProductWithUID, Currency } from '../types/types';
 import CartProductCard from '../wrappers/CartProductCard';

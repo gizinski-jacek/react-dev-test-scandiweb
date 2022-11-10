@@ -5,7 +5,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider as CartProvider } from 'react-redux';
-import store from './app/store';
+import store from './redux/store';
 import { ApolloProvider } from '@apollo/client';
 import { BrowserRouter } from 'react-router-dom';
 import { client } from './apollo/client';

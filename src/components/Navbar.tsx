@@ -2,7 +2,7 @@ import { Component, createRef } from 'react';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import { RootState } from '../app/store';
+import { RootState } from '../redux/store';
 import withRouter from '../HOC/withRouter';
 import {
 	CartProductWithUID,

@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { CartProduct, CartProductWithUID, Currency } from '../types/types';
 import styled from 'styled-components';
-import { AppDispatch } from '../app/store';
+import { AppDispatch } from '../redux/store';
 import { addProduct } from '../features/cartSlice';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
