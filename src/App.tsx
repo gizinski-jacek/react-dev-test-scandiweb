@@ -13,6 +13,7 @@ interface State {
 	categoryList: Category[];
 	selectedCurrency: Currency;
 	currencyList: Currency[];
+	loading: boolean;
 }
 
 class App extends Component {
@@ -20,6 +21,7 @@ class App extends Component {
 		categoryList: [],
 		selectedCurrency: { label: 'USD', symbol: '$' },
 		currencyList: [],
+		loading: true,
 	};
 
 	componentDidMount = async () => {
@@ -31,6 +33,7 @@ class App extends Component {
 				...this.state,
 				categoryList: initialData.data.categories,
 				currencyList: initialData.data.currencies,
+				loading: false,
 			});
 		} catch (error) {
 			console.log(error);
@@ -43,37 +46,39 @@ class App extends Component {
 
 	render() {
 		return (
-			<>
-				<Navbar
-					categoryList={this.state.categoryList}
-					changeCurrency={this.changeCurrency}
-					currencyList={this.state.currencyList}
-					selectedCurrency={this.state.selectedCurrency}
-				/>
-				<main>
-					<Routes>
-						<Route
-							path='/catalog'
-							element={
-								<CatalogPage selectedCurrency={this.state.selectedCurrency} />
-							}
-						/>
-						<Route
-							path='/product/:id'
-							element={
-								<ProductPage selectedCurrency={this.state.selectedCurrency} />
-							}
-						/>
-						<Route
-							path='/cart'
-							element={
-								<CartPage selectedCurrency={this.state.selectedCurrency} />
-							}
-						/>
-						<Route path='/*' element={<Navigate to='/catalog' />} />
-					</Routes>
-				</main>
-			</>
+			!this.state.loading && (
+				<>
+					<Navbar
+						categoryList={this.state.categoryList}
+						changeCurrency={this.changeCurrency}
+						currencyList={this.state.currencyList}
+						selectedCurrency={this.state.selectedCurrency}
+					/>
+					<main>
+						<Routes>
+							<Route
+								path='/catalog'
+								element={
+									<CatalogPage selectedCurrency={this.state.selectedCurrency} />
+								}
+							/>
+							<Route
+								path='/product/:id'
+								element={
+									<ProductPage selectedCurrency={this.state.selectedCurrency} />
+								}
+							/>
+							<Route
+								path='/cart'
+								element={
+									<CartPage selectedCurrency={this.state.selectedCurrency} />
+								}
+							/>
+							<Route path='/*' element={<Navigate to='/catalog' />} />
+						</Routes>
+					</main>
+				</>
+			)
 		);
 	}
 }
