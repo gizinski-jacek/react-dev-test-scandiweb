@@ -1,8 +1,15 @@
 import { Component, createRef } from 'react';
+import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import { RootState } from '../app/store';
 import withRouter from '../HOC/withRouter';
-import { Category, Currency, WithRouter } from '../types/types';
+import {
+	CartProductWithUID,
+	Category,
+	Currency,
+	WithRouter,
+} from '../types/types';
 import SideCart from './SideCart';
 
 const Nav = styled.nav`
@@ -102,6 +109,7 @@ interface State {
 }
 
 interface Props {
+	cart: CartProductWithUID[];
 	withRouter: WithRouter;
 	categoryList: Category[];
 	changeCurrency: (currency: Currency) => void;
@@ -278,6 +286,7 @@ class Navbar extends Component<Props> {
 							</div>
 						</CurrencySelect>
 						<SideCart
+							cart={this.props.cart}
 							open={this.state.sideCartOpen}
 							toggle={this.toggleSideCartVisibility}
 							selectedCurrency={this.props.selectedCurrency}
@@ -290,4 +299,8 @@ class Navbar extends Component<Props> {
 	}
 }
 
-export default withRouter(Navbar);
+function mapStateToProps(state: RootState) {
+	return { cart: state.cart };
+}
+
+export default withRouter(connect(mapStateToProps, null)(Navbar));
