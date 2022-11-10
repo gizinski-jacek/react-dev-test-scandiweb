@@ -15,6 +15,7 @@ const Card = styled.div`
 	text-decoration: none;
 	color: #000000;
 	position: relative;
+	width: fit-content;
 
 	&:hover {
 		box-shadow: 0 0 1rem 0.25rem #dadada;
@@ -84,7 +85,7 @@ class PLPProductCard extends Component<Props> {
 				<Image
 					src={this.props.product.gallery[0]}
 					inStock={this.props.product.inStock}
-					maxWidth={'280px'}
+					width={'280px'}
 					height={'280px'}
 				>
 					{this.props.product.inStock && (
