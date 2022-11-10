@@ -7,30 +7,25 @@ import Image from '../reusables/Image';
 import { CartProductWithUID, Currency } from '../types/types';
 import ProductAttributes from './ProductAttributes';
 
-const Product = styled.li<{ bordered?: boolean }>`
+const Product = styled.li`
 	display: flex;
 	margin: 1rem;
 `;
 
-const Details = styled.div<{ bigger?: boolean }>`
+const Details = styled.div`
 	flex: 1;
 	display: flex;
 	flex-direction: column;
-	max-width: 400px;
 	margin-right: auto;
 
 	h4 {
-		font-size: 1.25rem;
-		margin: 0.25rem 0;
-	}
-
-	h4:first-child {
-		font-size: 1.5rem;
+		margin: 0;
+		margin-bottom: 0.5rem;
 		font-weight: 600;
-	}
 
-	h5 {
-		font-weight: 600;
+		&:nth-child(2) {
+			font-weight: 400;
+		}
 	}
 `;
 
@@ -41,12 +36,13 @@ const ProductCounter = styled.div`
 
 	span {
 		margin: auto;
+		font-weight: 600;
 	}
 `;
 
-const DecBtn = styled.div`
-	width: 24px;
-	height: 24px;
+const DecBtn = styled.div<{ bigger?: boolean }>`
+	width: ${({ bigger }) => (bigger ? '32px' : '24px')};
+	height: ${({ bigger }) => (bigger ? '32px' : '24px')};
 	border: 1px solid #000000;
 	cursor: pointer;
 	font-size: 1.25rem;
@@ -94,9 +90,9 @@ const IncBtn = styled(DecBtn)`
 	}
 `;
 
-const ArrowsWrapper = styled.div`
-	width: 120px;
-	height: 160px;
+const ArrowsWrapper = styled.div<{ width?: string; height?: string }>`
+	width: ${({ width }) => width || '120px'};
+	height: ${({ height }) => height || '160px'};
 	position: relative;
 `;
 
@@ -175,7 +171,6 @@ interface Props {
 	incrementProduct: (product: CartProductWithUID) => void;
 	decrementProduct: (product: CartProductWithUID) => void;
 	gallery?: boolean;
-	bordered?: boolean;
 	bigger?: boolean;
 }
 
@@ -233,27 +228,39 @@ class CartProductCard extends Component<Props> {
 			(p) => p.currency.label === this.props.selectedCurrency.label
 		);
 		return (
-			<Product bordered={this.props.bordered}>
-				<Details bigger={this.props.bigger}>
+			<Product>
+				<Details>
 					<h4>{this.props.product.brand}</h4>
 					<h4>{this.props.product.name}</h4>
-					<h5>
+					<h4>
 						{price?.currency.symbol}
 						{price?.amount}
-					</h5>
-					<ProductAttributes product={this.props.product} />
+					</h4>
+					<ProductAttributes
+						product={this.props.product}
+						bigger={this.props.bigger}
+					/>
 				</Details>
 				<ProductCounter>
-					<IncBtn onClick={(e) => this.increment(e, this.props.product)} />
+					<IncBtn
+						onClick={(e) => this.increment(e, this.props.product)}
+						bigger={this.props.bigger}
+					/>
 					<span>{this.props.product.count}</span>
-					<DecBtn onClick={(e) => this.decrement(e, this.props.product)} />
+					<DecBtn
+						onClick={(e) => this.decrement(e, this.props.product)}
+						bigger={this.props.bigger}
+					/>
 				</ProductCounter>
 				{this.props.gallery ? (
-					<ArrowsWrapper>
+					<ArrowsWrapper
+						width={this.props.bigger ? '180px' : '120px'}
+						height={this.props.bigger ? '240px' : '160px'}
+					>
 						<Image
 							src={this.props.product.gallery[this.state.activeImageIndex]}
-							width={'120px'}
-							height={'160px'}
+							width={this.props.bigger ? '180px' : '120px'}
+							height={this.props.bigger ? '240px' : '160px'}
 						/>
 						<Arrows>
 							<ArrowPrev onClick={this.prevImage} />
@@ -263,8 +270,8 @@ class CartProductCard extends Component<Props> {
 				) : (
 					<Image
 						src={this.props.product.gallery[this.state.activeImageIndex]}
-						width={'120px'}
-						height={'160px'}
+						width={this.props.bigger ? '180px' : '120px'}
+						height={this.props.bigger ? '240px' : '160px'}
 					/>
 				)}
 			</Product>
