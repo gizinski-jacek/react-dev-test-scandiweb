@@ -61,15 +61,19 @@ class CartPage extends Component<Props> {
 		const tax = total * 0.21;
 		return (
 			<Page>
-				{this.props.cart.map((product) => (
-					<CartProductCard
-						product={product}
-						selectedCurrency={this.props.selectedCurrency}
-						gallery={product.gallery.length > 1}
-						bordered={true}
-						bigger={true}
-					/>
-				))}
+				{this.props.cart.length ? (
+					this.props.cart.map((product) => (
+						<CartProductCard
+							product={product}
+							selectedCurrency={this.props.selectedCurrency}
+							gallery={product.gallery.length > 1}
+							bordered={true}
+							bigger={true}
+						/>
+					))
+				) : (
+					<h2>No Items In Cart</h2>
+				)}
 				<Details>
 					<div>
 						<h4>Tax 21%: </h4>
