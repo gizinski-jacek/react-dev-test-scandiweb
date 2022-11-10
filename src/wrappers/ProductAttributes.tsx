@@ -7,24 +7,35 @@ import {
 	CartProductWithUID,
 } from '../types/types';
 
-const Container = styled.div`
+const Container = styled.div<{ bigger?: boolean }>`
 	display: flex;
 	flex-direction: column;
-	gap: 1rem;
+	gap: 0.5rem;
+
+	${({ bigger }) =>
+		bigger &&
+		`
+		span {
+			font-size: 1.25rem;
+		}`};
 `;
 
 const Attributes = styled.div`
-	div {
+	> div {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.25rem 1rem;
-		margin: 0.25rem 0;
+		gap: 0.5rem;
+		margin-top: 0.5rem;
 	}
 `;
 
-const Color = styled.div<{ selected: boolean; bgColor: string }>`
-	width: 20px;
-	height: 20px;
+const Color = styled.div<{
+	selected: boolean;
+	bgColor: string;
+	bigger?: boolean;
+}>`
+	width: ${({ bigger }) => (bigger ? '24px' : '16px')};
+	height: ${({ bigger }) => (bigger ? '24px' : '16px')};
 	border: 1px solid #a1a1a1;
 	cursor: pointer;
 	position: relative;
@@ -46,11 +57,14 @@ const Color = styled.div<{ selected: boolean; bgColor: string }>`
   `}
 `;
 
-const OtherAtt = styled.div<{ clickable?: boolean; selected: boolean }>`
-	flex: 1;
-	display: flex;
+const OtherAtt = styled.div<{
+	clickable?: boolean;
+	selected: boolean;
+	bigger?: boolean;
+}>`
+	width: 1fr;
 	justify-content: center;
-	padding: 0.5rem;
+	padding: ${({ bigger }) => (bigger ? '0.5rem 1rem' : '0.25rem 0.5rem')};
 	border: 1px solid #000000;
 	position: relative;
 	cursor: pointer;
@@ -96,68 +110,58 @@ interface Props {
 		attributeItem: Attribute,
 		product: CartProductWithUID | CartProduct
 	) => void;
+	bigger?: boolean;
 }
 
 class ProductAttributes extends Component<Props> {
 	render() {
 		return (
-			<Container>
+			<Container bigger={this.props.bigger}>
 				{this.props.product.attributes?.map((att) => {
-					if (att.id.toLowerCase() === 'color') {
-						return (
-							<Attributes key={att.id}>
-								<span>{att.name}:</span>
-								<div>
-									{att.items.map((item) => {
-										const selected =
-											this.props.product.selectedAttributes.find(
-												(a) => a.id === att.id
-											)?.item.id === item.id;
+					return (
+						<Attributes key={att.id}>
+							<span>{att.name}:</span>
+							<div>
+								{att.items.map((item) => {
+									const selected =
+										this.props.product.selectedAttributes.find(
+											(a) => a.id === att.id
+										)?.item.id === item.id;
+									if (att.type.toLowerCase() === 'swatch') {
 										return (
 											<Color
 												key={item.value}
-												onClick={(e) =>
+												onClick={() =>
 													this.props.onClick && !selected
 														? this.props.onClick(att, item, this.props.product)
 														: null
 												}
 												bgColor={item.value}
 												selected={selected}
+												bigger={this.props.bigger}
 											/>
 										);
-									})}
-								</div>
-							</Attributes>
-						);
-					} else {
-						return (
-							<Attributes key={att.id}>
-								<span>{att.name}:</span>
-								<div>
-									{att.items.map((item) => {
-										const selected =
-											this.props.product.selectedAttributes.find(
-												(a) => a.id === att.id
-											)?.item.id === item.id;
+									} else {
 										return (
 											<OtherAtt
 												key={item.value}
-												onClick={(e) =>
+												onClick={() =>
 													this.props.onClick && !selected
 														? this.props.onClick(att, item, this.props.product)
 														: null
 												}
 												selected={selected}
 												clickable={this.props.onClick ? true : false}
+												bigger={this.props.bigger}
 											>
 												{item.value}
 											</OtherAtt>
 										);
-									})}
-								</div>
-							</Attributes>
-						);
-					}
+									}
+								})}
+							</div>
+						</Attributes>
+					);
 				})}
 			</Container>
 		);
