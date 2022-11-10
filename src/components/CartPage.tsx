@@ -10,13 +10,17 @@ import roundToDecimal from '../utils/roundToDecimal';
 const Page = styled.div`
 	> li {
 		padding: 1rem 0;
-		max-height: 320px;
 		border: 0 solid #00000010;
 		border-width: 0 0 2px 0;
 
 		&:first-child {
-			border-width: 2px 0 2px 0;
+			border-top-width: 2px;
 		}
+	}
+
+	h2 {
+		text-align: center;
+		margin: 5rem;
 	}
 `;
 
@@ -62,33 +66,35 @@ class CartPage extends Component<Props> {
 		return (
 			<Page>
 				{this.props.cart.length ? (
-					this.props.cart.map((product) => (
-						<CartProductCard
-							product={product}
-							selectedCurrency={this.props.selectedCurrency}
-							gallery={product.gallery.length > 1}
-							bordered={true}
-							bigger={true}
-						/>
-					))
+					<>
+						{this.props.cart.map((product) => (
+							<CartProductCard
+								key={product.uid}
+								product={product}
+								selectedCurrency={this.props.selectedCurrency}
+								gallery={product.gallery.length > 1}
+								bigger
+							/>
+						))}
+						<Details>
+							<div>
+								<h4>Tax 21%: </h4>
+								<h4>Quantity: </h4>
+								<h4>Total: </h4>
+							</div>
+							<div>
+								<h4>
+									{this.props.selectedCurrency.symbol}
+									{roundToDecimal(tax, 2)}
+								</h4>
+								<h4>{productCount}</h4>
+								<h4>{roundToDecimal(total, 2)}</h4>
+							</div>
+						</Details>
+					</>
 				) : (
 					<h2>No Items In Cart</h2>
 				)}
-				<Details>
-					<div>
-						<h4>Tax 21%: </h4>
-						<h4>Quantity: </h4>
-						<h4>Total: </h4>
-					</div>
-					<div>
-						<h4>
-							{this.props.selectedCurrency.symbol}
-							{roundToDecimal(tax, 2)}
-						</h4>
-						<h4>{productCount}</h4>
-						<h4>{roundToDecimal(total, 2)}</h4>
-					</div>
-				</Details>
 			</Page>
 		);
 	}
