@@ -11,11 +11,11 @@ const Cart = styled.div`
 	cursor: pointer;
 
 	.side-cart-contents {
-		width: 400px;
+		width: 360px;
 		max-height: 75vh;
 		cursor: initial;
 		position: absolute;
-		margin-top: 1rem;
+		padding: 1rem 0;
 		right: 0;
 		display: flex;
 		flex-direction: column;
@@ -123,9 +123,9 @@ class SideCart extends Component<Props> {
 							{productCount} items
 						</Header>
 						<ul className='side-cart-product-list'>
-							{this.props.cart.map((product, i) => (
+							{this.props.cart.map((product) => (
 								<CartProductCard
-									key={i}
+									key={product.uid}
 									product={product}
 									selectedCurrency={this.props.selectedCurrency}
 								/>
