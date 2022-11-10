@@ -23,20 +23,28 @@ import parse from 'html-react-parser';
 
 const Product = styled.div`
 	display: flex;
+	flex-direction: column;
 	justify-content: space-evenly;
 	gap: 2rem;
+
+	@media only screen and (min-width: 768px) {
+		flex-direction: row;
+	}
 `;
 
 const Gallery = styled.div`
 	display: flex;
+	gap: 1rem;
+	max-height: 420px;
+	width: fit-content;
+`;
 
-	> div {
-		display: flex;
-		flex-direction: column;
-		flex-wrap: wrap;
-		gap: 1rem;
-		margin-right: 1rem;
-	}
+const Thumbnails = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+	overflow-y: scroll;
+	padding-right: 1rem;
 `;
 
 const Info = styled.div`
@@ -136,22 +144,22 @@ class ProductPage extends Component<Props> {
 			this.state.product && (
 				<Product>
 					<Gallery>
-						<div>
+						<Thumbnails>
 							{this.state.product.gallery.map((img, i) => (
 								<Image
 									key={img}
 									src={img}
-									width={'60px'}
-									height={'60px'}
+									width={'80px'}
+									height={'80px'}
 									cursor={'true'}
 									onClick={() => this.changeImage(i)}
 								/>
 							))}
-						</div>
+						</Thumbnails>
 						<Image
 							src={this.state.activeImage}
-							maxWidth={'600px'}
-							height={'600px'}
+							width={'420px'}
+							height={'420px'}
 						/>
 					</Gallery>
 					<Info>
