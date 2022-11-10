@@ -48,7 +48,7 @@ export const cartSlice = createSlice({
 		},
 		decrementProduct: (state, action: PayloadAction<CartProductWithUID>) => {
 			const productInCart = state.find(
-				(product) => product.id === action.payload.id
+				(product) => product.uid === action.payload.uid
 			);
 			if (!productInCart) return state;
 			if (productInCart.count === 1) {
