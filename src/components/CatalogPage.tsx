@@ -14,8 +14,8 @@ import PLPProductCard from '../wrappers/PLPProductCard';
 
 const Catalog = styled.div`
 	h2 {
-		margin: 4rem 2rem;
-		text-transform: uppercase;
+		margin: 5rem 1rem;
+		text-transform: capitalize;
 	}
 `;
 
