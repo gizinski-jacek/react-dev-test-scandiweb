@@ -16,7 +16,7 @@ export interface Attribute {
 export interface AttributeSet {
 	id: string;
 	name: string;
-	type?: string;
+	type: string;
 	items: Attribute[];
 }
 
@@ -45,7 +45,7 @@ export interface Currency {
 export interface CartAttributeSet {
 	id: string;
 	name: string;
-	type?: string;
+	type: string;
 	item: Attribute;
 }
 export interface CartProduct extends Product {
