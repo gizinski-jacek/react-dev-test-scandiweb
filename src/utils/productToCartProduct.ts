@@ -7,6 +7,7 @@ const productToCartProduct = (product: Product): CartProduct => {
 		return {
 			id: att.id,
 			name: att.name,
+			type: att.type,
 			item: att.items[0],
 		};
 	});
