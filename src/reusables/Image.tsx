@@ -2,13 +2,11 @@ import { Component } from 'react';
 import styled from 'styled-components';
 
 const ImgWrapper = styled.div<{
-	maxWidth?: string;
 	width?: string;
 	height?: string;
 	inStock?: boolean;
 	cursor?: any;
 }>`
-	max-width: ${({ maxWidth }) => maxWidth || 'auto'};
 	width: ${({ width }) => width || 'auto'};
 	height: ${({ height }) => height || 'auto'};
 	cursor: ${({ cursor }) => cursor === 'true' && 'pointer'};
@@ -44,7 +42,6 @@ interface Props {
 	children?: any;
 	src: string;
 	inStock?: boolean;
-	maxWidth?: string;
 	width?: string;
 	height?: string;
 	cursor?: string;
