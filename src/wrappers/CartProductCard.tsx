@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { AppDispatch } from '../redux/store';
-import { decrementProduct, incrementProduct } from '../features/cartSlice';
+import { decrementProduct, incrementProduct } from '../redux-slices/cartSlice';
 import Image from '../reusables/Image';
 import { CartProductWithUID, Currency } from '../types/types';
 import ProductAttributes from './ProductAttributes';

@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { AppDispatch } from '../redux/store';
-import { addProduct } from '../features/cartSlice';
+import { addProduct } from '../redux-slices/cartSlice';
 import withRouter from '../HOC/withRouter';
 import Button from '../reusables/Button';
 import {
