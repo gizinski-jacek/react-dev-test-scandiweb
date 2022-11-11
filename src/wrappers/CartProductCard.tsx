@@ -2,10 +2,16 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { AppDispatch } from '../redux/store';
-import { decrementProduct, incrementProduct } from '../redux-slices/cartSlice';
+import {
+	decrementProduct,
+	incrementProduct,
+	removeProduct,
+} from '../redux-slices/cartSlice';
 import Image from '../reusables/Image';
 import { CartProductWithUID, Currency } from '../types/types';
 import ProductAttributes from './ProductAttributes';
+import { Link } from 'react-router-dom';
+import Button from '../reusables/Button';
 
 const Product = styled.li`
 	display: flex;
@@ -13,7 +19,17 @@ const Product = styled.li`
 `;
 
 const Details = styled.div`
-	flex: 1;
+	display: flex;
+	flex-direction: column;
+	margin-right: auto;
+	gap: 2rem;
+
+	> button {
+		white-space: nowrap;
+	}
+`;
+
+const Info = styled.div`
 	display: flex;
 	flex-direction: column;
 	margin-right: auto;
@@ -90,7 +106,7 @@ const IncBtn = styled(DecBtn)`
 	}
 `;
 
-const ArrowsWrapper = styled.div<{ width?: string; height?: string }>`
+const GalleryWrapper = styled.div<{ width?: string; height?: string }>`
 	width: ${({ width }) => width || '120px'};
 	height: ${({ height }) => height || '160px'};
 	position: relative;
@@ -168,10 +184,12 @@ interface State {
 interface Props {
 	product: CartProductWithUID;
 	selectedCurrency: Currency;
+	removeProduct: (product: CartProductWithUID) => void;
 	incrementProduct: (product: CartProductWithUID) => void;
 	decrementProduct: (product: CartProductWithUID) => void;
 	gallery?: boolean;
 	bigger?: boolean;
+	removeBtn?: boolean;
 }
 
 class CartProductCard extends Component<Props> {
@@ -207,6 +225,11 @@ class CartProductCard extends Component<Props> {
 		}
 	};
 
+	remove = (e: React.MouseEvent<HTMLButtonElement>) => {
+		e.stopPropagation();
+		this.props.removeProduct(this.props.product);
+	};
+
 	increment = (
 		e: React.MouseEvent<HTMLDivElement>,
 		product: CartProductWithUID
@@ -230,16 +253,41 @@ class CartProductCard extends Component<Props> {
 		return (
 			<Product>
 				<Details>
-					<h4>{this.props.product.brand}</h4>
-					<h4>{this.props.product.name}</h4>
-					<h4>
-						{price?.currency.symbol}
-						{price?.amount}
-					</h4>
-					<ProductAttributes
-						product={this.props.product}
-						bigger={this.props.bigger}
-					/>
+					<Info>
+						{this.props.bigger ? (
+							<Link to={`/product/${this.props.product.id}`}>
+								<h4>{this.props.product.brand}</h4>
+								<h4>{this.props.product.name}</h4>
+								<h4>
+									{price?.currency.symbol}
+									{price?.amount}
+								</h4>
+							</Link>
+						) : (
+							<>
+								<h4>{this.props.product.brand}</h4>
+								<h4>{this.props.product.name}</h4>
+								<h4>
+									{price?.currency.symbol}
+									{price?.amount}
+								</h4>
+							</>
+						)}
+						<ProductAttributes
+							product={this.props.product}
+							bigger={this.props.bigger}
+						/>
+					</Info>
+					{this.props.removeBtn && (
+						<Button
+							bgColor={'#e10000'}
+							border={'#000000'}
+							margin={'auto 0 0 0'}
+							onClick={this.remove}
+						>
+							Remove Product
+						</Button>
+					)}
 				</Details>
 				<ProductCounter>
 					<IncBtn
@@ -253,7 +301,7 @@ class CartProductCard extends Component<Props> {
 					/>
 				</ProductCounter>
 				{this.props.gallery ? (
-					<ArrowsWrapper
+					<GalleryWrapper
 						width={this.props.bigger ? '180px' : '120px'}
 						height={this.props.bigger ? '240px' : '160px'}
 					>
@@ -266,7 +314,7 @@ class CartProductCard extends Component<Props> {
 							<ArrowPrev onClick={this.prevImage} />
 							<ArrowNext onClick={this.nextImage} />
 						</Arrows>
-					</ArrowsWrapper>
+					</GalleryWrapper>
 				) : (
 					<Image
 						src={this.props.product.gallery[this.state.activeImageIndex]}
@@ -281,6 +329,8 @@ class CartProductCard extends Component<Props> {
 
 function mapDispatchToProps(dispatch: AppDispatch) {
 	return {
+		removeProduct: (product: CartProductWithUID) =>
+			dispatch(removeProduct(product)),
 		incrementProduct: (product: CartProductWithUID) =>
 			dispatch(incrementProduct(product)),
 		decrementProduct: (product: CartProductWithUID) =>
