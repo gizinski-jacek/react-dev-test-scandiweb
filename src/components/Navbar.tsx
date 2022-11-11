@@ -42,9 +42,12 @@ const CategoryLink = styled(NavLink)<{ active: string }>`
 	text-decoration: none;
 	flex-wrap: nowrap;
 	color: #000000;
+	border-bottom: 2px solid #00000000;
 	transition: 0.1s ease-in-out;
 
 	&:hover {
+		text-decoration: none;
+		border-color: #00c800;
 		color: #00c800;
 	}
 
