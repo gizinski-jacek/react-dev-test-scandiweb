@@ -75,6 +75,11 @@ const Price = styled.div`
 	font-weight: 600;
 `;
 
+const H2 = styled.h2`
+	text-align: center;
+	margin: 5rem 0;
+`;
+
 interface Props {
 	withRouter: WithRouter;
 	selectedCurrency: Currency;
@@ -82,12 +87,12 @@ interface Props {
 }
 
 interface State {
-	product: CartProduct | undefined;
+	product: CartProduct | null;
 	activeImage: string;
 }
 
 class ProductPage extends Component<Props> {
-	state: State = { product: undefined, activeImage: '' };
+	state: State = { product: null, activeImage: '' };
 
 	componentDidMount = async () => {
 		try {
@@ -96,12 +101,19 @@ class ProductPage extends Component<Props> {
 				query: GET_PRODUCT_DETAILS,
 				variables: { id: id },
 			});
-			const cartProduct = productToCartProduct(response.data.product);
-			this.setState({
-				...this.state,
-				product: cartProduct,
-				activeImage: cartProduct.gallery[0],
-			});
+			if (!response.data.product) {
+				this.setState({
+					...this.state,
+					product: null,
+				});
+			} else {
+				const cartProduct = productToCartProduct(response.data.product);
+				this.setState({
+					...this.state,
+					product: cartProduct,
+					activeImage: cartProduct.gallery[0],
+				});
+			}
 		} catch (error) {
 			console.log(error);
 		}
@@ -141,57 +153,57 @@ class ProductPage extends Component<Props> {
 		const productPrice = this.state.product?.prices.find(
 			(price) => price.currency.label === this.props.selectedCurrency.label
 		);
-		return (
-			this.state.product && (
-				<Product>
-					<Gallery>
-						<Thumbnails>
-							{this.state.product.gallery.map((img, i) => (
-								<Image
-									key={img}
-									src={img}
-									width={'80px'}
-									height={'80px'}
-									cursor={'true'}
-									onClick={() => this.changeImage(i)}
-								/>
-							))}
-						</Thumbnails>
-						<Image
-							src={this.state.activeImage}
-							width={'420px'}
-							height={'420px'}
-						/>
-					</Gallery>
-					<Info>
-						<Name>
-							<h4>{this.state.product.brand}</h4>
-							<h4>{this.state.product.name}</h4>
-						</Name>
-						<ProductAttributes
-							product={this.state.product}
-							onClick={this.changeAttribute}
-							bigger
-						/>
-						<Price>
-							<span>Price:</span>
-							<h4>
-								{productPrice?.currency.symbol}
-								{productPrice?.amount}
-							</h4>
-						</Price>
-						<Button
-							disabled={!this.state.product.inStock}
-							onClick={this.addToCart}
-							bgColor={'#00c800'}
-						>
-							{this.state.product.inStock ? 'Add to Cart' : 'Out of Stock'}
-						</Button>
-						{this.state.product.description &&
-							parse(this.state.product.description)}
-					</Info>
-				</Product>
-			)
+		return this.state.product ? (
+			<Product>
+				<Gallery>
+					<Thumbnails>
+						{this.state.product.gallery.map((img, i) => (
+							<Image
+								key={img}
+								src={img}
+								width={'80px'}
+								height={'80px'}
+								cursor={'true'}
+								onClick={() => this.changeImage(i)}
+							/>
+						))}
+					</Thumbnails>
+					<Image
+						src={this.state.activeImage}
+						width={'420px'}
+						height={'420px'}
+					/>
+				</Gallery>
+				<Info>
+					<Name>
+						<h4>{this.state.product.brand}</h4>
+						<h4>{this.state.product.name}</h4>
+					</Name>
+					<ProductAttributes
+						product={this.state.product}
+						onClick={this.changeAttribute}
+						bigger
+					/>
+					<Price>
+						<span>Price:</span>
+						<h4>
+							{productPrice?.currency.symbol}
+							{productPrice?.amount}
+						</h4>
+					</Price>
+					<Button
+						bgColor='#00c800'
+						disabled={!this.state.product.inStock}
+						onClick={this.addToCart}
+					>
+						{this.state.product.inStock ? 'Add to Cart' : 'Out of Stock'}
+					</Button>
+					{this.state.product.description &&
+						parse(this.state.product.description)}
+				</Info>
+			</Product>
+		) : (
+			<H2>Product not found</H2>
 		);
 	}
 }
