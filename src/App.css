@@ -49,6 +49,20 @@ p {
 	line-height: 1.25rem;
 }
 
+a {
+	text-decoration: none;
+}
+
+a:visited {
+	text-decoration: underline;
+	color: inherit;
+}
+
+a:hover {
+	text-decoration: underline;
+	color: #0064ff;
+}
+
 body {
 	min-height: 100vh;
 	position: relative;
