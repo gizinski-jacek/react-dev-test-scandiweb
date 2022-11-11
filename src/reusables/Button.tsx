@@ -6,19 +6,21 @@ const Btn = styled.button<{
 	bgColor?: string;
 	color?: string;
 	margin?: string;
+	minWidth?: string;
 }>`
 	display: block;
 	border: ${({ border }) => (border ? `1px solid ${border}` : 'none')};
 	color: ${({ color }) => color || '#ffffff'};
 	margin: ${({ margin }) => margin || '0'};
 	background-color: ${({ bgColor }) => bgColor || '#000000'};
+	min-width: ${({ minWidth }) => minWidth || 'initial'};
 	padding: 0.5rem;
 	font-size: 1.1rem;
 	font-weight: 600;
 	text-decoration: none;
 	cursor: pointer;
 	transition: 0.1s ease-in-out;
-	width: fit-content;
+	text-transform: uppercase;
 
 	&:disabled {
 		opacity: 0.25;
@@ -40,6 +42,7 @@ interface Props {
 	bgColor?: string;
 	color?: string;
 	margin?: string;
+	minWidth?: string;
 	disabled?: boolean;
 	onClick: (...any: any) => void;
 }
