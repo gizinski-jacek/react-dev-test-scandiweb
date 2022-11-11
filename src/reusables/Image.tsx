@@ -9,6 +9,8 @@ const ImgWrapper = styled.div<{
 }>`
 	width: ${({ width }) => width || 'auto'};
 	height: ${({ height }) => height || 'auto'};
+	min-width: ${({ width }) => width || 'auto'};
+	min-height: ${({ height }) => height || 'auto'};
 	cursor: ${({ cursor }) => cursor === 'true' && 'pointer'};
 	position: relative;
 
