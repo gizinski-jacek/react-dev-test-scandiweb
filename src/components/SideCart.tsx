@@ -148,11 +148,7 @@ class SideCart extends Component<Props> {
 								>
 									View Bag
 								</Button>
-								<Button
-									bgColor='#00c800'
-									color='#ffffff'
-									onClick={this.props.navigateToCart}
-								>
+								<Button bgColor='#00c800' color='#ffffff' onClick={() => {}}>
 									Check Out
 								</Button>
 							</div>
