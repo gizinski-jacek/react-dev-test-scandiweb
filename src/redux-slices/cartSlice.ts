@@ -38,6 +38,12 @@ export const cartSlice = createSlice({
 				state.push({ ...(action.payload as CartProduct), uid: nanoid() });
 			}
 		},
+		removeProduct: (state, action: PayloadAction<CartProductWithUID>) => {
+			const newState = state.filter(
+				(product) => product.uid !== action.payload.uid
+			);
+			return newState;
+		},
 		incrementProduct: (state, action: PayloadAction<CartProductWithUID>) => {
 			const newState = state.map((product) =>
 				product.uid === action.payload.uid
@@ -69,7 +75,7 @@ export const cartSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { addProduct, incrementProduct, decrementProduct } =
+export const { addProduct, removeProduct, incrementProduct, decrementProduct } =
 	cartSlice.actions;
 
 export default cartSlice.reducer;
