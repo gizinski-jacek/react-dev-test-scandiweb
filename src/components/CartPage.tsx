@@ -6,6 +6,7 @@ import { CartProductWithUID, Currency } from '../types/types';
 import CartProductCard from '../wrappers/CartProductCard';
 import styled from 'styled-components';
 import roundToDecimal from '../utils/roundToDecimal';
+import Button from '../reusables/Button';
 
 const Page = styled.div`
 	> li {
@@ -24,8 +25,11 @@ const Page = styled.div`
 	}
 `;
 
-const Details = styled.div`
+const Footer = styled.div`
 	margin: 1rem;
+`;
+
+const Details = styled.div`
 	display: flex;
 	gap: 1rem;
 
@@ -77,21 +81,31 @@ class CartPage extends Component<Props> {
 								removeBtn
 							/>
 						))}
-						<Details>
-							<div>
-								<h4>Tax 21%: </h4>
-								<h4>Quantity: </h4>
-								<h4>Total: </h4>
-							</div>
-							<div>
-								<h4>
-									{this.props.selectedCurrency.symbol}
-									{roundToDecimal(tax, 2)}
-								</h4>
-								<h4>{productCount}</h4>
-								<h4>{roundToDecimal(total, 2)}</h4>
-							</div>
-						</Details>
+						<Footer>
+							<Details>
+								<div>
+									<h4>Tax 21%: </h4>
+									<h4>Quantity: </h4>
+									<h4>Total: </h4>
+								</div>
+								<div>
+									<h4>
+										{this.props.selectedCurrency.symbol}
+										{roundToDecimal(tax, 2)}
+									</h4>
+									<h4>{productCount}</h4>
+									<h4>{roundToDecimal(total, 2)}</h4>
+								</div>
+							</Details>
+							<Button
+								bgColor='#00c800'
+								margin='1rem 0 0 0'
+								minWidth='200px'
+								onClick={() => {}}
+							>
+								Order
+							</Button>
+						</Footer>
 					</>
 				) : (
 					<h2>No Items In Cart</h2>
