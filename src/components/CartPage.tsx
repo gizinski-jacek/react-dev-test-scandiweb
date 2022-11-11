@@ -74,6 +74,7 @@ class CartPage extends Component<Props> {
 								selectedCurrency={this.props.selectedCurrency}
 								gallery={product.gallery.length > 1}
 								bigger
+								removeBtn
 							/>
 						))}
 						<Details>
