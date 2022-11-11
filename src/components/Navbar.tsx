@@ -47,7 +47,6 @@ const CategoryLink = styled(NavLink)<{ active: string }>`
 
 	&:hover {
 		text-decoration: none;
-		border-color: #00c800;
 		color: #00c800;
 	}
 
@@ -55,7 +54,7 @@ const CategoryLink = styled(NavLink)<{ active: string }>`
 		active === 'true' &&
 		`
 		border-bottom: 2px solid #00c800;
-		color: #00c800;
+		color: #00c800 !important;
   `}
 `;
 
