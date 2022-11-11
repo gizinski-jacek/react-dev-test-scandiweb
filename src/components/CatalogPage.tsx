@@ -33,7 +33,7 @@ interface Props {
 
 interface State {
 	category: string;
-	productList: CartProduct[];
+	productList: CartProduct[] | null;
 }
 
 class CatalogPage extends Component<Props> {
@@ -53,28 +53,13 @@ class CatalogPage extends Component<Props> {
 				query: GET_CATEGORY_PRODUCTS,
 				variables: { category: category },
 			});
-			const cartProducts = response.data.category.products.map((product) =>
-				productToCartProduct(product)
-			);
-			this.setState({
-				...this.state,
-				category: response.data.category.name,
-				productList: cartProducts,
-			});
-		} catch (error) {
-			console.log(error);
-		}
-	};
-
-	componentDidUpdate = async (prevProps: Props, prevState: State) => {
-		try {
-			const search = this.props.withRouter.location.search;
-			const category = new URLSearchParams(search).get('category') || 'all';
-			if (category !== prevState.category) {
-				const response: GQLCategoryData = await client.query({
-					query: GET_CATEGORY_PRODUCTS,
-					variables: { category: category },
+			if (!response.data.category) {
+				this.setState({
+					...this.state,
+					category: 'invalid category',
+					productList: null,
 				});
+			} else {
 				const cartProducts = response.data.category.products.map((product) =>
 					productToCartProduct(product)
 				);
@@ -89,21 +74,54 @@ class CatalogPage extends Component<Props> {
 		}
 	};
 
+	componentDidUpdate = async (prevProps: Props, prevState: State) => {
+		try {
+			const search = this.props.withRouter.location.search;
+			const category = new URLSearchParams(search).get('category') || 'all';
+			if (category !== prevState.category) {
+				const response: GQLCategoryData = await client.query({
+					query: GET_CATEGORY_PRODUCTS,
+					variables: { category: category },
+				});
+				if (!response.data.category) {
+					this.setState({
+						...this.state,
+						category: 'invalid category',
+						productList: null,
+					});
+				} else {
+					const cartProducts = response.data.category.products.map((product) =>
+						productToCartProduct(product)
+					);
+					this.setState({
+						...this.state,
+						category: response.data.category.name,
+						productList: cartProducts,
+					});
+				}
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	render() {
-		const search = this.props.withRouter.location.search;
-		const category = new URLSearchParams(search).get('category');
 		return (
 			<Catalog>
-				<h2>{category === 'all' ? 'all products' : category}</h2>
-				<Grid>
-					{this.state.productList.map((product, i) => (
-						<PLPProductCard
-							key={i}
-							product={product}
-							selectedCurrency={this.props.selectedCurrency}
-						/>
-					))}
-				</Grid>
+				<h2>
+					{this.state.category === 'all' ? 'all products' : this.state.category}
+				</h2>
+				{this.state.productList && (
+					<Grid>
+						{this.state.productList.map((product, i) => (
+							<PLPProductCard
+								key={i}
+								product={product}
+								selectedCurrency={this.props.selectedCurrency}
+							/>
+						))}
+					</Grid>
+				)}
 			</Catalog>
 		);
 	}
