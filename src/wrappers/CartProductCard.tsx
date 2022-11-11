@@ -280,9 +280,9 @@ class CartProductCard extends Component<Props> {
 					</Info>
 					{this.props.removeBtn && (
 						<Button
-							bgColor={'#e10000'}
-							border={'#000000'}
-							margin={'auto 0 0 0'}
+							bgColor='#e10000'
+							border='#000000'
+							margin='auto 0 0 0'
 							onClick={this.remove}
 						>
 							Remove Product
