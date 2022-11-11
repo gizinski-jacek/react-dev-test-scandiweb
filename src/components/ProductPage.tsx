@@ -34,7 +34,7 @@ const Product = styled.div`
 
 const Gallery = styled.div`
 	display: flex;
-	gap: 1rem;
+	gap: 2rem;
 	max-height: 420px;
 	width: fit-content;
 `;
@@ -44,7 +44,8 @@ const Thumbnails = styled.div`
 	flex-direction: column;
 	gap: 2rem;
 	overflow-y: scroll;
-	padding-right: 1rem;
+	padding-left: 1rem;
+	direction: rtl;
 `;
 
 const Info = styled.div`
