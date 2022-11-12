@@ -11,7 +11,7 @@ const Cart = styled.div`
 	cursor: pointer;
 
 	.side-cart-contents {
-		width: 360px;
+		width: 320px;
 		max-height: 75vh;
 		cursor: initial;
 		position: absolute;
