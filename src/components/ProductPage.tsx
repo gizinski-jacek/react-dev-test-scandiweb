@@ -52,7 +52,7 @@ const Info = styled.div`
 	display: flex;
 	flex-direction: column;
 	gap: 2rem;
-	width: 280px;
+	width: 240px;
 
 	span {
 		display: block;
