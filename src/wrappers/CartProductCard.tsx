@@ -15,6 +15,7 @@ import Button from '../reusables/Button';
 
 const Product = styled.li`
 	display: flex;
+	gap: 0.5rem;
 	margin: 1rem;
 `;
 
@@ -29,26 +30,37 @@ const Details = styled.div`
 	}
 `;
 
-const Info = styled.div`
+const Info = styled.div<{ bigger?: boolean }>`
 	display: flex;
 	flex-direction: column;
+	gap: 0.5rem;
 	margin-right: auto;
 
+	h3,
 	h4 {
-		margin: 0;
-		margin-bottom: 0.5rem;
 		font-weight: 600;
 
 		&:nth-child(2) {
 			font-weight: 400;
 		}
 	}
+
+	${({ bigger }) =>
+		!bigger &&
+		`
+		h3, h4 {
+			margin: 0;
+			font-weight: 400;
+
+			&:nth-child(3) {
+			font-weight: 500;
+		}
+  `}
 `;
 
 const ProductCounter = styled.div`
 	display: flex;
 	flex-direction: column;
-	margin: 0 1rem;
 
 	span {
 		margin: auto;
@@ -253,11 +265,11 @@ class CartProductCard extends Component<Props> {
 		return (
 			<Product>
 				<Details>
-					<Info>
+					<Info bigger={this.props.bigger}>
 						{this.props.bigger ? (
 							<Link to={`/product/${this.props.product.id}`}>
-								<h4>{this.props.product.brand}</h4>
-								<h4>{this.props.product.name}</h4>
+								<h3>{this.props.product.brand}</h3>
+								<h3>{this.props.product.name}</h3>
 								<h4>
 									{price?.currency.symbol}
 									{price?.amount}

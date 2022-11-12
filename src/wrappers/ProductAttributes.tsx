@@ -62,16 +62,18 @@ const OtherAtt = styled.div<{
 	selected: boolean;
 	bigger?: boolean;
 }>`
-	width: 1fr;
+	width: ${({ bigger }) => (bigger ? '52px' : '24px')};
+	flex: 1;
+	display: inline-flex;
 	justify-content: center;
-	padding: ${({ bigger }) => (bigger ? '0.5rem 1rem' : '0.25rem 0.5rem')};
+	padding: ${({ bigger }) => (bigger ? '0.75rem 1rem' : '0.25rem 0.5rem')};
 	border: 1px solid #000000;
 	position: relative;
-	cursor: pointer;
 
 	${({ clickable }) =>
 		clickable &&
 		`
+		cursor: pointer;
 		transition: 0.1s ease-in-out;
 
 		&:hover {
