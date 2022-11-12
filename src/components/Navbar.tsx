@@ -44,6 +44,7 @@ const CategoryLink = styled(NavLink)<{ active: string }>`
 	color: #000000;
 	border-bottom: 2px solid #00000000;
 	transition: 0.1s ease-in-out;
+	font-size: 1.25rem;
 
 	&:hover {
 		text-decoration: none;
@@ -91,6 +92,10 @@ const CurrencySelect = styled.div`
 		position: absolute;
 		left: 0;
 		box-shadow: 0 0 0.5rem 0 #dadada;
+	}
+
+	svg {
+		margin-top: auto;
 	}
 `;
 
@@ -251,7 +256,7 @@ class Navbar extends Component<Props> {
 					<NavControls ref={this.state.ref}>
 						<CurrencySelect onClick={this.toggleCurrencySelectorVisibility}>
 							<div className='currency-icon'>
-								<h3>{this.props.selectedCurrency.symbol}</h3>
+								<h4>{this.props.selectedCurrency.symbol}</h4>
 								<svg
 									width='24px'
 									height='24px'
