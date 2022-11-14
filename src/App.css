@@ -65,10 +65,10 @@ a:hover {
 
 body {
 	min-height: 100vh;
-	position: relative;
 	min-width: 480px;
+	position: relative;
 }
 
 main {
-	margin: 2rem 4rem;
+	padding: 4rem;
 }
