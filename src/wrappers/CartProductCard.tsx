@@ -13,9 +13,9 @@ import ProductAttributes from './ProductAttributes';
 import { Link } from 'react-router-dom';
 import Button from '../reusables/Button';
 
-const Product = styled.li`
+const Product = styled.li<{ bigger?: boolean }>`
 	display: flex;
-	gap: 0.5rem;
+	gap: ${({ bigger }) => (bigger ? '1rem' : '0.5rem')};
 	margin: 1rem;
 `;
 
@@ -38,10 +38,10 @@ const Info = styled.div<{ bigger?: boolean }>`
 
 	h3,
 	h4 {
-		font-weight: 600;
+		font-weight: 500;
 
 		&:nth-child(2) {
-			font-weight: 400;
+			font-weight: 300;
 		}
 	}
 
@@ -263,7 +263,7 @@ class CartProductCard extends Component<Props> {
 			(p) => p.currency.label === this.props.selectedCurrency.label
 		);
 		return (
-			<Product>
+			<Product bigger={this.props.bigger}>
 				<Details>
 					<Info bigger={this.props.bigger}>
 						{this.props.bigger ? (
