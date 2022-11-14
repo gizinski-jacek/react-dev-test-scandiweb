@@ -1,6 +1,6 @@
-# [Scandiweb](https://scandiweb.com/) Junior Developer test assignment
+# [Scandiweb](https://scandiweb.com/) Entry React developer test
 
-[Test assignment details.](https://www.notion.so/Entry-React-developer-TEST-39f601f8aa3f48ac88c4a8fefda304c1)
+[Assignment details.](https://www.notion.so/Entry-React-developer-TEST-39f601f8aa3f48ac88c4a8fefda304c1)
 
 [GraphQL endpoint.](https://github.com/scandiweb/junior-react-endpoint)
 
