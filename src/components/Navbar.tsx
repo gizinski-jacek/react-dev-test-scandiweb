@@ -1,7 +1,6 @@
 import { Component, createRef } from 'react';
 import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
-import styled from 'styled-components';
+import * as styled from '../styled/Navbar.styled';
 import { RootState } from '../redux/store';
 import withRouter from '../HOC/withRouter';
 import {
@@ -11,107 +10,6 @@ import {
 	WithRouter,
 } from '../types/types';
 import SideCart from './SideCart';
-
-const Nav = styled.nav`
-	padding: 1rem 4rem;
-	height: 5rem;
-	display: flex;
-	justify-content: space-between;
-	background-color: #ffffff;
-	border-bottom: 1px solid #00000010;
-	position: sticky;
-	top: 0;
-	z-index: 20;
-`;
-
-const Blur = styled.div`
-	background-color: #00000040;
-	position: absolute;
-	top: 5rem;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	z-index: 5;
-	flex: 1;
-`;
-
-const CategoryList = styled.div`
-	display: flex;
-`;
-
-const CategoryLink = styled(NavLink)<{ active: string }>`
-	display: inline-block;
-	padding: 1rem;
-	text-transform: uppercase;
-	text-decoration: none;
-	flex-wrap: nowrap;
-	color: #000000;
-	border-bottom: 2px solid #00000000;
-	transition: 0.1s ease-in-out;
-	font-size: 1.25rem;
-
-	&:hover {
-		text-decoration: none;
-		color: #00c800;
-	}
-
-	${({ active }) =>
-		active === 'true' &&
-		`
-		border-bottom: 2px solid #00c800;
-		color: #00c800 !important;
-  `}
-`;
-
-const Logo = styled.div`
-	width: 40px;
-	height: 40px;
-	min-width: 40px;
-	min-height: 40px;
-	fill: #ffffff;
-	margin: 0 1rem;
-`;
-
-const NavControls = styled.div`
-	display: flex;
-	gap: 1rem;
-`;
-
-const CurrencySelect = styled.div`
-	position: relative;
-	cursor: pointer;
-	z-index: 10;
-
-	h3 {
-		min-width: 28px;
-		text-align: end;
-	}
-
-	.currency-icon {
-		display: flex;
-		align-items: center;
-	}
-
-	.currency-item-list {
-		position: absolute;
-		left: 0;
-		box-shadow: 0 0 0.5rem 0 #dadada;
-	}
-
-	svg {
-		margin-top: auto;
-	}
-`;
-
-const CurrencyItem = styled.div<{ selected: boolean }>`
-	padding: 0.75rem 1.25rem;
-	white-space: nowrap;
-	background-color: ${({ selected }) => (selected ? '#dadada' : '#ffffff')};
-
-	&:hover {
-		filter: brightness(95%);
-	}
-`;
 
 interface State {
 	currencySelectOpen: boolean;
@@ -210,22 +108,22 @@ class Navbar extends Component<Props> {
 		const category = new URLSearchParams(search).get('category');
 		return (
 			<>
-				{this.state.sideCartOpen && <Blur />}
-				<Nav>
-					<CategoryList>
+				{this.state.sideCartOpen && <styled.Blur />}
+				<styled.Nav>
+					<styled.CategoryList>
 						{this.props.categoryList.map((c) => {
 							return (
-								<CategoryLink
+								<styled.CategoryLink
 									key={c.name}
 									to={`/catalog${`?category=${c.name}`}`}
 									active={(category === c.name).toString()}
 								>
 									{c.name}
-								</CategoryLink>
+								</styled.CategoryLink>
 							);
 						})}
-					</CategoryList>
-					<Logo>
+					</styled.CategoryList>
+					<styled.Logo>
 						<svg
 							xmlns='http://www.w3.org/2000/svg'
 							xmlSpace='preserve'
@@ -256,9 +154,11 @@ class Navbar extends Component<Props> {
 								</g>
 							</g>
 						</svg>
-					</Logo>
-					<NavControls ref={this.state.ref}>
-						<CurrencySelect onClick={this.toggleCurrencySelectorVisibility}>
+					</styled.Logo>
+					<styled.NavControls ref={this.state.ref}>
+						<styled.CurrencySelect
+							onClick={this.toggleCurrencySelectorVisibility}
+						>
 							<div className='currency-icon'>
 								<h4>{this.props.selectedCurrency.symbol}</h4>
 								<svg
@@ -284,7 +184,7 @@ class Navbar extends Component<Props> {
 							<div className='currency-item-list'>
 								{this.state.currencySelectOpen &&
 									this.props.currencyList.map((currency) => (
-										<CurrencyItem
+										<styled.CurrencyItem
 											key={currency.label}
 											onClick={(e) => this.changeCurrency(e, currency)}
 											selected={
@@ -292,10 +192,10 @@ class Navbar extends Component<Props> {
 											}
 										>
 											{currency.symbol} {currency.label}
-										</CurrencyItem>
+										</styled.CurrencyItem>
 									))}
 							</div>
-						</CurrencySelect>
+						</styled.CurrencySelect>
 						<SideCart
 							cart={this.props.cart}
 							open={this.state.sideCartOpen}
@@ -303,8 +203,8 @@ class Navbar extends Component<Props> {
 							selectedCurrency={this.props.selectedCurrency}
 							navigateToCart={this.navigateToCart}
 						/>
-					</NavControls>
-				</Nav>
+					</styled.NavControls>
+				</styled.Nav>
 			</>
 		);
 	}
