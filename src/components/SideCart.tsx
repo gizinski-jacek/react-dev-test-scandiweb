@@ -1,85 +1,9 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
+import * as styled from '../styled/SideCart.styled';
 import Button from '../reusables/Button';
 import { CartProductWithUID, Currency } from '../types/types';
 import roundToDecimal from '../utils/roundToDecimal';
 import CartProductCard from '../wrappers/CartProductCard';
-
-const Cart = styled.div`
-	position: relative;
-	width: 40px;
-	cursor: pointer;
-
-	.side-cart-contents {
-		width: 320px;
-		max-height: 75vh;
-		cursor: initial;
-		position: absolute;
-		padding: 1rem 0;
-		right: 0;
-		display: flex;
-		flex-direction: column;
-		background-color: #ffffff;
-		z-index: 10;
-	}
-
-	.side-cart-product-list {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-		overflow: scroll;
-	}
-`;
-
-const CartProductCount = styled.div`
-	position: absolute;
-	top: 0;
-	right: 0;
-	width: 20px;
-	height: 20px;
-	padding: 2px;
-	text-align: center;
-	color: #ffffff;
-	background-color: #000000;
-	border-radius: 50%;
-`;
-
-const Header = styled.div`
-	display: flex;
-	align-items: center;
-	margin: 0.5rem;
-	cursor: initial;
-
-	h4 {
-		margin: 0.5rem;
-		font-weight: 600;
-	}
-`;
-
-const Footer = styled.div`
-	padding: 1rem;
-	position: sticky;
-	bottom: 0;
-	background-color: #ffffff;
-
-	.side-cart-controls {
-		display: flex;
-		gap: 1rem;
-
-		button {
-			flex: 1;
-		}
-	}
-`;
-
-const Total = styled.div`
-	display: flex;
-	justify-content: space-between;
-	margin: 1rem 0;
-	font-size: 1.25rem;
-	font-weight: 600;
-`;
 
 interface Props {
 	cart: CartProductWithUID[];
@@ -105,7 +29,7 @@ class SideCart extends Component<Props> {
 			0
 		);
 		return (
-			<Cart>
+			<styled.Cart>
 				<div onClick={this.props.toggle}>
 					<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
 						<path
@@ -114,14 +38,14 @@ class SideCart extends Component<Props> {
 							data-name='Shopping Cart'
 						/>
 					</svg>
-					<CartProductCount>{productCount}</CartProductCount>
+					<styled.CartProductCount>{productCount}</styled.CartProductCount>
 				</div>
 				{this.props.open && (
 					<div className='side-cart-contents'>
-						<Header>
+						<styled.Header>
 							<h4>My Bag</h4>
 							{productCount} items
-						</Header>
+						</styled.Header>
 						<ul className='side-cart-product-list'>
 							{this.props.cart.map((product) => (
 								<CartProductCard
@@ -131,14 +55,14 @@ class SideCart extends Component<Props> {
 								/>
 							))}
 						</ul>
-						<Footer>
-							<Total>
+						<styled.Footer>
+							<styled.Total>
 								<span>Total</span>
 								<span>
 									{this.props.selectedCurrency.symbol}
 									{roundToDecimal(total, 2)}
 								</span>
-							</Total>
+							</styled.Total>
 							<div className='side-cart-controls'>
 								<Button
 									bgColor='#ffffff'
@@ -152,10 +76,10 @@ class SideCart extends Component<Props> {
 									Check Out
 								</Button>
 							</div>
-						</Footer>
+						</styled.Footer>
 					</div>
 				)}
-			</Cart>
+			</styled.Cart>
 		);
 	}
 }
