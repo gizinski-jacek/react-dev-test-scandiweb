@@ -17,7 +17,11 @@ const Nav = styled.nav`
 	height: 5rem;
 	display: flex;
 	justify-content: space-between;
-	position: relative;
+	background-color: #ffffff;
+	border-bottom: 1px solid #00000010;
+	position: sticky;
+	top: 0;
+	z-index: 20;
 `;
 
 const Blur = styled.div`
@@ -172,7 +176,7 @@ class Navbar extends Component<Props> {
 			document.body.style.overflow = 'hidden';
 		} else {
 			document.body.removeEventListener('click', this.outsideRefClick);
-			document.body.style.removeProperty('overflow');
+			document.body.removeAttribute('style');
 		}
 	};
 
