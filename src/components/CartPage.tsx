@@ -9,7 +9,14 @@ import roundToDecimal from '../utils/roundToDecimal';
 import Button from '../reusables/Button';
 
 const Page = styled.div`
-	> li {
+	h2 {
+		margin: 0 1rem;
+		margin-bottom: 4rem;
+		text-transform: capitalize;
+		font-weight: 800;
+	}
+
+	ul li {
 		padding: 1rem 0;
 		border: 0 solid #00000010;
 		border-width: 0 0 2px 0;
@@ -18,15 +25,10 @@ const Page = styled.div`
 			border-top-width: 2px;
 		}
 	}
-
-	h2 {
-		text-align: center;
-		margin: 5rem;
-	}
 `;
 
 const Footer = styled.div`
-	margin: 1rem;
+	padding: 1rem;
 `;
 
 const Details = styled.div`
@@ -69,18 +71,21 @@ class CartPage extends Component<Props> {
 		const tax = total * 0.21;
 		return (
 			<Page>
-				{this.props.cart.length ? (
+				<h2>{this.props.cart.length ? 'Cart' : 'No Items In Cart'}</h2>
+				{this.props.cart.length && (
 					<>
-						{this.props.cart.map((product) => (
-							<CartProductCard
-								key={product.uid}
-								product={product}
-								selectedCurrency={this.props.selectedCurrency}
-								gallery={product.gallery.length > 1}
-								bigger
-								removeBtn
-							/>
-						))}
+						<ul>
+							{this.props.cart.map((product) => (
+								<CartProductCard
+									key={product.uid}
+									product={product}
+									selectedCurrency={this.props.selectedCurrency}
+									gallery={product.gallery.length > 1}
+									bigger
+									removeBtn
+								/>
+							))}
+						</ul>
 						<Footer>
 							<Details>
 								<div>
@@ -97,18 +102,11 @@ class CartPage extends Component<Props> {
 									<h4>{roundToDecimal(total, 2)}</h4>
 								</div>
 							</Details>
-							<Button
-								bgColor='#00c800'
-								margin='1rem 0 0 0'
-								minWidth='200px'
-								onClick={() => {}}
-							>
+							<Button bgColor='#00c800' minWidth='200px' onClick={() => {}}>
 								Order
 							</Button>
 						</Footer>
 					</>
-				) : (
-					<h2>No Items In Cart</h2>
 				)}
 			</Page>
 		);
