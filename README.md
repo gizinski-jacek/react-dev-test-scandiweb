@@ -1,4 +1,8 @@
-# [Scandiweb](https://scandiweb.com/) Junior Developer Test
+# [Scandiweb](https://scandiweb.com/) Junior Developer test assignment
+
+[Test assignment details.](https://www.notion.so/Entry-React-developer-TEST-39f601f8aa3f48ac88c4a8fefda304c1)
+
+[GraphQL endpoint.](https://github.com/scandiweb/junior-react-endpoint)
 
 Author: Jacek Giziński
 
