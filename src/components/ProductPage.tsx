@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
+import * as styled from '../styled/ProductPage.styled';
 import { AppDispatch } from '../redux/store';
 import { addProduct } from '../redux-slices/cartSlice';
 import withRouter from '../HOC/withRouter';
@@ -20,65 +20,6 @@ import ProductAttributes from '../wrappers/ProductAttributes';
 import { GET_PRODUCT_DETAILS } from '../apollo/queries';
 import { client } from '../apollo/client';
 import parse from 'html-react-parser';
-
-const Product = styled.div`
-	display: flex;
-	flex-direction: column;
-	justify-content: space-evenly;
-	gap: 2rem;
-
-	@media only screen and (min-width: 768px) {
-		flex-direction: row;
-	}
-`;
-
-const Gallery = styled.div`
-	display: flex;
-	gap: 2rem;
-	max-height: 420px;
-	width: fit-content;
-`;
-
-const Thumbnails = styled.div`
-	display: flex;
-	flex-direction: column;
-	gap: 2rem;
-	overflow-y: scroll;
-	padding-left: 1rem;
-	direction: rtl;
-`;
-
-const Info = styled.div`
-	display: flex;
-	flex-direction: column;
-	gap: 2rem;
-	width: 240px;
-
-	span {
-		display: block;
-		font-weight: 600;
-	}
-`;
-
-const Name = styled.div`
-	h4 {
-		margin: 0;
-		margin-bottom: 0.5rem;
-
-		&:first-child {
-			font-weight: 600;
-		}
-	}
-`;
-
-const Price = styled.div`
-	font-weight: 600;
-`;
-
-const H2 = styled.h2`
-	text-align: center;
-	margin: 5rem 0;
-`;
 
 interface Props {
 	withRouter: WithRouter;
@@ -154,9 +95,9 @@ class ProductPage extends Component<Props> {
 			(price) => price.currency.label === this.props.selectedCurrency.label
 		);
 		return this.state.product ? (
-			<Product>
-				<Gallery>
-					<Thumbnails>
+			<styled.Product>
+				<styled.Gallery>
+					<styled.Thumbnails>
 						{this.state.product.gallery.map((img, i) => (
 							<Image
 								key={img}
@@ -167,30 +108,30 @@ class ProductPage extends Component<Props> {
 								onClick={() => this.changeImage(i)}
 							/>
 						))}
-					</Thumbnails>
+					</styled.Thumbnails>
 					<Image
 						src={this.state.activeImage}
 						width={'420px'}
 						height={'420px'}
 					/>
-				</Gallery>
-				<Info>
-					<Name>
+				</styled.Gallery>
+				<styled.Info>
+					<styled.Name>
 						<h4>{this.state.product.brand}</h4>
 						<h4>{this.state.product.name}</h4>
-					</Name>
+					</styled.Name>
 					<ProductAttributes
 						product={this.state.product}
 						onClick={this.changeAttribute}
 						bigger
 					/>
-					<Price>
+					<styled.Price>
 						<span>Price:</span>
 						<h4>
 							{productPrice?.currency.symbol}
 							{productPrice?.amount}
 						</h4>
-					</Price>
+					</styled.Price>
 					<Button
 						bgColor='#00c800'
 						disabled={!this.state.product.inStock}
@@ -200,10 +141,10 @@ class ProductPage extends Component<Props> {
 					</Button>
 					{this.state.product.description &&
 						parse(this.state.product.description)}
-				</Info>
-			</Product>
+				</styled.Info>
+			</styled.Product>
 		) : (
-			<H2>Product not found</H2>
+			<styled.H2>Product not found</styled.H2>
 		);
 	}
 }
