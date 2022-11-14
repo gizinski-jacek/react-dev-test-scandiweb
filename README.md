@@ -1,5 +1,7 @@
 # [Scandiweb](https://scandiweb.com/) Junior Developer Test
 
+Author: Jacek Giziński
+
 Feel free to contact me at:
 
 ```
