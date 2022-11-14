@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import styled from 'styled-components';
+import * as styled from '../styled/CatalogPage.styled';
 import { client } from '../apollo/client';
 import { GET_CATEGORY_PRODUCTS } from '../apollo/queries';
 import withRouter from '../HOC/withRouter';
@@ -11,21 +11,6 @@ import {
 } from '../types/types';
 import productToCartProduct from '../utils/productToCartProduct';
 import PLPProductCard from '../wrappers/PLPProductCard';
-
-const Catalog = styled.div`
-	h2 {
-		margin: 0 1rem;
-		margin-bottom: 4rem;
-		text-transform: capitalize;
-	}
-`;
-
-const Grid = styled.div`
-	display: grid;
-	grid-template-columns: repeat(auto-fit, 280px);
-	grid-gap: 4rem;
-	justify-content: center;
-`;
 
 interface Props {
 	withRouter: WithRouter;
@@ -108,12 +93,12 @@ class CatalogPage extends Component<Props> {
 
 	render() {
 		return (
-			<Catalog>
+			<styled.Catalog>
 				<h2>
 					{this.state.category === 'all' ? 'all products' : this.state.category}
 				</h2>
 				{this.state.productList && (
-					<Grid>
+					<styled.Grid>
 						{this.state.productList.map((product, i) => (
 							<PLPProductCard
 								key={i}
@@ -121,9 +106,9 @@ class CatalogPage extends Component<Props> {
 								selectedCurrency={this.props.selectedCurrency}
 							/>
 						))}
-					</Grid>
+					</styled.Grid>
 				)}
-			</Catalog>
+			</styled.Catalog>
 		);
 	}
 }
