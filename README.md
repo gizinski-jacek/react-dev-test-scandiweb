@@ -1,9 +1,21 @@
-# Getting Started with Create React App
+# [Scandiweb](https://scandiweb.com/) Junior Developer Test
+
+Feel free to contact me at:
+
+```
+gizinski.jacek.tr@gmail.com
+```
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 
+### `npm i`
+
+To install dependancies.\
+\
 In the project directory, you can run:
 
 ### `npm start`
