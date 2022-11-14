@@ -1,67 +1,10 @@
 import { Component } from 'react';
 import { CartProduct, CartProductWithUID, Currency } from '../types/types';
-import styled from 'styled-components';
+import * as styled from '../styled/PLPProductCard.styled';
 import { AppDispatch } from '../redux/store';
 import { addProduct } from '../redux-slices/cartSlice';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import Image from '../reusables/Image';
-
-const Card = styled.div`
-	padding: 1rem;
-	display: flex;
-	flex-direction: column;
-	transition: 0.25s ease-in-out;
-	text-decoration: none;
-	color: #000000;
-	position: relative;
-	width: fit-content;
-
-	&:hover {
-		box-shadow: 0 0 1rem 0.25rem #dadada;
-
-		div {
-			opacity: 1;
-		}
-	}
-`;
-
-const CardLink = styled(Link)`
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	cursor: pointer;
-	z-index: 1;
-`;
-
-const CartIcon = styled.div`
-	opacity: 0;
-	display: block;
-	position: absolute;
-	right: 8px;
-	bottom: -16px;
-	width: 32px;
-	height: 32px;
-	border-radius: 50%;
-	background-color: #00c800;
-	transition: 0.25s ease-in-out;
-	cursor: pointer;
-	z-index: 3;
-
-	&:hover {
-		transform: scale(1.25);
-	}
-`;
-
-const Details = styled.div`
-	flex: 1;
-	margin-top: 1rem;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-`;
 
 interface Props {
 	product: CartProduct;
@@ -80,8 +23,8 @@ class PLPProductCard extends Component<Props> {
 			(price) => price.currency.label === this.props.selectedCurrency.label
 		);
 		return (
-			<Card>
-				<CardLink to={`/product/${this.props.product.id}`} />
+			<styled.Card>
+				<styled.CardLink to={`/product/${this.props.product.id}`} />
 				<Image
 					src={this.props.product.gallery[0]}
 					inStock={this.props.product.inStock}
@@ -89,7 +32,7 @@ class PLPProductCard extends Component<Props> {
 					height={'280px'}
 				>
 					{this.props.product.inStock && (
-						<CartIcon onClick={this.addToCart}>
+						<styled.CartIcon onClick={this.addToCart}>
 							<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
 								<path
 									fill='#ffffff'
@@ -97,16 +40,16 @@ class PLPProductCard extends Component<Props> {
 									data-name='Shopping Cart'
 								/>
 							</svg>
-						</CartIcon>
+						</styled.CartIcon>
 					)}
 				</Image>
-				<Details>
+				<styled.Details>
 					<h4>
 						{this.props.product.brand} {this.props.product.name}
 					</h4>
 					<h4>{`${productPrice?.currency.symbol}${productPrice?.amount}`}</h4>
-				</Details>
-			</Card>
+				</styled.Details>
+			</styled.Card>
 		);
 	}
 }
