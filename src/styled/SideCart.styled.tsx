@@ -4,27 +4,27 @@ export const Cart = styled.div`
 	position: relative;
 	width: 40px;
 	cursor: pointer;
+`;
 
-	.side-cart-contents {
-		width: 320px;
-		max-height: 75vh;
-		cursor: initial;
-		position: absolute;
-		padding: 1rem 0;
-		right: 0;
-		display: flex;
-		flex-direction: column;
-		background-color: #ffffff;
-		z-index: 10;
-	}
+export const Contents = styled.div`
+	width: 320px;
+	max-height: 75vh;
+	cursor: initial;
+	position: absolute;
+	padding: 1rem 0;
+	right: 0;
+	display: flex;
+	flex-direction: column;
+	background-color: #ffffff;
+	z-index: 10;
+`;
 
-	.side-cart-product-list {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-		overflow: scroll;
-	}
+export const ProductList = styled.ul`
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	overflow: scroll;
 `;
 
 export const CartProductCount = styled.div`
@@ -57,14 +57,14 @@ export const Footer = styled.div`
 	position: sticky;
 	bottom: 0;
 	background-color: #ffffff;
+`;
 
-	.side-cart-controls {
-		display: flex;
-		gap: 1rem;
+export const Controls = styled.div`
+	display: flex;
+	gap: 1rem;
 
-		button {
-			flex: 1;
-		}
+	button {
+		flex: 1;
 	}
 `;
 
