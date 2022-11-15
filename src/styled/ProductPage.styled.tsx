@@ -40,7 +40,7 @@ export const Info = styled.div`
 `;
 
 export const Name = styled.div`
-	h4 {
+	h3 {
 		margin: 0;
 		margin-bottom: 0.5rem;
 

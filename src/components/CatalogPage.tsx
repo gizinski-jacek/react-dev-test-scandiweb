@@ -24,17 +24,13 @@ interface State {
 
 class CatalogPage extends Component<Props> {
 	state: State = {
-		category:
-			new URLSearchParams(this.props.withRouter.location.search).get(
-				'category'
-			) || 'all',
+		category: '',
 		productList: [],
 	};
 
 	componentDidMount = async () => {
 		try {
-			const search = this.props.withRouter.location.search;
-			const category = new URLSearchParams(search).get('category') || 'all';
+			const { category } = this.props.withRouter.params;
 			const response: GQLCategoryData = await client.query({
 				query: GET_CATEGORY_PRODUCTS,
 				variables: { category: category },
@@ -62,8 +58,7 @@ class CatalogPage extends Component<Props> {
 
 	componentDidUpdate = async (prevProps: Props, prevState: State) => {
 		try {
-			const search = this.props.withRouter.location.search;
-			const category = new URLSearchParams(search).get('category') || 'all';
+			const { category } = this.props.withRouter.params;
 			if (category !== prevState.category) {
 				const response: GQLCategoryData = await client.query({
 					query: GET_CATEGORY_PRODUCTS,

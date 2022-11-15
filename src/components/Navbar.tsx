@@ -104,8 +104,8 @@ class Navbar extends Component<Props> {
 	};
 
 	render() {
-		const search = this.props.withRouter.location.search;
-		const category = new URLSearchParams(search).get('category');
+		const { pathname } = this.props.withRouter.location;
+		const category = pathname.replace('/catalog/', '');
 		return (
 			<>
 				{this.state.sideCartOpen && <styled.Blur />}
@@ -115,7 +115,7 @@ class Navbar extends Component<Props> {
 							return (
 								<styled.CategoryLink
 									key={c.name}
-									to={`/catalog${`?category=${c.name}`}`}
+									to={`/catalog/${c.name}`}
 									active={(category === c.name).toString()}
 								>
 									{c.name}

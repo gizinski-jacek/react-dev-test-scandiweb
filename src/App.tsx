@@ -57,7 +57,7 @@ class App extends Component {
 					<main>
 						<Routes>
 							<Route
-								path='/catalog'
+								path='/catalog/:category'
 								element={
 									<CatalogPage selectedCurrency={this.state.selectedCurrency} />
 								}
@@ -74,7 +74,7 @@ class App extends Component {
 									<CartPage selectedCurrency={this.state.selectedCurrency} />
 								}
 							/>
-							<Route path='/*' element={<Navigate to='/catalog' />} />
+							<Route path='/*' element={<Navigate to='/catalog/all' />} />
 						</Routes>
 					</main>
 				</>

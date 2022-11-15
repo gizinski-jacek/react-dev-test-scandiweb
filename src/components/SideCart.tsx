@@ -41,12 +41,12 @@ class SideCart extends Component<Props> {
 					<styled.CartProductCount>{productCount}</styled.CartProductCount>
 				</div>
 				{this.props.open && (
-					<div className='side-cart-contents'>
+					<styled.Contents>
 						<styled.Header>
 							<h4>My Bag</h4>
 							{productCount} items
 						</styled.Header>
-						<ul className='side-cart-product-list'>
+						<styled.ProductList>
 							{this.props.cart.map((product) => (
 								<CartProductCard
 									key={product.uid}
@@ -54,7 +54,7 @@ class SideCart extends Component<Props> {
 									selectedCurrency={this.props.selectedCurrency}
 								/>
 							))}
-						</ul>
+						</styled.ProductList>
 						<styled.Footer>
 							<styled.Total>
 								<span>Total</span>
@@ -63,7 +63,7 @@ class SideCart extends Component<Props> {
 									{roundToDecimal(total, 2)}
 								</span>
 							</styled.Total>
-							<div className='side-cart-controls'>
+							<styled.Controls>
 								<Button
 									bgColor='#ffffff'
 									color='#000000'
@@ -75,9 +75,9 @@ class SideCart extends Component<Props> {
 								<Button bgColor='#00c800' color='#ffffff' onClick={() => {}}>
 									Check Out
 								</Button>
-							</div>
+							</styled.Controls>
 						</styled.Footer>
-					</div>
+					</styled.Contents>
 				)}
 			</styled.Cart>
 		);

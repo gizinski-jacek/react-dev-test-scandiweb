@@ -3,12 +3,15 @@ import styled from 'styled-components';
 export const Page = styled.div`
 	h2 {
 		margin: 0 1rem;
-		margin-bottom: 4rem;
 		text-transform: capitalize;
 		font-weight: 800;
 	}
+`;
 
-	ul li {
+export const ProductList = styled.ul`
+	margin-top: 4rem;
+
+	li {
 		padding: 1rem 0;
 		border: 0 solid #00000010;
 		border-width: 0 0 2px 0;

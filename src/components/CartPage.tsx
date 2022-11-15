@@ -42,7 +42,7 @@ class CartPage extends Component<Props> {
 				<h2>{this.props.cart.length ? 'Cart' : 'No Items In Cart'}</h2>
 				{this.props.cart.length && (
 					<>
-						<ul>
+						<styled.ProductList>
 							{this.props.cart.map((product) => (
 								<CartProductCard
 									key={product.uid}
@@ -53,7 +53,7 @@ class CartPage extends Component<Props> {
 									removeBtn
 								/>
 							))}
-						</ul>
+						</styled.ProductList>
 						<styled.Footer>
 							<styled.Details>
 								<div>
