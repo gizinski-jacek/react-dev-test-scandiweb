@@ -117,8 +117,8 @@ class ProductPage extends Component<Props> {
 				</styled.Gallery>
 				<styled.Info>
 					<styled.Name>
-						<h4>{this.state.product.brand}</h4>
-						<h4>{this.state.product.name}</h4>
+						<h3>{this.state.product.brand}</h3>
+						<h3>{this.state.product.name}</h3>
 					</styled.Name>
 					<ProductAttributes
 						product={this.state.product}
