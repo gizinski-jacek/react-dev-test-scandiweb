@@ -5,7 +5,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import CatalogPage from './components/CatalogPage';
 import ProductPage from './components/ProductPage';
 import CartPage from './components/CartPage';
-import Navbar from './components/Navbar';
+import Layout from './Layout';
 import { GET_INITIAL_DATA } from './apollo/queries';
 import { client } from './apollo/client';
 
@@ -47,37 +47,38 @@ class App extends Component {
 	render() {
 		return (
 			!this.state.loading && (
-				<>
-					<Navbar
-						categoryList={this.state.categoryList}
-						changeCurrency={this.changeCurrency}
-						currencyList={this.state.currencyList}
-						selectedCurrency={this.state.selectedCurrency}
-					/>
-					<main>
-						<Routes>
-							<Route
-								path='/catalog/:category'
-								element={
-									<CatalogPage selectedCurrency={this.state.selectedCurrency} />
-								}
+				<Routes>
+					<Route
+						element={
+							<Layout
+								categoryList={this.state.categoryList}
+								changeCurrency={this.changeCurrency}
+								currencyList={this.state.currencyList}
+								selectedCurrency={this.state.selectedCurrency}
 							/>
-							<Route
-								path='/product/:id'
-								element={
-									<ProductPage selectedCurrency={this.state.selectedCurrency} />
-								}
-							/>
-							<Route
-								path='/cart'
-								element={
-									<CartPage selectedCurrency={this.state.selectedCurrency} />
-								}
-							/>
-							<Route path='/*' element={<Navigate to='/catalog/all' />} />
-						</Routes>
-					</main>
-				</>
+						}
+					>
+						<Route
+							path='/catalog/:category'
+							element={
+								<CatalogPage selectedCurrency={this.state.selectedCurrency} />
+							}
+						/>
+						<Route
+							path='/product/:id'
+							element={
+								<ProductPage selectedCurrency={this.state.selectedCurrency} />
+							}
+						/>
+						<Route
+							path='/cart'
+							element={
+								<CartPage selectedCurrency={this.state.selectedCurrency} />
+							}
+						/>
+						<Route path='/*' element={<Navigate to='/catalog/all' />} />
+					</Route>
+				</Routes>
 			)
 		);
 	}

@@ -104,8 +104,7 @@ class Navbar extends Component<Props> {
 	};
 
 	render() {
-		const { pathname } = this.props.withRouter.location;
-		const category = pathname.replace('/catalog/', '');
+		const { category } = this.props.withRouter.params;
 		return (
 			<>
 				{this.state.sideCartOpen && <styled.Blur />}
