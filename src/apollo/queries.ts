@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const GET_INITIAL_DATA = gql`
+export const GET_LISTS = gql`
 	query {
 		categories {
 			name
