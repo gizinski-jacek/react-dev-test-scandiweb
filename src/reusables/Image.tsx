@@ -7,22 +7,22 @@ const ImgWrapper = styled.div<{
 	inStock?: boolean;
 	cursor?: any;
 }>`
-	width: ${({ width }) => width || 'auto'};
-	height: ${({ height }) => height || 'auto'};
-	min-width: ${({ width }) => width || 'auto'};
-	min-height: ${({ height }) => height || 'auto'};
+	width: ${({ width }) => width || 'fit-content'};
+	height: ${({ height }) => height || 'fit-content'};
 	cursor: ${({ cursor }) => cursor === 'true' && 'pointer'};
 	position: relative;
+	margin-left: auto;
 
 	${({ inStock }) =>
 		inStock === false &&
 		`
     img {
-			opacity: 0.25;
+			opacity: 0.5;
 		}
 
 		:before {
-			font-size: 1.5rem;
+			font-size: 2rem;
+			color:black;
 			white-space: nowrap;
 			content: 'Out of Stock';
 			text-transform: uppercase;
@@ -30,14 +30,15 @@ const ImgWrapper = styled.div<{
 			top: 50%;
 			left: 50%;
 			transform: translate(-50%, -50%);
+
 		}
-  `}
+  `};
 `;
 
 const Img = styled.img`
 	display: block;
-	width: 100%;
-	height: 100%;
+	max-width: 100%;
+	max-height: 100%;
 `;
 
 interface Props {
