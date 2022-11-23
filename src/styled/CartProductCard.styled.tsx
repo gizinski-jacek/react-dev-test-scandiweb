@@ -23,29 +23,44 @@ export const Info = styled.div<{ bigger?: boolean }>`
 	gap: 0.5rem;
 	margin-right: auto;
 
-	h3,
 	h4 {
-		font-weight: 500;
+		margin-top: 0;
+		font-weight: 400;
+	}
 
-		&:nth-child(2) {
-			font-weight: 300;
-		}
+	> h4 {
+		font-weight: 500;
 	}
 
 	${({ bigger }) =>
-		!bigger &&
+		bigger &&
 		`
-		h3, h4 {
-			margin: 0;
-			font-weight: 400;
+		h4 {
+			font-size: 1.5rem !important;
+			font-weight: 300;
+		}
 
-			&:nth-child(3) {
+		h4:first-child,
+		> h4 {
 			font-weight: 500;
 		}
   `}
 `;
 
-export const ProductCounter = styled.div`
+export const ProductLink = styled.div<{ link?: boolean }>`
+	${({ link }) =>
+		link &&
+		`
+		cursor: pointer;
+
+		&:hover {
+			color: #0064ff;
+			text-decoration: underline;
+		}
+  `}
+`;
+
+export const ProductCounter = styled.div<{ height?: string }>`
 	display: flex;
 	flex-direction: column;
 
@@ -105,9 +120,9 @@ export const IncBtn = styled(DecBtn)`
 	}
 `;
 
-export const GalleryWrapper = styled.div<{ width?: string; height?: string }>`
-	width: ${({ width }) => width || '120px'};
-	height: ${({ height }) => height || '160px'};
+export const Wrapper = styled.div<{ width?: string; height?: string }>`
+	width: ${({ width }) => width || 'auto'};
+	height: ${({ height }) => height || 'auto'};
 	position: relative;
 `;
 
