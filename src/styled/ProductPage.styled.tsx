@@ -11,10 +11,10 @@ export const Product = styled.div`
 	}
 `;
 
-export const Gallery = styled.div`
+export const Gallery = styled.div<{ height?: string }>`
 	display: flex;
 	gap: 2rem;
-	max-height: 420px;
+	max-height: ${({ height }) => height || '400px'};
 	width: fit-content;
 `;
 
@@ -54,7 +54,7 @@ export const Price = styled.div`
 	font-weight: 600;
 `;
 
-export const H2 = styled.h2`
+export const NotFound = styled.div`
 	text-align: center;
 	margin: 5rem 0;
 `;
