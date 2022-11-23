@@ -4,16 +4,10 @@ import Button from '../reusables/Button';
 import { CartProductWithUID, Currency } from '../types/types';
 import roundToDecimal from '../utils/roundToDecimal';
 import CartProductCard from '../wrappers/CartProductCard';
+import { RootState } from '../redux/store';
+import { connect } from 'react-redux';
 
-interface Props {
-	cart: CartProductWithUID[];
-	open: boolean;
-	toggle: (e: React.MouseEvent<HTMLDivElement>) => void;
-	selectedCurrency: Currency;
-	navigateToCart: () => void;
-}
-
-class SideCart extends Component<Props> {
+class SideCart extends Component<StateProps & OwnProps> {
 	render() {
 		const productCount = this.props.cart.reduce(
 			(total, product) => total + product.count,
@@ -51,7 +45,7 @@ class SideCart extends Component<Props> {
 								<CartProductCard
 									key={product.uid}
 									product={product}
-									selectedCurrency={this.props.selectedCurrency}
+									navigateTo={this.props.navigateTo}
 								/>
 							))}
 						</styled.ProductList>
@@ -68,7 +62,7 @@ class SideCart extends Component<Props> {
 									bgColor='#ffffff'
 									color='#000000'
 									border='#000000'
-									onClick={this.props.navigateToCart}
+									onClick={() => this.props.navigateTo('/cart')}
 								>
 									View Bag
 								</Button>
@@ -84,4 +78,19 @@ class SideCart extends Component<Props> {
 	}
 }
 
-export default SideCart;
+interface StateProps {
+	cart: CartProductWithUID[];
+	selectedCurrency: Currency;
+}
+
+type OwnProps = {
+	open: boolean;
+	toggle: (e: React.MouseEvent<HTMLDivElement>) => void;
+	navigateTo: (string: string) => void;
+};
+
+function mapStateToProps(state: RootState, ownProps: OwnProps) {
+	return { cart: state.cart, selectedCurrency: state.currency, ...ownProps };
+}
+
+export default connect(mapStateToProps)(SideCart);
