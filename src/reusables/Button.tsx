@@ -22,17 +22,18 @@ const Btn = styled.button<{
 	transition: 0.1s ease-in-out;
 	text-transform: uppercase;
 
-	&:disabled {
-		opacity: 0.25;
-		cursor: initial;
-	}
-
 	&:hover {
 		filter: brightness(110%);
 	}
 
 	&:active {
 		filter: brightness(120%);
+	}
+
+	&:disabled {
+		opacity: 0.25;
+		cursor: initial;
+		filter: none;
 	}
 `;
 
