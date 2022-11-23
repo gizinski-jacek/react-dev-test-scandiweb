@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import * as styled from '../styled/CartProductCard.styled';
-import { AppDispatch } from '../redux/store';
+import { AppDispatch, RootState } from '../redux/store';
 import {
 	decrementProduct,
 	incrementProduct,
@@ -10,25 +10,14 @@ import {
 import Image from '../reusables/Image';
 import { CartProductWithUID, Currency } from '../types/types';
 import ProductAttributes from './ProductAttributes';
-import { Link } from 'react-router-dom';
 import Button from '../reusables/Button';
+import roundToDecimal from '../utils/roundToDecimal';
 
 interface State {
 	activeImageIndex: number;
 }
 
-interface Props {
-	product: CartProductWithUID;
-	selectedCurrency: Currency;
-	removeProduct: (product: CartProductWithUID) => void;
-	incrementProduct: (product: CartProductWithUID) => void;
-	decrementProduct: (product: CartProductWithUID) => void;
-	gallery?: boolean;
-	bigger?: boolean;
-	removeBtn?: boolean;
-}
-
-class CartProductCard extends Component<Props> {
+class CartProductCard extends Component<StateProps & OwnProps & DispatchProps> {
 	state: State = { activeImageIndex: 0 };
 
 	prevImage = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -61,11 +50,6 @@ class CartProductCard extends Component<Props> {
 		}
 	};
 
-	remove = (e: React.MouseEvent<HTMLButtonElement>) => {
-		e.stopPropagation();
-		this.props.removeProduct(this.props.product);
-	};
-
 	increment = (
 		e: React.MouseEvent<HTMLDivElement>,
 		product: CartProductWithUID
@@ -90,24 +74,22 @@ class CartProductCard extends Component<Props> {
 			<styled.Product bigger={this.props.bigger}>
 				<styled.Details>
 					<styled.Info bigger={this.props.bigger}>
-						{this.props.bigger ? (
-							<Link to={`/product/${this.props.product.id}`}>
-								<h3>{this.props.product.brand}</h3>
-								<h3>{this.props.product.name}</h3>
-								<h4>
-									{price?.currency.symbol}
-									{price?.amount}
-								</h4>
-							</Link>
-						) : (
-							<>
-								<h4>{this.props.product.brand}</h4>
-								<h4>{this.props.product.name}</h4>
-								<h4>
-									{price?.currency.symbol}
-									{price?.amount}
-								</h4>
-							</>
+						<styled.ProductLink
+							link={!!this.props.navigateTo}
+							onClick={() =>
+								this.props.navigateTo
+									? this.props.navigateTo(`/product/${this.props.product.id}`)
+									: null
+							}
+						>
+							<h4>{this.props.product.brand}</h4>
+							<h4>{this.props.product.name}</h4>
+						</styled.ProductLink>
+						{price && (
+							<h4>
+								{price.currency.symbol}
+								{roundToDecimal(price.amount, 2)}
+							</h4>
 						)}
 						<ProductAttributes
 							product={this.props.product}
@@ -119,13 +101,13 @@ class CartProductCard extends Component<Props> {
 							bgColor='#e10000'
 							border='#000000'
 							margin='auto 0 0 0'
-							onClick={this.remove}
+							onClick={() => this.props.removeProduct(this.props.product)}
 						>
 							Remove Product
 						</Button>
 					)}
 				</styled.Details>
-				<styled.ProductCounter>
+				<styled.ProductCounter height={this.props.bigger ? '160px' : '120px'}>
 					<styled.IncBtn
 						onClick={(e) => this.increment(e, this.props.product)}
 						bigger={this.props.bigger}
@@ -136,31 +118,43 @@ class CartProductCard extends Component<Props> {
 						bigger={this.props.bigger}
 					/>
 				</styled.ProductCounter>
-				{this.props.gallery ? (
-					<styled.GalleryWrapper
-						width={this.props.bigger ? '180px' : '120px'}
-						height={this.props.bigger ? '240px' : '160px'}
-					>
-						<Image
-							src={this.props.product.gallery[this.state.activeImageIndex]}
-							width={this.props.bigger ? '180px' : '120px'}
-							height={this.props.bigger ? '240px' : '160px'}
-						/>
+				<styled.Wrapper width={this.props.bigger ? '160px' : '120px'}>
+					<Image
+						src={this.props.product.gallery[this.state.activeImageIndex]}
+						width={this.props.bigger ? '160px' : '120px'}
+					/>
+					{this.props.gallery && (
 						<styled.Arrows>
 							<styled.ArrowPrev onClick={this.prevImage} />
 							<styled.ArrowNext onClick={this.nextImage} />
 						</styled.Arrows>
-					</styled.GalleryWrapper>
-				) : (
-					<Image
-						src={this.props.product.gallery[this.state.activeImageIndex]}
-						width={this.props.bigger ? '180px' : '120px'}
-						height={this.props.bigger ? '240px' : '160px'}
-					/>
-				)}
+					)}
+				</styled.Wrapper>
 			</styled.Product>
 		);
 	}
+}
+
+interface StateProps {
+	selectedCurrency: Currency;
+}
+
+interface OwnProps {
+	product: CartProductWithUID;
+	gallery?: boolean;
+	bigger?: boolean;
+	removeBtn?: boolean;
+	navigateTo?: (...any: any) => void;
+}
+
+interface DispatchProps {
+	removeProduct: (product: CartProductWithUID) => void;
+	incrementProduct: (product: CartProductWithUID) => void;
+	decrementProduct: (product: CartProductWithUID) => void;
+}
+
+function mapStateToProps(state: RootState, ownProps: OwnProps) {
+	return { selectedCurrency: state.currency, ...ownProps };
 }
 
 function mapDispatchToProps(dispatch: AppDispatch) {
@@ -174,4 +168,4 @@ function mapDispatchToProps(dispatch: AppDispatch) {
 	};
 }
 
-export default connect(null, mapDispatchToProps)(CartProductCard);
+export default connect(mapStateToProps, mapDispatchToProps)(CartProductCard);
