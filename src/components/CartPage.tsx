@@ -48,7 +48,7 @@ class CartPage extends Component<StateProps & OwnProps & DispatchProps> {
 									gallery={product.gallery.length > 1}
 									bigger
 									removeBtn
-									navigate={this.navigateTo}
+									navigateTo={this.navigateTo}
 								/>
 							))}
 						</styled.ProductList>
