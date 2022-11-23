@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Page = styled.div`
 	h2 {
 		margin: 0 1rem;
-		text-transform: capitalize;
+		text-transform: uppercase;
 		font-weight: 800;
 	}
 `;
