@@ -63,12 +63,15 @@ a:hover {
 	color: #0064ff;
 }
 
-body {
+#root {
 	min-height: 100vh;
 	min-width: 480px;
 	position: relative;
+	display: flex;
+	flex-direction: column;
 }
 
 main {
+	flex: 1;
 	padding: 4rem;
 }
