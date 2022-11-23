@@ -2,25 +2,23 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
 import { decrementProduct, incrementProduct } from '../redux-slices/cartSlice';
-import { CartProductWithUID, Currency } from '../types/types';
+import { CartProductWithUID, Currency, WithRouter } from '../types/types';
 import CartProductCard from '../wrappers/CartProductCard';
 import * as styled from '../styled/CartPage.styled';
 import roundToDecimal from '../utils/roundToDecimal';
 import Button from '../reusables/Button';
+import withRouter from '../HOC/withRouter';
 
 interface State {
 	activeImageIndex: number;
 }
 
-interface Props {
-	cart: CartProductWithUID[];
-	selectedCurrency: Currency;
-	incrementProduct: (product: CartProductWithUID) => void;
-	decrementProduct: (product: CartProductWithUID) => void;
-}
-
-class CartPage extends Component<Props> {
+class CartPage extends Component<StateProps & OwnProps & DispatchProps> {
 	state: State = { activeImageIndex: 0 };
+
+	navigateTo = (string: string) => {
+		this.props.withRouter.navigate(string);
+	};
 
 	render() {
 		const productCount = this.props.cart.reduce(
@@ -47,10 +45,10 @@ class CartPage extends Component<Props> {
 								<CartProductCard
 									key={product.uid}
 									product={product}
-									selectedCurrency={this.props.selectedCurrency}
 									gallery={product.gallery.length > 1}
 									bigger
 									removeBtn
+									navigate={this.navigateTo}
 								/>
 							))}
 						</styled.ProductList>
@@ -81,8 +79,22 @@ class CartPage extends Component<Props> {
 	}
 }
 
-function mapStateToProps(state: RootState) {
-	return { cart: state.cart };
+interface StateProps {
+	cart: CartProductWithUID[];
+	selectedCurrency: Currency;
+}
+
+interface OwnProps {
+	withRouter: WithRouter;
+}
+
+interface DispatchProps {
+	incrementProduct: (product: CartProductWithUID) => void;
+	decrementProduct: (product: CartProductWithUID) => void;
+}
+
+function mapStateToProps(state: RootState, ownProps: OwnProps) {
+	return { cart: state.cart, selectedCurrency: state.currency, ...ownProps };
 }
 
 function mapDispatchToProps(dispatch: AppDispatch) {
@@ -94,4 +106,6 @@ function mapDispatchToProps(dispatch: AppDispatch) {
 	};
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CartPage);
+export default withRouter(
+	connect(mapStateToProps, mapDispatchToProps)(CartPage)
+);
