@@ -21,7 +21,6 @@ export const Blur = styled.div`
 	right: 0;
 	bottom: 0;
 	z-index: 5;
-	flex: 1;
 `;
 
 export const CategoryList = styled.div`
@@ -63,33 +62,36 @@ export const Logo = styled.div`
 
 export const NavControls = styled.div`
 	display: flex;
-	gap: 1rem;
 `;
 
 export const CurrencySelect = styled.div`
 	position: relative;
 	cursor: pointer;
 	z-index: 10;
+	margin: auto;
 
-	h3 {
-		min-width: 28px;
+	span {
+		font-size: 1.5rem;
+		min-width: 40px;
 		text-align: end;
-	}
-
-	.currency-icon {
-		display: flex;
-		align-items: center;
-	}
-
-	.currency-item-list {
-		position: absolute;
-		left: 0;
-		box-shadow: 0 0 0.5rem 0 #dadada;
+		margin: 0;
 	}
 
 	svg {
-		margin-top: auto;
+		margin-top: 0.5rem;
 	}
+`;
+
+export const CurrencyIcon = styled.div`
+	display: flex;
+	align-items: center;
+`;
+
+export const CurrencyList = styled.div`
+	position: absolute;
+	top: 100%;
+	left: 0;
+	box-shadow: 0 0 0.5rem 0 #dadada;
 `;
 
 export const CurrencyItem = styled.div<{ selected: boolean }>`
