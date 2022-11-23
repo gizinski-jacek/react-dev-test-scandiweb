@@ -36,7 +36,7 @@ class App extends Component<StateProps & StateDispatch> {
 				const initialData: GQLInitialData = await client.query({
 					query: GET_LISTS,
 				});
-				if (initialData.data.currencies.length === 0) {
+				if (!initialData.data.currencies[0]) {
 					throw new Error(
 						'Default currency not set. Error fetching currencies from API.'
 					);
