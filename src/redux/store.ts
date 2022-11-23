@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import cartReducer from '../redux-slices/cartSlice';
+import currencyReducer from '../redux-slices/currencySlice';
 import storage from 'redux-persist/lib/storage';
 import { combineReducers } from 'redux';
 import { persistReducer, persistStore } from 'redux-persist';
@@ -12,6 +13,7 @@ const persistConfig = {
 
 const reducers = combineReducers({
 	cart: cartReducer,
+	currency: currencyReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers);
