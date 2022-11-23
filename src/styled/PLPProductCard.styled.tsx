@@ -5,11 +5,10 @@ export const Card = styled.div`
 	padding: 1rem;
 	display: flex;
 	flex-direction: column;
-	transition: 0.25s ease-in-out;
+	transition: 0.15s ease-in-out;
 	text-decoration: none;
 	color: #000000;
 	position: relative;
-	width: fit-content;
 
 	&:hover {
 		box-shadow: 0 0 1rem 0.25rem #dadada;
@@ -18,6 +17,10 @@ export const Card = styled.div`
 			opacity: 1;
 		}
 	}
+`;
+
+export const Img = styled.div`
+	margin: auto;
 `;
 
 export const CardLink = styled(Link)`
@@ -40,12 +43,16 @@ export const CartIcon = styled.div`
 	height: 32px;
 	border-radius: 50%;
 	background-color: #00c800;
-	transition: 0.25s ease-in-out;
+	transition: 0.15s ease-in-out;
 	cursor: pointer;
 	z-index: 3;
 
 	&:hover {
 		transform: scale(1.25);
+	}
+
+	&:active {
+		filter: brightness(110%);
 	}
 `;
 
