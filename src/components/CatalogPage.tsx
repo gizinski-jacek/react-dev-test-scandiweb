@@ -11,6 +11,7 @@ import {
 } from '../types/types';
 import productToCartProduct from '../utils/productToCartProduct';
 import PLPProductCard from '../wrappers/PLPProductCard';
+import LoadingSpinner from '../reusables/LoadingSpinner';
 
 interface Props {
 	withRouter: WithRouter;
@@ -20,12 +21,14 @@ interface Props {
 interface State {
 	category: string;
 	productList: CartProduct[] | null;
+	loading: boolean;
 }
 
 class CatalogPage extends Component<Props> {
 	state: State = {
 		category: '',
 		productList: [],
+		loading: true,
 	};
 
 	componentDidMount = async () => {
@@ -40,6 +43,7 @@ class CatalogPage extends Component<Props> {
 					...this.state,
 					category: 'invalid category',
 					productList: null,
+					loading: false,
 				});
 			} else {
 				const cartProducts = response.data.category.products.map((product) =>
@@ -49,9 +53,14 @@ class CatalogPage extends Component<Props> {
 					...this.state,
 					category: response.data.category.name,
 					productList: cartProducts,
+					loading: false,
 				});
 			}
 		} catch (error) {
+			this.setState({
+				...this.state,
+				loading: false,
+			});
 			console.log(error);
 		}
 	};
@@ -69,6 +78,7 @@ class CatalogPage extends Component<Props> {
 						...this.state,
 						category: 'invalid category',
 						productList: null,
+						loading: false,
 					});
 				} else {
 					const cartProducts = response.data.category.products.map((product) =>
@@ -78,28 +88,29 @@ class CatalogPage extends Component<Props> {
 						...this.state,
 						category: response.data.category.name,
 						productList: cartProducts,
+						loading: false,
 					});
 				}
 			}
 		} catch (error) {
+			this.setState({
+				...this.state,
+				loading: false,
+			});
 			console.log(error);
 		}
 	};
 
 	render() {
-		return (
+		return this.state.loading ? (
+			<LoadingSpinner />
+		) : (
 			<styled.Catalog>
-				<h2>
-					{this.state.category === 'all' ? 'all products' : this.state.category}
-				</h2>
+				<h2>{this.state.category}</h2>
 				{this.state.productList && (
 					<styled.Grid>
 						{this.state.productList.map((product, i) => (
-							<PLPProductCard
-								key={i}
-								product={product}
-								selectedCurrency={this.props.selectedCurrency}
-							/>
+							<PLPProductCard key={i} product={product} />
 						))}
 					</styled.Grid>
 				)}
