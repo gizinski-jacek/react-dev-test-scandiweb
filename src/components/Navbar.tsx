@@ -1,33 +1,26 @@
 import { Component, createRef } from 'react';
 import { connect } from 'react-redux';
 import * as styled from '../styled/Navbar.styled';
-import { RootState } from '../redux/store';
+import { AppDispatch, RootState } from '../redux/store';
 import withRouter from '../HOC/withRouter';
-import {
-	CartProductWithUID,
-	Category,
-	Currency,
-	WithRouter,
-} from '../types/types';
+import { Category, Currency, GQLInitialData, WithRouter } from '../types/types';
 import SideCart from './SideCart';
+import { changeCurrency } from '../redux-slices/currencySlice';
+import { client } from '../apollo/client';
+import { GET_LISTS } from '../apollo/queries';
 
 interface State {
+	categoryList: Category[];
+	currencyList: Currency[];
 	currencySelectOpen: boolean;
 	sideCartOpen: boolean;
 	ref: any;
 }
 
-interface Props {
-	cart: CartProductWithUID[];
-	withRouter: WithRouter;
-	categoryList: Category[];
-	changeCurrency: (currency: Currency) => void;
-	currencyList: Currency[];
-	selectedCurrency: Currency;
-}
-
-class Navbar extends Component<Props> {
+class Navbar extends Component<StateProps & DispatchProps & OwnProps> {
 	state: State = {
+		categoryList: [],
+		currencyList: [],
 		currencySelectOpen: false,
 		sideCartOpen: false,
 		ref: createRef(),
@@ -63,13 +56,25 @@ class Navbar extends Component<Props> {
 		}
 	};
 
+	componentDidMount = async () => {
+		try {
+			const initialData: GQLInitialData = await client.query({
+				query: GET_LISTS,
+			});
+			this.setState({
+				...this.state,
+				categoryList: initialData.data.categories,
+				currencyList: initialData.data.currencies,
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	componentDidUpdate = () => {
 		if (this.state.currencySelectOpen) {
 			document.body.addEventListener('click', this.outsideRefClick);
-		} else {
-			document.body.removeEventListener('click', this.outsideRefClick);
-		}
-		if (this.state.sideCartOpen) {
+		} else if (this.state.sideCartOpen) {
 			document.body.addEventListener('click', this.outsideRefClick);
 			document.body.style.overflow = 'hidden';
 		} else {
@@ -94,13 +99,13 @@ class Navbar extends Component<Props> {
 		this.props.changeCurrency(currency);
 	};
 
-	navigateToCart = () => {
+	navigateTo = (string: string) => {
 		this.setState({
 			...this.state,
 			currencySelectOpen: false,
 			sideCartOpen: false,
 		});
-		this.props.withRouter.navigate('/cart');
+		this.props.withRouter.navigate(string);
 	};
 
 	render() {
@@ -110,7 +115,7 @@ class Navbar extends Component<Props> {
 				{this.state.sideCartOpen && <styled.Blur />}
 				<styled.Nav>
 					<styled.CategoryList>
-						{this.props.categoryList.map((c) => {
+						{this.state.categoryList.map((c) => {
 							return (
 								<styled.CategoryLink
 									key={c.name}
@@ -158,8 +163,8 @@ class Navbar extends Component<Props> {
 						<styled.CurrencySelect
 							onClick={this.toggleCurrencySelectorVisibility}
 						>
-							<div className='currency-icon'>
-								<h4>{this.props.selectedCurrency.symbol}</h4>
+							<styled.CurrencyIcon>
+								<span>{this.props.selectedCurrency.symbol}</span>
 								<svg
 									width='24px'
 									height='24px'
@@ -179,10 +184,10 @@ class Navbar extends Component<Props> {
 										fill='#000000'
 									/>
 								</svg>
-							</div>
-							<div className='currency-item-list'>
+							</styled.CurrencyIcon>
+							<styled.CurrencyList>
 								{this.state.currencySelectOpen &&
-									this.props.currencyList.map((currency) => (
+									this.state.currencyList.map((currency) => (
 										<styled.CurrencyItem
 											key={currency.label}
 											onClick={(e) => this.changeCurrency(e, currency)}
@@ -193,14 +198,12 @@ class Navbar extends Component<Props> {
 											{currency.symbol} {currency.label}
 										</styled.CurrencyItem>
 									))}
-							</div>
+							</styled.CurrencyList>
 						</styled.CurrencySelect>
 						<SideCart
-							cart={this.props.cart}
 							open={this.state.sideCartOpen}
 							toggle={this.toggleSideCartVisibility}
-							selectedCurrency={this.props.selectedCurrency}
-							navigateToCart={this.navigateToCart}
+							navigateTo={this.navigateTo}
 						/>
 					</styled.NavControls>
 				</styled.Nav>
@@ -209,8 +212,26 @@ class Navbar extends Component<Props> {
 	}
 }
 
-function mapStateToProps(state: RootState) {
-	return { cart: state.cart };
+interface StateProps {
+	selectedCurrency: Currency;
 }
 
-export default withRouter(connect(mapStateToProps, null)(Navbar));
+interface OwnProps {
+	withRouter: WithRouter;
+}
+
+interface DispatchProps {
+	changeCurrency: (currency: Currency) => void;
+}
+
+function mapStateToProps(state: RootState, ownProps: OwnProps) {
+	return { selectedCurrency: state.currency, ...ownProps };
+}
+
+function mapDispatchToProps(dispatch: AppDispatch) {
+	return {
+		changeCurrency: (currency: Currency) => dispatch(changeCurrency(currency)),
+	};
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Navbar));
