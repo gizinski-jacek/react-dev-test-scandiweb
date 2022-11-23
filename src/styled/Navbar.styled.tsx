@@ -54,8 +54,6 @@ export const CategoryLink = styled(NavLink)<{ active: string }>`
 export const Logo = styled.div`
 	width: 40px;
 	height: 40px;
-	min-width: 40px;
-	min-height: 40px;
 	fill: #ffffff;
 	margin: 0 1rem;
 `;
@@ -72,7 +70,7 @@ export const CurrencySelect = styled.div`
 
 	span {
 		font-size: 1.5rem;
-		min-width: 40px;
+		min-width: 32px;
 		text-align: end;
 		margin: 0;
 	}
