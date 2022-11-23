@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import * as styled from '../styled/ProductPage.styled';
-import { AppDispatch } from '../redux/store';
+import { AppDispatch, RootState } from '../redux/store';
 import { addProduct } from '../redux-slices/cartSlice';
 import withRouter from '../HOC/withRouter';
 import Button from '../reusables/Button';
@@ -20,20 +20,17 @@ import ProductAttributes from '../wrappers/ProductAttributes';
 import { GET_PRODUCT_DETAILS } from '../apollo/queries';
 import { client } from '../apollo/client';
 import parse from 'html-react-parser';
-
-interface Props {
-	withRouter: WithRouter;
-	selectedCurrency: Currency;
-	addProduct: (product: CartProductWithUID | CartProduct) => void;
-}
+import LoadingSpinner from '../reusables/LoadingSpinner';
+import roundToDecimal from '../utils/roundToDecimal';
 
 interface State {
 	product: CartProduct | null;
 	activeImage: string;
+	loading: boolean;
 }
 
-class ProductPage extends Component<Props> {
-	state: State = { product: null, activeImage: '' };
+class ProductPage extends Component<StateProps & OwnProps & DispatchProps> {
+	state: State = { product: null, activeImage: '', loading: true };
 
 	componentDidMount = async () => {
 		try {
@@ -46,6 +43,7 @@ class ProductPage extends Component<Props> {
 				this.setState({
 					...this.state,
 					product: null,
+					loading: false,
 				});
 			} else {
 				const cartProduct = productToCartProduct(response.data.product);
@@ -53,9 +51,11 @@ class ProductPage extends Component<Props> {
 					...this.state,
 					product: cartProduct,
 					activeImage: cartProduct.gallery[0],
+					loading: false,
 				});
 			}
 		} catch (error) {
+			this.setState({ ...this.state, loading: false });
 			console.log(error);
 		}
 	};
@@ -91,19 +91,20 @@ class ProductPage extends Component<Props> {
 	};
 
 	render() {
-		const productPrice = this.state.product?.prices.find(
+		const price = this.state.product?.prices.find(
 			(price) => price.currency.label === this.props.selectedCurrency.label
 		);
-		return this.state.product ? (
+		return this.state.loading ? (
+			<LoadingSpinner />
+		) : this.state.product ? (
 			<styled.Product>
-				<styled.Gallery>
+				<styled.Gallery height={'440px'}>
 					<styled.Thumbnails>
 						{this.state.product.gallery.map((img, i) => (
 							<Image
 								key={img}
 								src={img}
 								width={'80px'}
-								height={'80px'}
 								cursor={'true'}
 								onClick={() => this.changeImage(i)}
 							/>
@@ -111,8 +112,8 @@ class ProductPage extends Component<Props> {
 					</styled.Thumbnails>
 					<Image
 						src={this.state.activeImage}
-						width={'420px'}
-						height={'420px'}
+						height={'440px'}
+						inStock={this.state.product.inStock}
 					/>
 				</styled.Gallery>
 				<styled.Info>
@@ -125,13 +126,15 @@ class ProductPage extends Component<Props> {
 						onClick={this.changeAttribute}
 						bigger
 					/>
-					<styled.Price>
-						<span>Price:</span>
-						<h4>
-							{productPrice?.currency.symbol}
-							{productPrice?.amount}
-						</h4>
-					</styled.Price>
+					{price && (
+						<styled.Price>
+							<span>Price:</span>
+							<h4>
+								{price.currency.symbol}
+								{roundToDecimal(price.amount, 2)}
+							</h4>
+						</styled.Price>
+					)}
 					<Button
 						bgColor='#00c800'
 						disabled={!this.state.product.inStock}
@@ -144,9 +147,26 @@ class ProductPage extends Component<Props> {
 				</styled.Info>
 			</styled.Product>
 		) : (
-			<styled.H2>Product not found</styled.H2>
+			<styled.NotFound>
+				<h2>Product not found</h2>
+			</styled.NotFound>
 		);
 	}
+}
+interface StateProps {
+	selectedCurrency: Currency;
+}
+
+interface OwnProps {
+	withRouter: WithRouter;
+}
+
+interface DispatchProps {
+	addProduct: (product: CartProductWithUID | CartProduct) => void;
+}
+
+function mapStateToProps(state: RootState, ownProps: OwnProps) {
+	return { selectedCurrency: state.currency, ...ownProps };
 }
 
 function mapDispatchToProps(dispatch: AppDispatch) {
@@ -156,4 +176,6 @@ function mapDispatchToProps(dispatch: AppDispatch) {
 	};
 }
 
-export default withRouter(connect(null, mapDispatchToProps)(ProductPage));
+export default withRouter(
+	connect(mapStateToProps, mapDispatchToProps)(ProductPage)
+);
