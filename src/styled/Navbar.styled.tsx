@@ -67,6 +67,10 @@ export const CurrencySelect = styled.div`
 	cursor: pointer;
 	z-index: 10;
 	margin: auto;
+`;
+
+export const CurrencySymbol = styled.div<{ rotate?: boolean }>`
+	display: flex;
 
 	span {
 		font-size: 1.5rem;
@@ -75,14 +79,13 @@ export const CurrencySelect = styled.div`
 		margin: 0;
 	}
 
-	svg {
-		margin-top: 0.5rem;
-	}
-`;
-
-export const CurrencyIcon = styled.div`
-	display: flex;
-	align-items: center;
+	${({ rotate }) =>
+		rotate &&
+		`
+		svg {
+			transform: rotateX(180deg);
+		}
+  `}
 `;
 
 export const CurrencyList = styled.div`
