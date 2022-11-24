@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Product = styled.div`
 	display: flex;
 	flex-direction: column;
-	justify-content: space-evenly;
+	justify-content: space-between;
 	gap: 2rem;
 
 	@media only screen and (min-width: 768px) {
@@ -25,13 +25,14 @@ export const Thumbnails = styled.div`
 	overflow-y: scroll;
 	padding-left: 1rem;
 	direction: rtl;
+	min-width: fit-content;
 `;
 
 export const Info = styled.div`
 	display: flex;
 	flex-direction: column;
 	gap: 2rem;
-	width: 240px;
+	max-width: 240px;
 
 	span {
 		display: block;
