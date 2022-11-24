@@ -7,8 +7,8 @@ const ImgWrapper = styled.div<{
 	inStock?: boolean;
 	cursor?: any;
 }>`
-	width: ${({ width }) => width || 'fit-content'};
-	height: ${({ height }) => height || 'fit-content'};
+	width: ${({ width }) => width || 'auto'};
+	height: ${({ height }) => height || 'auto'};
 	cursor: ${({ cursor }) => cursor === 'true' && 'pointer'};
 	position: relative;
 	margin-left: auto;
@@ -20,9 +20,9 @@ const ImgWrapper = styled.div<{
 			opacity: 0.5;
 		}
 
-		:before {
-			font-size: 2rem;
-			color:black;
+		&:before {
+			font-size: 2.5rem;
+			color: #000000;
 			white-space: nowrap;
 			content: 'Out of Stock';
 			text-transform: uppercase;
@@ -30,7 +30,6 @@ const ImgWrapper = styled.div<{
 			top: 50%;
 			left: 50%;
 			transform: translate(-50%, -50%);
-
 		}
   `};
 `;
