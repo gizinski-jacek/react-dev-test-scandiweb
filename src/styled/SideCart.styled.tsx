@@ -4,6 +4,7 @@ export const Cart = styled.div`
 	position: relative;
 	width: 40px;
 	cursor: pointer;
+	margin: auto;
 `;
 
 export const Contents = styled.div`
@@ -17,6 +18,7 @@ export const Contents = styled.div`
 	flex-direction: column;
 	background-color: #ffffff;
 	z-index: 10;
+	box-shadow: 0 0 0.25rem 0 #ffffff;
 `;
 
 export const ProductList = styled.ul`
@@ -38,6 +40,7 @@ export const CartProductCount = styled.div`
 	color: #ffffff;
 	background-color: #000000;
 	border-radius: 50%;
+	font-weight: 500;
 `;
 
 export const Header = styled.div`
