@@ -107,7 +107,7 @@ class CartProductCard extends Component<StateProps & OwnProps & DispatchProps> {
 						</Button>
 					)}
 				</styled.Details>
-				<styled.ProductCounter height={this.props.bigger ? '160px' : '120px'}>
+				<styled.ProductCounter>
 					<styled.IncBtn
 						onClick={(e) => this.increment(e, this.props.product)}
 						bigger={this.props.bigger}
