@@ -60,7 +60,7 @@ export const ProductLink = styled.div<{ link?: boolean }>`
   `}
 `;
 
-export const ProductCounter = styled.div<{ height?: string }>`
+export const ProductCounter = styled.div`
 	display: flex;
 	flex-direction: column;
 
@@ -145,14 +145,15 @@ export const ArrowPrev = styled.div`
 	opacity: 0.75;
 	transition: 0.1s ease-in-out;
 
-	&:before {
+	&:before,
+	&:after {
 		content: '';
 		display: block;
-		width: 8px;
+		width: 10px;
 		height: 2px;
 		background-color: #ffffff;
 		position: absolute;
-		top: 5px;
+		top: 6px;
 		left: 0;
 		right: 0;
 		bottom: 0;
@@ -161,18 +162,9 @@ export const ArrowPrev = styled.div`
 	}
 
 	&:after {
-		content: '';
-		display: block;
 		width: 2px;
-		height: 8px;
-		background-color: #ffffff;
-		position: absolute;
-		top: -5px;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		margin: auto;
-		transform: rotate(45deg);
+		height: 10px;
+		top: -6px;
 	}
 
 	&:hover {
