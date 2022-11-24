@@ -163,7 +163,7 @@ class Navbar extends Component<StateProps & DispatchProps & OwnProps> {
 						<styled.CurrencySelect
 							onClick={this.toggleCurrencySelectorVisibility}
 						>
-							<styled.CurrencyIcon>
+							<styled.CurrencySymbol rotate={this.state.currencySelectOpen}>
 								<span>{this.props.selectedCurrency.symbol}</span>
 								<svg
 									width='24px'
@@ -171,11 +171,6 @@ class Navbar extends Component<StateProps & DispatchProps & OwnProps> {
 									viewBox='0 0 24 24'
 									fill='none'
 									xmlns='http://www.w3.org/2000/svg'
-									style={{
-										transform: this.state.currencySelectOpen
-											? 'rotateX(180deg)'
-											: '',
-									}}
 								>
 									<path
 										fillRule='evenodd'
@@ -184,10 +179,10 @@ class Navbar extends Component<StateProps & DispatchProps & OwnProps> {
 										fill='#000000'
 									/>
 								</svg>
-							</styled.CurrencyIcon>
-							<styled.CurrencyList>
-								{this.state.currencySelectOpen &&
-									this.state.currencyList.map((currency) => (
+							</styled.CurrencySymbol>
+							{this.state.currencySelectOpen && (
+								<styled.CurrencyList>
+									{this.state.currencyList.map((currency) => (
 										<styled.CurrencyItem
 											key={currency.label}
 											onClick={(e) => this.changeCurrency(e, currency)}
@@ -198,7 +193,8 @@ class Navbar extends Component<StateProps & DispatchProps & OwnProps> {
 											{currency.symbol} {currency.label}
 										</styled.CurrencyItem>
 									))}
-							</styled.CurrencyList>
+								</styled.CurrencyList>
+							)}
 						</styled.CurrencySelect>
 						<SideCart
 							open={this.state.sideCartOpen}
