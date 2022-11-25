@@ -27,7 +27,7 @@ export const CategoryList = styled.div`
 	display: flex;
 `;
 
-export const CategoryLink = styled(NavLink)<{ active: string }>`
+export const CategoryLink = styled(NavLink)<{ $active: boolean }>`
 	display: inline-block;
 	padding: 1rem;
 	text-transform: uppercase;
@@ -43,8 +43,8 @@ export const CategoryLink = styled(NavLink)<{ active: string }>`
 		color: #00c800;
 	}
 
-	${({ active }) =>
-		active === 'true' &&
+	${({ $active }) =>
+		$active &&
 		`
 		border-bottom: 2px solid #00c800;
 		color: #00c800 !important;
@@ -69,7 +69,7 @@ export const CurrencySelect = styled.div`
 	margin: auto;
 `;
 
-export const CurrencySymbol = styled.div<{ rotate?: boolean }>`
+export const CurrencySymbol = styled.div<{ $rotate?: boolean }>`
 	display: flex;
 
 	span {
@@ -79,8 +79,8 @@ export const CurrencySymbol = styled.div<{ rotate?: boolean }>`
 		margin: 0;
 	}
 
-	${({ rotate }) =>
-		rotate &&
+	${({ $rotate }) =>
+		$rotate &&
 		`
 		svg {
 			transform: rotateX(180deg);
