@@ -7,7 +7,7 @@ import { Category, Currency, GQLInitialData, WithRouter } from '../types/types';
 import SideCart from './SideCart';
 import { changeCurrency } from '../redux-slices/currencySlice';
 import { client } from '../apollo/client';
-import { GET_LISTS } from '../apollo/queries';
+import { GET_NAVBAR_DATA } from '../apollo/queries';
 
 interface State {
 	categoryList: Category[];
@@ -15,6 +15,7 @@ interface State {
 	currencySelectOpen: boolean;
 	sideCartOpen: boolean;
 	ref: any;
+	loading: boolean;
 }
 
 class Navbar extends Component<StateProps & DispatchProps & OwnProps> {
@@ -24,6 +25,7 @@ class Navbar extends Component<StateProps & DispatchProps & OwnProps> {
 		currencySelectOpen: false,
 		sideCartOpen: false,
 		ref: createRef(),
+		loading: true,
 	};
 
 	toggleCurrencySelectorVisibility = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -59,12 +61,13 @@ class Navbar extends Component<StateProps & DispatchProps & OwnProps> {
 	componentDidMount = async () => {
 		try {
 			const initialData: GQLInitialData = await client.query({
-				query: GET_LISTS,
+				query: GET_NAVBAR_DATA,
 			});
 			this.setState({
 				...this.state,
 				categoryList: initialData.data.categories,
 				currencyList: initialData.data.currencies,
+				loading: false,
 			});
 		} catch (error) {
 			console.log(error);
@@ -110,7 +113,7 @@ class Navbar extends Component<StateProps & DispatchProps & OwnProps> {
 
 	render() {
 		const { category } = this.props.withRouter.params;
-		return (
+		return this.state.loading ? null : (
 			<>
 				{this.state.sideCartOpen && <styled.Blur />}
 				<styled.Nav>
@@ -120,7 +123,7 @@ class Navbar extends Component<StateProps & DispatchProps & OwnProps> {
 								<styled.CategoryLink
 									key={c.name}
 									to={`/catalog/${c.name}`}
-									active={(category === c.name).toString()}
+									$active={category === c.name}
 								>
 									{c.name}
 								</styled.CategoryLink>
@@ -163,7 +166,7 @@ class Navbar extends Component<StateProps & DispatchProps & OwnProps> {
 						<styled.CurrencySelect
 							onClick={this.toggleCurrencySelectorVisibility}
 						>
-							<styled.CurrencySymbol rotate={this.state.currencySelectOpen}>
+							<styled.CurrencySymbol $rotate={this.state.currencySelectOpen}>
 								<span>{this.props.selectedCurrency.symbol}</span>
 								<svg
 									width='24px'
