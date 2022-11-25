@@ -19,14 +19,14 @@ interface Props {
 }
 
 interface State {
-	category: string;
+	category: string | undefined;
 	productList: CartProduct[] | null;
 	loading: boolean;
 }
 
 class CatalogPage extends Component<Props> {
 	state: State = {
-		category: '',
+		category: this.props.withRouter.params.category,
 		productList: [],
 		loading: true,
 	};
@@ -57,10 +57,6 @@ class CatalogPage extends Component<Props> {
 				});
 			}
 		} catch (error) {
-			this.setState({
-				...this.state,
-				loading: false,
-			});
 			console.log(error);
 		}
 	};
@@ -69,6 +65,12 @@ class CatalogPage extends Component<Props> {
 		try {
 			const { category } = this.props.withRouter.params;
 			if (category !== prevState.category) {
+				if (!this.state.loading) {
+					this.setState({
+						...this.state,
+						loading: true,
+					});
+				}
 				const response: GQLCategoryData = await client.query({
 					query: GET_CATEGORY_PRODUCTS,
 					variables: { category: category },
@@ -93,10 +95,6 @@ class CatalogPage extends Component<Props> {
 				}
 			}
 		} catch (error) {
-			this.setState({
-				...this.state,
-				loading: false,
-			});
 			console.log(error);
 		}
 	};
