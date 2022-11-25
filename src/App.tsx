@@ -6,7 +6,7 @@ import CatalogPage from './components/CatalogPage';
 import ProductPage from './components/ProductPage';
 import CartPage from './components/CartPage';
 import Layout from './Layout';
-import { GET_LISTS } from './apollo/queries';
+import { GET_NAVBAR_DATA } from './apollo/queries';
 import { client } from './apollo/client';
 import { AppDispatch, RootState } from './redux/store';
 import { changeCurrency } from './redux-slices/currencySlice';
@@ -34,12 +34,10 @@ class App extends Component<StateProps & StateDispatch> {
 		try {
 			if (!this.props.selectedCurrency) {
 				const initialData: GQLInitialData = await client.query({
-					query: GET_LISTS,
+					query: GET_NAVBAR_DATA,
 				});
 				if (!initialData.data.currencies[0]) {
-					throw new Error(
-						'Default currency not set. Error fetching currencies from API.'
-					);
+					throw new Error('Error fetching default currency from the API.');
 				}
 				this.props.changeCurrency(initialData.data.currencies[0]);
 			}
