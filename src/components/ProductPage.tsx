@@ -60,6 +60,39 @@ class ProductPage extends Component<StateProps & OwnProps & DispatchProps> {
 		}
 	};
 
+	componentDidUpdate = async (
+		prevProps: StateProps & OwnProps & DispatchProps,
+		prevState: State
+	) => {
+		try {
+			const { id } = this.props.withRouter.params;
+			if (id !== prevState.product?.id) {
+				const response: GQLProductData = await client.query({
+					query: GET_PRODUCT_DETAILS,
+					variables: { id: id },
+				});
+				if (!response.data.product) {
+					this.setState({
+						...this.state,
+						product: null,
+						loading: false,
+					});
+				} else {
+					const cartProduct = productToCartProduct(response.data.product);
+					this.setState({
+						...this.state,
+						product: cartProduct,
+						activeImage: cartProduct.gallery[0],
+						loading: false,
+					});
+				}
+			}
+		} catch (error) {
+			this.setState({ ...this.state, loading: false });
+			console.log(error);
+		}
+	};
+
 	changeImage = (index: number) => {
 		if (!this.state.product) return;
 		this.setState({
@@ -105,14 +138,14 @@ class ProductPage extends Component<StateProps & OwnProps & DispatchProps> {
 								key={img}
 								src={img}
 								width={'80px'}
-								cursor={'true'}
+								cursor
 								onClick={() => this.changeImage(i)}
 							/>
 						))}
 					</styled.Thumbnails>
 					<Image
 						src={this.state.activeImage}
-						height={'440px'}
+						width={'440px'}
 						inStock={this.state.product.inStock}
 					/>
 				</styled.Gallery>
