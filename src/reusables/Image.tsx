@@ -5,11 +5,11 @@ const ImgWrapper = styled.div<{
 	width?: string;
 	height?: string;
 	inStock?: boolean;
-	cursor?: any;
+	cursor?: boolean;
 }>`
 	width: ${({ width }) => width || 'auto'};
 	height: ${({ height }) => height || 'auto'};
-	cursor: ${({ cursor }) => cursor === 'true' && 'pointer'};
+	cursor: ${({ cursor }) => cursor && 'pointer'};
 	position: relative;
 	margin-left: auto;
 
@@ -46,7 +46,7 @@ interface Props {
 	inStock?: boolean;
 	width?: string;
 	height?: string;
-	cursor?: string;
+	cursor?: boolean;
 	onClick?: (...any: any) => void;
 }
 
