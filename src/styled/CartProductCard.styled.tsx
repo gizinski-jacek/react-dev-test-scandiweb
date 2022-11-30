@@ -89,7 +89,8 @@ export const DecBtn = styled.div<{ bigger?: boolean }>`
 		border-color: #960096;
 	}
 
-	&:before {
+	&:before,
+	&:after {
 		content: '';
 		display: block;
 		width: 12px;
@@ -106,17 +107,8 @@ export const DecBtn = styled.div<{ bigger?: boolean }>`
 
 export const IncBtn = styled(DecBtn)`
 	&:after {
-		content: '';
-		display: block;
 		width: 2px;
 		height: 12px;
-		background-color: #000000;
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		margin: auto;
 	}
 `;
 
