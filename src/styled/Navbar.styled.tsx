@@ -3,11 +3,12 @@ import styled from 'styled-components';
 
 export const Nav = styled.nav`
 	padding: 1rem 4rem;
-	height: 5rem;
+	padding-bottom: 0;
 	display: flex;
 	justify-content: space-between;
+	align-items: center;
+	gap: 1rem;
 	background-color: #ffffff;
-	border-bottom: 1px solid #00000010;
 	position: sticky;
 	top: 0;
 	z-index: 20;
@@ -25,6 +26,7 @@ export const Blur = styled.div`
 
 export const CategoryList = styled.div`
 	display: flex;
+	flex: 1;
 `;
 
 export const CategoryLink = styled(NavLink)<{ $active: boolean }>`
@@ -54,19 +56,22 @@ export const CategoryLink = styled(NavLink)<{ $active: boolean }>`
 export const Logo = styled.div`
 	width: 40px;
 	height: 40px;
+	min-width: 40px;
+	min-height: 40px;
 	fill: #ffffff;
-	margin: 0 1rem;
 `;
 
 export const NavControls = styled.div`
 	display: flex;
+	flex: 1;
+	justify-content: flex-end;
 `;
 
 export const CurrencySelect = styled.div`
 	position: relative;
 	cursor: pointer;
 	z-index: 10;
-	margin: auto;
+	margin: auto 0;
 `;
 
 export const CurrencySymbol = styled.div<{ $rotate?: boolean }>`
@@ -76,7 +81,6 @@ export const CurrencySymbol = styled.div<{ $rotate?: boolean }>`
 		font-size: 1.5rem;
 		min-width: 32px;
 		text-align: end;
-		margin: 0;
 	}
 
 	${({ $rotate }) =>
