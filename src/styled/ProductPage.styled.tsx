@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Product = styled.div`
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
+	justify-content: space-evenly;
 	gap: 2rem;
 
 	@media only screen and (min-width: 768px) {
