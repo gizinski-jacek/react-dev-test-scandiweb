@@ -55,7 +55,7 @@ class ProductAttributes extends Component<Props> {
 														: null
 												}
 												selected={selected}
-												clickable={this.props.onClick ? true : false}
+												cursor={this.props.onClick ? true : false}
 												bigger={this.props.bigger}
 											>
 												{item.value}
