@@ -4,7 +4,6 @@ export const Cart = styled.div`
 	position: relative;
 	width: 40px;
 	cursor: pointer;
-	margin: auto;
 `;
 
 export const Contents = styled.div`
